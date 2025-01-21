@@ -9,7 +9,7 @@ import ParkInfoPage from "./pages/ParkInfoPage";
 
 function App() {
   return (
-    <>
+    <div className="mobile-container">
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/mypage" element={<MyPage />} />
@@ -18,7 +18,7 @@ function App() {
         <Route path="/signin" element={<SignInPage />} />
         <Route path="/parkinginfo" element={<ParkInfoPage />} />
       </Routes>
-    </>
+    </div>
   );
 }
 
