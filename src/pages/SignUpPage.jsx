@@ -7,7 +7,7 @@ import { SlEnvolope } from "react-icons/sl";
 import { PiPhone } from "react-icons/pi";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { FaCircleCheck } from "react-icons/fa6";
-import Button from "../components/Buttons/Button";
+import SquareButton from "../components/Buttons/SquareButton";
 
 function SignUpPage() {
   const navigate = useNavigate();
@@ -99,7 +99,7 @@ function SignUpPage() {
                 onChange={handleChange}
               />
             </div>
-            <Button onClick={() => setStep(2)} buttonTxt={"다음"} />
+            <SquareButton onClick={() => setStep(2)} buttonTxt={"다음"} />
           </Step>
         );
       case 2:
@@ -125,7 +125,7 @@ function SignUpPage() {
                 <ErrMsg>이메일 형식이 올바르지 않습니다.</ErrMsg>
               )}
             </div>
-            <Button onClick={() => setStep(3)} buttonTxt={"다음"} />
+            <SquareButton onClick={() => setStep(3)} buttonTxt={"다음"} />
           </Step>
         );
       case 3:
@@ -151,7 +151,7 @@ function SignUpPage() {
                 <ErrMsg>전화번호는 숫자 10~11자로 입력해주세요.</ErrMsg>
               )}
             </div>
-            <Button onClick={() => setStep(4)} buttonTxt={"다음"} />
+            <SquareButton onClick={() => setStep(4)} buttonTxt={"다음"} />
           </Step>
         );
       case 4:
@@ -191,7 +191,7 @@ function SignUpPage() {
               />
               {validate.pwcheck && <ErrMsg>입력한 비밀번호와 다릅니다.</ErrMsg>}
             </div>
-            <Button onClick={handleSubmit} buttonTxt={"다음"} />
+            <SquareButton onClick={handleSubmit} buttonTxt={"다음"} />
           </Step>
         );
       case 5:
@@ -218,7 +218,7 @@ function SignUpPage() {
               <h2 style={{ marginBottom: "100px" }}>
                 회원가입이 완료되었습니다.
               </h2>
-              <Button
+              <SquareButton
                 onClick={() => navigate("/signin")}
                 buttonTxt={"로그인하러 가기"}
               />

@@ -1,11 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 
-const Button = ({ buttonTxt, onClick }) => {
+const SquareButton = ({ buttonTxt, onClick }) => {
   return <ButtonWrapper onClick={onClick}>{buttonTxt}</ButtonWrapper>;
 };
 
-export default Button;
+export default SquareButton;
 
 const ButtonWrapper = styled.button`
   width: 100%;

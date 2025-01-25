@@ -3,7 +3,7 @@ import { styled } from "styled-components";
 import { SlEnvolope } from "react-icons/sl";
 import { IoLockClosedOutline } from "react-icons/io5";
 import logotxt from "../assets/logotxt.svg";
-import Button from "../components/Buttons/Button";
+import SquareButton from "../components/Buttons/SquareButton";
 import { useNavigate } from "react-router-dom";
 
 function SignInPage() {
@@ -41,7 +41,7 @@ function SignInPage() {
             </div>
           </FormDiv>
         </LoginDiv>
-        <Button buttonTxt={"로그인"} onClick={() => alert("로그인")} />
+        <SquareButton buttonTxt={"로그인"} onClick={() => alert("로그인")} />
         <SignupBtn onClick={() => navigate("/signup")}>회원가입하기</SignupBtn>
       </div>
     </Wrapper>
