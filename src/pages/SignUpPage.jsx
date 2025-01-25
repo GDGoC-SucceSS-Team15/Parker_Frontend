@@ -121,7 +121,7 @@ function SignUpPage() {
                 value={formData.email}
                 onChange={handleChange}
               />
-              {validate.email && (
+              {formData.email && validate.email && (
                 <ErrMsg>이메일 형식이 올바르지 않습니다.</ErrMsg>
               )}
             </div>
@@ -147,7 +147,7 @@ function SignUpPage() {
                 value={formData.phone}
                 onChange={handleChange}
               />
-              {validate.phone && (
+              {formData.phone && validate.phone && (
                 <ErrMsg>전화번호는 숫자 10~11자로 입력해주세요.</ErrMsg>
               )}
             </div>
@@ -173,7 +173,7 @@ function SignUpPage() {
                 value={formData.pw}
                 onChange={handleChange}
               />
-              {validate.pw && (
+              {formData.pw && validate.pw && (
                 <ErrMsg>
                   비밀번호는 영문과 숫자를 조합하여 8~16자로 입력해야 합니다.
                 </ErrMsg>
@@ -189,7 +189,9 @@ function SignUpPage() {
                 value={formData.pwcheck}
                 onChange={handleChange}
               />
-              {validate.pwcheck && <ErrMsg>입력한 비밀번호와 다릅니다.</ErrMsg>}
+              {formData.pwcheck && validate.pwcheck && (
+                <ErrMsg>입력한 비밀번호와 다릅니다.</ErrMsg>
+              )}
             </div>
             <SquareButton onClick={handleSubmit} buttonTxt={"다음"} />
           </Step>
