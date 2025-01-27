@@ -24,6 +24,9 @@ export default Header;
 
 const HeaderWrapper = styled.div`
   width: calc(100% - 60px);
+  position: sticky;
+  top: 0;
+  background-color: white;
   .header-div {
     width: 100%;
     display: flex;
