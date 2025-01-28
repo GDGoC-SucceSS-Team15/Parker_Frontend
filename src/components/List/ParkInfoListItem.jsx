@@ -34,17 +34,13 @@ const ParkInfoListItem = ({
       <Line />
       <TimeFee>
         <div className="time">
-          <div>
-            <FiClock />
-          </div>
+          <FiClock />
           <div>
             운영시간 : {start_time} ~ {end_time}
           </div>
         </div>
         <div className="fee">
-          <div>
-            <AiOutlineDollar />
-          </div>
+          <AiOutlineDollar />
           <div>
             주차요금 매 {unit_time}분당 {unit_fee}원
           </div>
