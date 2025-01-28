@@ -60,6 +60,12 @@ const ItemWrapper = styled.div`
   box-shadow: 0px 8px 20px 0px rgba(122, 122, 123, 0.32);
   padding: 30px;
   margin-bottom: 30px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  &:hover {
+    border: 1px solid #eaeaea;
+    box-shadow: 0px 8px 20px 0px rgba(47, 47, 48, 0.32);
+  }
 `;
 const Location = styled.div`
   width: 100%;
@@ -67,7 +73,7 @@ const Location = styled.div`
   justify-content: space-between;
   .Left {
     width: fit-content;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
     display: flex;
     flex-direction: column;
@@ -104,10 +110,16 @@ const Line = styled.hr`
 const TimeFee = styled.div`
   display: flex;
   justify-content: space-between;
+  font-size: 10px;
+  font-weight: 700;
   .time {
     display: flex;
+    gap: 3px;
+    align-items: center;
   }
   .fee {
     display: flex;
+    gap: 3px;
+    align-items: center;
   }
 `;
