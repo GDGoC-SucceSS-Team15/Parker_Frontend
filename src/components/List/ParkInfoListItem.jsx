@@ -13,9 +13,10 @@ const ParkInfoListItem = ({
   end_time,
   unit_fee,
   unit_time,
+  onClick,
 }) => {
   return (
-    <ItemWrapper>
+    <ItemWrapper onClick={onClick}>
       <Location>
         <div className="Left">
           <div>
