@@ -1,9 +1,9 @@
 import { styled } from "styled-components";
-import Parker_Logo from "./../assets/LogoImage/Parker_Logo.png"
-import My_Page from "./../assets/MenuButton/Menu_MyPage.png"
-import Report from "./../assets/MenuButton/Menu_Report.png"
-import Record from "./../assets/MenuButton/Menu_Record.png"
-import Parking_Info from "./../assets/MenuButton/Menu_ParkInfo.png"
+import Parker_Logo from "./../assets/LogoImage.svg"
+import My_Page from "./../assets/MenuButton/Menu_MyPage.svg"
+import SavedParkingSpaces from "./../assets/MenuButton/Menu_SavedParkingSpaces.svg"
+import ParkingSpaces from "./../assets/MenuButton/Menu_ParkingSpaces.svg"
+import Parking_Info from "./../assets/MenuButton/Menu_ParkInfo.svg"
 import Setting from "./../assets/MenuButton/Menu_Setting.png"
 import More from "./../assets/MenuButton/Menu_More.png"
 import Log_Out from "./../assets/MenuButton/Menu_Logout.png"
@@ -25,16 +25,16 @@ const Menu = () => {
       </ProfileDiv>
 
       <PageDiv>
-        <button onClick={() => navigate("/MyPage")}>
+        <button onClick={() => navigate("/mypage")}>
           <img src={My_Page} alt="myPage" />마이페이지
         </button>
         <button>
-          <img src={Record} alt="Record" />활동 기록
+          <img src={SavedParkingSpaces} alt="SavedParkingSpaces" />즐겨찾는 주차공간
         </button>
-        <button onClick={() => navigate("/MyParkingPage")}>
-          <img src={Report} alt="Report" />등록한 주차 공간
+        <button onClick={() => navigate("/parking-spaces")}>
+          <img src={ParkingSpaces} alt="ParkingSpaces" />등록한 주차공간
         </button>
-        <button onClick={() => navigate("/ParkInfoPage")}>
+        <button onClick={() => navigate("/parkinginfo")}>
           <img src={Parking_Info} alt="parkingInfo" />주차 정보 페이지
         </button>
       </PageDiv>
@@ -46,7 +46,7 @@ const Menu = () => {
         <button>
           <img src={More} alt="moreOptions" />더보기
         </button>
-        <button onClick={() => navigate("/SignInPage")}>
+        <button onClick={() => navigate("/signin")}>
           <img src={Log_Out} alt="logOut" />로그아웃
         </button>
         <button>
