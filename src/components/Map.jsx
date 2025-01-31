@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import PositionMaker from "./../assets/PositionMaker.png"
+import BottomBar from "./BottomBar";
+import TopBar from "./TopBar";
 
 const Map = () => {
   const [currentLocation, setCurrentLocation] = useState(null); 
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태
 
   useEffect(() => {
-    // 내 위치 가져오기
+    getLocation();
+  },[]);
+
+  // 내 위치 가져오기
+  const getLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -26,7 +32,7 @@ const Map = () => {
       setCurrentLocation({ latitude: 37.5665, longitude: 126.9780 });
       setIsLoading(false);
     }
-  }, []);
+  };
 
   useEffect(() => {
     if (!currentLocation) return; // 위치 정보가 없으면 실행하지 않음
@@ -51,7 +57,7 @@ const Map = () => {
         PositionMaker,
         new window.kakao.maps.Size(70, 70), 
         { offset: new window.kakao.maps.Point(25, 50) } // 마커 이미지의 중심 좌표
-);
+        );
 
         // 현재 위치 마커 추가
         new window.kakao.maps.Marker({
@@ -70,7 +76,13 @@ const Map = () => {
     return <LoadingContainer>현재 위치를 탐색 중...</LoadingContainer>;
   }
 
-  return <MapContainer id="map" />;
+  return (
+    <div>
+      <TopBar />
+      <MapContainer id="map" />
+      <BottomBar onGetLocation={getLocation} />
+    </div>
+  );
 };
 
 export default Map;

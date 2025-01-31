@@ -4,34 +4,43 @@ import MyPage from "./../assets/Bottom_Button/BT_MyPage.svg"
 import SavedParkingSpaces from "./../assets/Bottom_Button/BT_SavedParkingSpaces.svg"
 import ParkingSpaces from "./../assets/Bottom_Button/BT_ParkingSpaces.svg"
 import ParkInfo from "./../assets/Bottom_Button/BT_ParkInfo.svg"
+import Report from "./../assets/ReportButton.svg"
+import { MdMyLocation } from "react-icons/md";
 import { styled } from "styled-components";
 
-
-const BottomBar = () => { 
+const BottomBar = ({ onGetLocation }) => { 
   const navigate = useNavigate();
 
   return (
-    <BottombarDiv>
-      <LeftGroup>
-        <button onClick={() => navigate("/mypage")} >
-          <img src={MyPage} alt="MyPage" />
-        </button>
-        <button className="saved-parking-spaces">
-          <img src={SavedParkingSpaces} alt="SavedParkingSpaces" />
-        </button>
-      </LeftGroup>
-      <MainButton onClick={() => navigate("/MainPage")} >
-        <img src={Parker_Logo} alt="Parker_Logo" />
-      </MainButton>
-      <RightGroup>
-        <button onClick={() => navigate("/parking-spaces")} >
-          <img src={ParkingSpaces} alt="ParkingSpaces" />
-        </button>
-        <button onClick={() => navigate("/parkinginfo")} >
-          <img src={ParkInfo} alt="ParkInforch_Button" />
-        </button>
-      </RightGroup>
-    </BottombarDiv>
+    <div>
+      <BottombarDiv>
+        <LeftGroup>
+          <button onClick={() => navigate("/mypage")} >
+            <img src={MyPage} alt="MyPage" />
+          </button>
+          <button className="saved-parking-spaces">
+            <img src={SavedParkingSpaces} alt="SavedParkingSpaces" />
+          </button>
+        </LeftGroup>
+        <MainButton onClick={() => navigate("/")} >
+          <img src={Parker_Logo} alt="Parker_Logo" />
+        </MainButton>
+        <RightGroup>
+          <button onClick={() => navigate("/parking-spaces")} >
+            <img src={ParkingSpaces} alt="ParkingSpaces" />
+          </button>
+          <button onClick={() => navigate("/parkinginfo")} >
+            <img src={ParkInfo} alt="ParkInforch_Button" />
+          </button>
+        </RightGroup>
+      </BottombarDiv>
+      <LocationButton onClick={onGetLocation}>
+        <MdMyLocation color="#636363" size={30} />
+      </LocationButton>
+      <ReportButton>
+        <img src={Report} alt="Report" />
+      </ReportButton>
+    </div>
   );
 }
 
@@ -68,14 +77,13 @@ const LeftGroup = styled.div`
     background-color: #ffffff;
     margin: 0 5%;
     border: none;
-    padding: 5%;
+    padding: 7%;
     border-radius: 50%;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: transform 0.2s ease-in-out;
-
 
     img {
       width: 27px;
@@ -95,7 +103,7 @@ const RightGroup = styled.div`
     background-color: #ffffff;
     margin: 0 5%;
     border: none;
-    padding: 5%;
+    padding: 7%;
     border-radius: 50%;
     cursor: pointer;
     display: flex;
@@ -129,5 +137,41 @@ const MainButton = styled.button`
 
   img {
     width: 60%;
+  }
+`;
+
+const LocationButton = styled.button`
+  display: flex;
+  position: absolute;
+  background-color: #ffffff;
+  border: none;
+  padding: 0;
+  justify-content: center;
+  align-items: center; 
+  border-radius: 50%;  
+  left: 8%;
+  width: 42px;  
+  height: 42px;
+  bottom: 95px;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+  z-index: 5;
+`;
+
+const ReportButton = styled.button`
+  display: flex;
+  position: absolute;
+  border: none;
+  justify-content: center;
+  align-items: center; 
+  border-radius: 50%;  
+  right: 8%;
+  width: 50px;  
+  height: 50px;
+  bottom: 95px;
+  z-index: 5;
+
+  img {
+    width: 85px;
+    height: 85px%;
   }
 `;

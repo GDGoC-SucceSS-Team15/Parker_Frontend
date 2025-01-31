@@ -4,10 +4,10 @@ import My_Page from "./../assets/MenuButton/Menu_MyPage.svg"
 import SavedParkingSpaces from "./../assets/MenuButton/Menu_SavedParkingSpaces.svg"
 import ParkingSpaces from "./../assets/MenuButton/Menu_ParkingSpaces.svg"
 import Parking_Info from "./../assets/MenuButton/Menu_ParkInfo.svg"
-import Setting from "./../assets/MenuButton/Menu_Setting.png"
-import More from "./../assets/MenuButton/Menu_More.png"
-import Log_Out from "./../assets/MenuButton/Menu_Logout.png"
-import Sharing from "./../assets/MenuButton/Menu_Sharing.png"
+import { CiSettings } from "react-icons/ci";
+import { IoInformationCircleOutline } from "react-icons/io5";
+import { IoReturnDownBackOutline } from "react-icons/io5";
+import { IoShareSocialOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 
 const Menu = () => {
@@ -41,16 +41,16 @@ const Menu = () => {
 
       <EtcDiv>
         <button>
-          <img src={Setting} alt="Settings" />설정
+          <CiSettings color="#3a3a3a" size={31} style={{ marginRight: "8px" }} />설정
         </button>
         <button>
-          <img src={More} alt="moreOptions" />더보기
+          <IoInformationCircleOutline color="#3a3a3a" size={30} style={{ marginRight: "8px" }} />더보기
         </button>
         <button onClick={() => navigate("/signin")}>
-          <img src={Log_Out} alt="logOut" />로그아웃
+          <IoReturnDownBackOutline color="#3a3a3a" size={27} style={{ marginRight: "8px" }} />로그아웃
         </button>
         <button>
-          <img src={Sharing} alt="Sharing" />공유
+          <IoShareSocialOutline color="#3a3a3a" size={27} style={{ marginRight: "8px" }} />공유
         </button>
       </EtcDiv>
     </MenuDiv>
@@ -111,7 +111,7 @@ const PageDiv = styled.div`
     display: flex;
     align-items: center;
     text-align: center;
-    margin: 10px 0;
+    margin: 10px -3px;
     padding: 10px;
     background-color: #ffffff;
     font-weight: bold;
@@ -120,7 +120,7 @@ const PageDiv = styled.div`
     transition: transform 0.2s;
 
     img {
-      width: 20px;
+      width: 25px;
       margin-right: 10px;
     }
 
@@ -138,18 +138,13 @@ const EtcDiv = styled.div`
     display: flex;
     align-items: center;
     text-align: center;
-    margin: 10px 0;
-    padding: 10px;
+    margin: 10px -7px;
+    padding: 7px;
     background-color: #ffffff;
     font-weight: bold;
     color: #3a3a3a;
     cursor: pointer;
     transition: transform 0.2s;
-
-    img {
-      width: 20px;
-      margin-right: 10px;
-    }
 
     &:hover {
       transform: translateX(10px);

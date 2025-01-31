@@ -1,6 +1,6 @@
 import Menu from "./Menu";
-import Search_Button from "./../assets/Search_Button.png"
-import Menu_Button from "./../assets/Menu_Button.png"
+import { IoSearchSharp } from "react-icons/io5";
+import { FiMenu } from "react-icons/fi";
 import Parking from "./../assets/ParkingIcon.svg"
 import Warning from "./../assets/WarningIcon.svg"
 import Fire from "./../assets/FireIcon.svg"
@@ -19,6 +19,7 @@ const TopBar = ({ onSearch, onToggle }) => {
       return;
     }
     onSearch(input);
+    setInput("");  // 검색 후 입력값 초기화
   };
 
   const toggleMenu = () => {
@@ -53,7 +54,7 @@ const TopBar = ({ onSearch, onToggle }) => {
       {isMenuVisible && <div onClick={closeMenu}></div>}
       <TopBarDiv ref={topBarRef}>
         <MenuButton onClick={toggleMenu}>
-          <img src={Menu_Button} alt="Menu_Button" />
+          <FiMenu color="#636363" size={20} />
         </MenuButton>
         <SearchInput 
           type="text"
@@ -62,7 +63,7 @@ const TopBar = ({ onSearch, onToggle }) => {
           onChange={(e) => setInput(e.target.value)} 
         />
         <SearchButton onClick={handleSearch} >
-          <img src={Search_Button} alt="Search_Button" />
+          <IoSearchSharp color="#636363" size={20}/>
         </SearchButton>
       </TopBarDiv>
 
@@ -110,17 +111,14 @@ const TopBarDiv = styled.div`
 const MenuButton = styled.button`
   background-color: #ffffff;
   border: none;
-  font-size: 18px;
-  padding: 10px 20px;
   border-radius: 20px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 60px;
+  width: 50px;
   height: 30px;
   padding-left: 10px;
-  color: #000000;
   transition: transform 0.2s ease-in-out;
 `;
 
