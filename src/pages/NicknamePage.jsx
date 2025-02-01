@@ -85,14 +85,16 @@ const ProfileImage = styled.img`
   border-radius: 50%;
   object-fit: cover;
   margin-bottom: 40px;
+  border: 2px solid #ccc;
 `;
 
 const NicknameWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 450px;
+  max-width: 500px;
   gap: 10px;
+  padding-right: 50px;
 `;
 
 const Label = styled.label`
@@ -102,8 +104,9 @@ const Label = styled.label`
 `;
 
 const NicknameInput = styled.input`
-  flex: 1;
+  width: 100%;
   padding: 10px;
+  flex: 1;
   font-size: 18px;
   border: 1px solid #ddd;
   border-radius: 7px;

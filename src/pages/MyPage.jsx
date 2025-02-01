@@ -52,7 +52,7 @@ function MyPage() {
           </ProfileLabel>{" "}
           <ProfileInfo>
             <Nickname onClick={() => navigate("/nickname-edit")}>
-              <span style={{ fontWeight: "bold" }}>김고수</span> 님
+              <span style={{ fontWeight: "bold" }}>김고수</span>님
             </Nickname>
           </ProfileInfo>
         </ProfileDiv>
@@ -134,6 +134,8 @@ const ProfileImage = styled.img`
   height: 100px;
   border-radius: 50%;
   object-fit: cover;
+  cursor: pointer;
+  border: 2px solid #ccc;
 `;
 
 const ProfileLabel = styled.label`
