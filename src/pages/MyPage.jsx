@@ -76,15 +76,15 @@ function MyPage() {
         <ServiceDiv>
           <span style={{ fontWeight: "bold", fontSize: "22px" }}>서비스</span>
           <Service onClick={() => navigate("/profile-edit")}>
-            <AiOutlineSetting size={20} />
+            <AiOutlineSetting size={30} />
             개인 정보 수정
           </Service>
           <Service onClick={() => navigate("/settings")}>
-            <AiOutlineSetting size={20} />
+            <AiOutlineSetting size={30} />
             개인 설정 관리
           </Service>
           <Service onClick={() => navigate("/bookmark")}>
-            <AiOutlineSetting size={20} />
+            <AiOutlineSetting size={30} />
             활동 기록
           </Service>
         </ServiceDiv>
@@ -163,7 +163,7 @@ const ProfileInfo = styled.div`
 `;
 
 const Nickname = styled.h2`
-  margin: 0;
+  margin: 1;
   font-size: 25px;
   cursor: pointer;
   font-weight: normal;
@@ -229,5 +229,5 @@ const Service = styled.div`
   text-align: left;
   font-size: 18px;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
 `;
