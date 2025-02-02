@@ -31,10 +31,17 @@ function ReportPage() {
     },
   ]);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const removeReport = (id) => {
     setReports((prevReports) =>
       prevReports.filter((report) => report.id !== id)
     );
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
   const handleBack = () => {
@@ -75,6 +82,15 @@ function ReportPage() {
             </ReportItem>
           ))}
         </ReportList>
+
+        {isModalOpen && (
+          <ModalOverlay onClick={closeModal}>
+            <ModalContent onClick={(e) => e.stopPropagation()}>
+              <p>신고가 철회되었습니다.</p>
+              <CloseButton onClick={closeModal}>확인</CloseButton>
+            </ModalContent>
+          </ModalOverlay>
+        )}
       </Content>
     </Wrapper>
   );
@@ -119,7 +135,7 @@ const ProfileImage = styled.img`
 const ReportList = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%
+  width: 100%;
   text-align: center;
 `;
 
@@ -213,4 +229,35 @@ const DeleteButton = styled.button`
   justify-content: center;
   cursor: pointer;
   box-shadow: 2px 6px 6px rgba(0, 0, 0, 0.2);
+`;
+
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+`;
+
+const ModalContent = styled.div`
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+`;
+
+const CloseButton = styled.button`
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 `;

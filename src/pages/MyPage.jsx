@@ -163,10 +163,10 @@ const ProfileInfo = styled.div`
 
 const Nickname = styled.h2`
   margin: 0;
-  font-size: 22px;
+  font-size: 25px;
   cursor: pointer;
   font-weight: normal;
-  margin-left: 25px;
+  margin-left: 20px;
   &:hover {
     text-decoration: underline;
   }
