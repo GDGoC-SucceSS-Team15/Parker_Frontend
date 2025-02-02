@@ -68,6 +68,7 @@ const Title = styled.h2`
   width: 100%;
   text-align: center;
   margin: 0 auto;
+  margin-right: 10px;
 `;
 
 const ProfileContainer = styled.div`
@@ -92,9 +93,9 @@ const NicknameWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 500px;
+  max-width: 450px;
   gap: 10px;
-  padding-right: 50px;
+  padding-right: 60px;
 `;
 
 const Label = styled.label`
@@ -111,7 +112,6 @@ const NicknameInput = styled.input`
   border: 1px solid #ddd;
   border-radius: 7px;
   outline: none;
-
   &:focus {
     border-color: #888;
   }
