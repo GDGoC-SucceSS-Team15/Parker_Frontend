@@ -21,8 +21,9 @@ function MyPage() {
   const badges = [
     { id: 1, text: "단속 구역 정보 마스터" },
     { id: 2, text: "동네 탐험가" },
-    { id: 3, text: "초보 주차왕" },
+    { id: 3, text: "도로의 수호자" },
     { id: 4, text: "베테랑 운전자" },
+    { id: 4, text: "주차밭의 파수꾼" },
   ];
 
   const handleImageChange = (e) => {
@@ -209,7 +210,6 @@ const Badge = styled.div`
   border-radius: 7px;
   font-size: 16px;
   cursor: pointer;
-
   &:hover {
     background-color: #f0f0f0;
   }
