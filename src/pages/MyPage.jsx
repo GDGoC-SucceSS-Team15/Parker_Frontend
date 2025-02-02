@@ -83,7 +83,7 @@ function MyPage() {
             <AiOutlineSetting size={20} />
             개인 설정 관리
           </Service>
-          <Service onClick={() => navigate("/logs")}>
+          <Service onClick={() => navigate("/bookmark")}>
             <AiOutlineSetting size={20} />
             활동 기록
           </Service>
