@@ -23,7 +23,7 @@ function MyPage() {
     { id: 2, text: "동네 탐험가" },
     { id: 3, text: "도로의 수호자" },
     { id: 4, text: "베테랑 운전자" },
-    { id: 4, text: "주차밭의 파수꾼" },
+    { id: 5, text: "주차밭의 파수꾼" },
   ];
 
   const handleImageChange = (e) => {
@@ -44,13 +44,13 @@ function MyPage() {
         </HeaderWrapper>
         <ProfileDiv>
           <ProfileLabel>
-            <ProfileImage src={selectedImage} alt="profile" />
+            <ProfileImage src={selectedImage || profileImg} alt="profile" />
             <HiddenFileInput
               type="file"
               accept="image/*"
               onChange={handleImageChange}
             />
-          </ProfileLabel>{" "}
+          </ProfileLabel>
           <ProfileInfo>
             <Nickname onClick={() => navigate("/nickname-edit")}>
               <span style={{ fontWeight: "bold" }}>김고수</span>님
@@ -113,7 +113,7 @@ const HeaderWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  position: absolute;
+  position: relative;
 `;
 
 const BackButton = styled.div`
@@ -163,7 +163,6 @@ const ProfileInfo = styled.div`
 `;
 
 const Nickname = styled.h2`
-  margin: 1;
   font-size: 25px;
   cursor: pointer;
   font-weight: normal;
