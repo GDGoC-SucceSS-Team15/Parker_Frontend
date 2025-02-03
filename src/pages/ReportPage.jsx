@@ -85,7 +85,6 @@ function ReportPage() {
           ))}
         </ReportList>
 
-
         <CustomModal isOpen={isModalOpen} onRequestClose={closeModal}>
           <ModalContainer>
             <IoMdCheckmarkCircleOutline size={60} color="#4CAF50" />
@@ -172,37 +171,38 @@ const DateTimeWrapper = styled.div`
   font-weight: bold;
 `;
 
-const Date = styled.span`
-  font-size: 14px;
-  color: #555;
-`;
+// const Date = styled.span`
+//   font-size: 14px;
+//   color: #555;
+// `;
 
-const Time = styled.span`
-  font-size: 14px;
-  color: #555;
-`;
+// const Time = styled.span`
+//   font-size: 14px;
+//   color: #555;
+// `;
 
-const Divider = styled.hr`
-  border: 0;
-  border-top: 1px solid #ddd;
-  margin: 10px 0;
-`;
+// const Divider = styled.hr`
+//   border: 0;
+//   border-top: 1px solid #ddd;
+//   margin: 10px 0;
+// `;
 
-const Address = styled.p`
-  font-size: 14px;
-  color: #555;
-`;
+// const Address = styled.p`
+//   font-size: 14px;
+//   color: #555;
+// `;
 
-const ApprovalStatus = styled.div`
-  font-size: 14px;
-  color: ${(props) =>
-    props.status === "승인"
-      ? "#4CAF50"
-      : props.status === "미승인"
-      ? "#FF4D4D"
-      : "#FFC107"};
-  span {
-    font-weight: bold;
+// const ApprovalStatus = styled.div`
+//   font-size: 14px;
+//   color: ${(props) =>
+//     props.status === "승인"
+//       ? "#4CAF50"
+//       : props.status === "미승인"
+//       ? "#FF4D4D"
+//       : "#FFC107"};
+//   span {
+//     font-weight: bold;
+//   }`;
 
 const Date = styled.div`
   flex-grow: 1;
@@ -284,34 +284,4 @@ const ModalText = styled.p`
   color: gray;
   font-size: 14px;
   margin-top: 5px;
-
-const ModalOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-`;
-
-const ModalContent = styled.div`
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  text-align: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-`;
-
-const CloseButton = styled.button`
-  margin-top: 10px;
-  padding: 8px 16px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
 `;
