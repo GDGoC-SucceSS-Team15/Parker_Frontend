@@ -4,6 +4,8 @@ import { Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineArrowLeft } from "react-icons/ai";
 import profileImg from "../assets/profile.svg";
+import CustomModal from "../components/Modals/CustomModal";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 
 function ReportPage() {
   const navigate = useNavigate();
@@ -83,14 +85,14 @@ function ReportPage() {
           ))}
         </ReportList>
 
-        {isModalOpen && (
-          <ModalOverlay onClick={closeModal}>
-            <ModalContent onClick={(e) => e.stopPropagation()}>
-              <p>신고가 철회되었습니다.</p>
-              <CloseButton onClick={closeModal}>확인</CloseButton>
-            </ModalContent>
-          </ModalOverlay>
-        )}
+
+        <CustomModal isOpen={isModalOpen} onRequestClose={closeModal}>
+          <ModalContainer>
+            <IoMdCheckmarkCircleOutline size={60} color="#4CAF50" />
+            <ModalTitle>신고 철회 완료</ModalTitle>
+            <ModalText>신고하신 내역이 철회되었습니다.</ModalText>
+          </ModalContainer>
+        </CustomModal>
       </Content>
     </Wrapper>
   );
@@ -160,6 +162,7 @@ const ReportContent = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
 `;
 
 const DateTimeWrapper = styled.div`
@@ -168,6 +171,38 @@ const DateTimeWrapper = styled.div`
   width: 100%;
   font-weight: bold;
 `;
+
+const Date = styled.span`
+  font-size: 14px;
+  color: #555;
+`;
+
+const Time = styled.span`
+  font-size: 14px;
+  color: #555;
+`;
+
+const Divider = styled.hr`
+  border: 0;
+  border-top: 1px solid #ddd;
+  margin: 10px 0;
+`;
+
+const Address = styled.p`
+  font-size: 14px;
+  color: #555;
+`;
+
+const ApprovalStatus = styled.div`
+  font-size: 14px;
+  color: ${(props) =>
+    props.status === "승인"
+      ? "#4CAF50"
+      : props.status === "미승인"
+      ? "#FF4D4D"
+      : "#FFC107"};
+  span {
+    font-weight: bold;
 
 const Date = styled.div`
   flex-grow: 1;
@@ -230,6 +265,25 @@ const DeleteButton = styled.button`
   cursor: pointer;
   box-shadow: 2px 6px 6px rgba(0, 0, 0, 0.2);
 `;
+
+const ModalContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+`;
+
+const ModalTitle = styled.h2`
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 10px;
+`;
+
+const ModalText = styled.p`
+  color: gray;
+  font-size: 14px;
+  margin-top: 5px;
 
 const ModalOverlay = styled.div`
   position: fixed;
