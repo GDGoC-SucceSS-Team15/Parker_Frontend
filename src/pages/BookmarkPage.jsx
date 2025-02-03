@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { AiOutlineArrowLeft } from "react-icons/ai";
 import { FaSortAmountDown } from "react-icons/fa";
 import profileImg from "../assets/profile.svg";
+import CustomModal from "../components/Modals/CustomModal";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 
 function BookmarkPage() {
   const navigate = useNavigate();
@@ -48,6 +50,8 @@ function BookmarkPage() {
     },
   ]);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const handleBack = () => {
     if (window.history.length > 1) {
       navigate(-1);
@@ -60,6 +64,11 @@ function BookmarkPage() {
     setParkingSpaces((prevSpaces) =>
       prevSpaces.filter((space) => space.id !== id)
     );
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
   const toggleSortOrder = () => {
@@ -111,6 +120,14 @@ function BookmarkPage() {
             </ParkingItem>
           ))}
         </ParkingList>
+
+        <CustomModal isOpen={isModalOpen} onRequestClose={closeModal}>
+          <ModalContainer>
+            <IoMdCheckmarkCircleOutline size={60} color="#4CAF50" />
+            <ModalTitle>즐겨찾기 삭제 완료</ModalTitle>
+            <ModalText>즐겨찾기한 내역이 삭제되었습니다.</ModalText>
+          </ModalContainer>
+        </CustomModal>
       </Content>
     </Wrapper>
   );
@@ -291,4 +308,24 @@ const DeleteButton = styled.button`
   justify-content: center;
   cursor: pointer;
   box-shadow: 2px 6px 6px rgba(0, 0, 0, 0.2);
+`;
+
+const ModalContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+`;
+
+const ModalTitle = styled.h2`
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 10px;
+`;
+
+const ModalText = styled.p`
+  color: gray;
+  font-size: 14px;
+  margin-top: 5px;
 `;
