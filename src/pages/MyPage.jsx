@@ -75,11 +75,11 @@ function MyPage() {
         </BadgeDiv>
         <ServiceDiv>
           <span style={{ fontWeight: "bold", fontSize: "22px" }}>서비스</span>
-          <Service onClick={() => navigate("/profile-edit")}>
+          <Service onClick={() => navigate("/nickname-edit")}>
             <AiOutlineSetting size={30} />
             개인 정보 수정
           </Service>
-          <Service onClick={() => navigate("/settings")}>
+          <Service onClick={() => navigate("/parking-spaces")}>
             <AiOutlineSetting size={30} />
             개인 설정 관리
           </Service>
