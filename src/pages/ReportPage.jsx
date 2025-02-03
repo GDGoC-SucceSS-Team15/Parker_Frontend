@@ -85,6 +85,7 @@ function ReportPage() {
           ))}
         </ReportList>
 
+
         <CustomModal isOpen={isModalOpen} onRequestClose={closeModal}>
           <ModalContainer>
             <IoMdCheckmarkCircleOutline size={60} color="#4CAF50" />
@@ -202,6 +203,48 @@ const ApprovalStatus = styled.div`
       : "#FFC107"};
   span {
     font-weight: bold;
+
+const Date = styled.div`
+  flex-grow: 1;
+  text-align: left;
+  font-size: 16px;
+  padding: 5px;
+`;
+
+const Time = styled.div`
+  flex-grow: 1;
+  text-align: right;
+  font-size: 16px;
+  padding: 5px;
+  color: rgb(100, 100, 100);
+`;
+
+const Divider = styled.div`
+  width: 100%;
+  height: 1px;
+  background-color: #ddd;
+`;
+
+const Address = styled.p`
+  color: #000000;
+  font-weight: bold;
+  text-align: center;
+  font-size: 17px;
+`;
+
+const ApprovalStatus = styled.p`
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  color: rgb(100, 100, 100);
+
+  span {
+    color: ${(props) =>
+      props.status === "승인"
+        ? "green"
+        : props.status === "미승인"
+        ? "red"
+        : "orange"};
   }
 `;
 
@@ -241,4 +284,34 @@ const ModalText = styled.p`
   color: gray;
   font-size: 14px;
   margin-top: 5px;
+
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+`;
+
+const ModalContent = styled.div`
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+`;
+
+const CloseButton = styled.button`
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 `;
