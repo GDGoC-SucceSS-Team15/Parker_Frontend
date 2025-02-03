@@ -261,11 +261,9 @@ const DeleteButton = styled.button`
 
 const ModalContainer = styled.div`
   text-align: center;
-  padding: 20px;
   background-color: white;
   border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  width: 300px;
+  width: 100%;
 `;
 
 const ModalTitle = styled.h3`
