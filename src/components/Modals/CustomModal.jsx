@@ -18,7 +18,7 @@ const customStyles = {
     margin: "0 auto",
   },
   content: {
-    width: "80%",
+    width: "300px",
     minHeight: "fit-content",
     position: "absolute",
     top: "50%",

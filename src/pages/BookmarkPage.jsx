@@ -3,32 +3,54 @@ import { styled } from "styled-components";
 import { Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineArrowLeft } from "react-icons/ai";
+import { FaSortAmountDown } from "react-icons/fa";
 import profileImg from "../assets/profile.svg";
 import CustomModal from "../components/Modals/CustomModal";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 
-function MyParkingPage() {
+function BookmarkPage() {
   const navigate = useNavigate();
+  const [sortOrder, setSortOrder] = useState("latest");
   const [parkingSpaces, setParkingSpaces] = useState([
     {
       id: 1,
-      name: "주차장 1",
-      address: "서울시 서초구 456",
-      startTime: "11:00 am",
-      endTime: "05:00 pm",
+      name: "주차장 이름",
+      address: "주소",
+      call: "02-3220-1224",
+      size: "72",
       paid: true,
-      type: "실내주차장",
+      type: "주차장 종류",
     },
     {
       id: 2,
-      name: "주차장 2",
+      name: "초안산근린공원주차장(구)",
+      address: "도봉구 창동 24-0",
+      call: "02-3220-1224",
+      size: "72",
+      paid: true,
+      type: "노외 주차장",
+    },
+    {
+      id: 3,
+      name: "주차장 이름",
       address: "주소",
-      startTime: "09:00 am",
-      endTime: "06:00 pm",
-      paid: false,
-      type: "실외주차장",
+      call: "02-3220-1224",
+      size: "72",
+      paid: true,
+      type: "공영 주차장",
+    },
+    {
+      id: 4,
+      name: "주차장 이름",
+      address: "주소",
+      call: "02-3220-1224",
+      size: "72",
+      paid: true,
+      type: "주차장 종류",
     },
   ]);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleBack = () => {
     if (window.history.length > 1) {
@@ -37,8 +59,6 @@ function MyParkingPage() {
       navigate("/");
     }
   };
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const removeParking = (id) => {
     setParkingSpaces((prevSpaces) =>
@@ -51,6 +71,10 @@ function MyParkingPage() {
     setIsModalOpen(false);
   };
 
+  const toggleSortOrder = () => {
+    setSortOrder((prevOrder) => (prevOrder === "latest" ? "oldest" : "latest"));
+  };
+
   return (
     <Wrapper>
       <Content>
@@ -58,9 +82,13 @@ function MyParkingPage() {
           <BackButton onClick={handleBack}>
             <AiOutlineArrowLeft size={25} />
           </BackButton>
-          <h2>등록된 주차 공간</h2>
+          <h2>즐겨찾는 주차 공간</h2>
           <ProfileImage src={profileImg} alt="profile" />
         </HeaderWrapper>
+        <SortButton onClick={toggleSortOrder}>
+          <FaSortAmountDown size={16} />
+          {sortOrder === "latest" ? "최신순" : "오래된순"}
+        </SortButton>
         <ParkingList>
           {parkingSpaces.map((space) => (
             <ParkingItem key={space.id}>
@@ -71,14 +99,14 @@ function MyParkingPage() {
                 </ParkingNameWrapper>
                 <Divider />
                 <Address>{space.address}</Address>
-                <TimeWrapper>
-                  <TimeLabel>운영 시작 시간:</TimeLabel>
-                  <TimeValue>{space.startTime}</TimeValue>
-                </TimeWrapper>
-                <TimeWrapper>
-                  <TimeLabel>운영 종료 시간:</TimeLabel>
-                  <TimeValue>{space.endTime}</TimeValue>
-                </TimeWrapper>
+                <DetailWrapper>
+                  <Label>전화번호:</Label>
+                  <Value>{space.call}</Value>
+                </DetailWrapper>
+                <DetailWrapper>
+                  <Label>총 주차면:</Label>
+                  <Value>{space.size}</Value>
+                </DetailWrapper>
                 <Payments>
                   <PaymentsLabel>유무료 구분:</PaymentsLabel>
                   <PaymentStatus paid={space.paid}>
@@ -96,8 +124,8 @@ function MyParkingPage() {
         <CustomModal isOpen={isModalOpen} onRequestClose={closeModal}>
           <ModalContainer>
             <IoMdCheckmarkCircleOutline size={60} color="#4CAF50" />
-            <ModalTitle>삭제 완료</ModalTitle>
-            <ModalText>저장 내역이 삭제되었습니다.</ModalText>
+            <ModalTitle>즐겨찾기 삭제 완료</ModalTitle>
+            <ModalText>즐겨찾기한 내역이 삭제되었습니다.</ModalText>
           </ModalContainer>
         </CustomModal>
       </Content>
@@ -105,7 +133,7 @@ function MyParkingPage() {
   );
 }
 
-export default MyParkingPage;
+export default BookmarkPage;
 
 const Wrapper = styled.div`
   width: 100%;
@@ -141,9 +169,32 @@ const ProfileImage = styled.img`
   object-fit: cover;
 `;
 
+const SortButton = styled.button`
+  display: flex;
+  margin-left: auto;
+  align-items: center;
+  background: #fff;
+  border: 0.5px solid #ddd;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  position: fi;
+  gap: 10px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+`;
+
 const ParkingList = styled.div`
   display: flex;
   flex-direction: column;
+  overflow-x: auto;
+  white-space: nowrap;
+  gap: 20px;
+  padding-bottom: 10px;
+  &::-webkit-scrollnar {
+    display: none;
+  }
 `;
 
 const ParkingItem = styled.div`
@@ -208,18 +259,18 @@ const Address = styled.p`
   margin-bottom: 0px;
 `;
 
-const TimeWrapper = styled.div`
+const DetailWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   font-weight: bold;
   margin-top: 3px;
 `;
 
-const TimeLabel = styled.div`
+const Label = styled.div`
   color: #777;
 `;
 
-const TimeValue = styled.div`
+const Value = styled.div`
   color: #000;
 `;
 
@@ -260,19 +311,21 @@ const DeleteButton = styled.button`
 `;
 
 const ModalContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
-  background-color: white;
-  border-radius: 10px;
-  width: 100%;
+  padding: 20px;
 `;
 
-const ModalTitle = styled.h3`
+const ModalTitle = styled.h2`
   font-size: 20px;
-  color: #333;
-  margin-bottom: 10px;
+  font-weight: bold;
+  margin-top: 10px;
 `;
 
 const ModalText = styled.p`
-  font-size: 16px;
-  color: #666;
+  color: gray;
+  font-size: 14px;
+  margin-top: 5px;
 `;
