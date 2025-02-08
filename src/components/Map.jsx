@@ -1,12 +1,50 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import PositionMaker from "./../assets/PositionMaker.png"
-import BottomBar from "./BottomBar";
-import TopBar from "./TopBar";
+import MarkerModal from "./Modals/MarkerModal"
+import ParkingMarkerContent from "./Modals/ParkingMarkerContent";
+import ParkingMarker from "./../assets/ParkingMarker.svg"
+import BottomBar from "./BottomBar"
+
+const parkingData = [
+  {
+    id: 1,
+    parkingName: "역삼문화공원 제1호 공영주차장",
+    address: "서울특별시 강남구 역삼동 635-1",
+    latitude: 37.6300,
+    longitude: 127.0270,
+    distance: 500, // 임의로 추가
+    estimatedTime: 5, // 임의로 추가
+    weekdayStartTime: "11:00",
+    weekdayEndTime: "21:00",
+    saturdayStartTime: "11:00",
+    saturdayEndTime: "21:00",
+    holidayStartTime: "11:00",
+    holidayEndTime: "21:00",
+    baseParkingTime: 5,
+    baseParkingFee: 500,
+  },
+  {
+    id: 2,
+    parkingName: "역삼문화공원 제2호 공영주차장",
+    address: "서울특별시 강남구 역삼동 635-1",
+    latitude: 37.6500,
+    longitude: 127.0280,
+    weekdayStartTime: "11:00",
+    weekdayEndTime: "21:00",
+    saturdayStartTime: "11:00",
+    saturdayEndTime: "21:00",
+    holidayStartTime: "11:00",
+    holidayEndTime: "21:00",
+    baseParkingTime: 5,
+    baseParkingFee: 500,
+  },
+]
 
 const Map = () => {
   const [currentLocation, setCurrentLocation] = useState(null); 
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태
+  const [selectedParking, setSelectedParking] = useState(null);
 
   useEffect(() => {
     getLocation();
@@ -59,11 +97,33 @@ const Map = () => {
         { offset: new window.kakao.maps.Point(25, 50) } // 마커 이미지의 중심 좌표
         );
 
-        // 현재 위치 마커 추가
+        // 현재 위치 마커
         new window.kakao.maps.Marker({
           position: new window.kakao.maps.LatLng(currentLocation.latitude, currentLocation.longitude), map,
           image: markerImage,
         });
+
+        
+        // 주차장 마커
+        const ParkingMark = new window.kakao.maps.MarkerImage(
+          ParkingMarker,
+          new window.kakao.maps.Size(50, 50), 
+          { offset: new window.kakao.maps.Point(25, 50) } // 마커 이미지의 중심 좌표
+          );
+        
+        parkingData.forEach((parking) => {
+          const marker = new window.kakao.maps.Marker({
+            position: new window.kakao.maps.LatLng(parking.latitude, parking.longitude),
+            map,
+            image: ParkingMark,
+          });
+
+          window.kakao.maps.event.addListener(marker, "click", () => {
+            setSelectedParking(parking);
+          });
+        });
+        
+
       });
     };
 
@@ -78,8 +138,31 @@ const Map = () => {
 
   return (
     <div>
-      <TopBar />
       <MapContainer id="map" />
+      {selectedParking && (
+        <MarkerModal
+          isOpen={!!selectedParking}
+          onRequestClose={() => setSelectedParking(null)}
+        >
+        {selectedParking && (
+          <ParkingMarkerContent
+            key={selectedParking.id}
+            parkingName={selectedParking.parkingName}
+            distance={selectedParking.distance}
+            estimatedTime={selectedParking.estimatedTime}
+            weekdayStartTime={selectedParking.weekdayStartTime}
+            weekdayEndTime={selectedParking.weekdayEndTime}
+            saturdayStartTime={selectedParking.saturdayStartTime}
+            saturdayEndTime={selectedParking.saturdayEndTime}
+            holidayStartTime={selectedParking.holidayStartTime}
+            holidayEndTime={selectedParking.holidayEndTime}
+            baseParkingTime={selectedParking.baseParkingTime}
+            baseParkingFee={selectedParking.baseParkingFee}
+            onClose={() => setSelectedParking(null)}
+          />
+        )}
+      </MarkerModal>
+      )}
       <BottomBar onGetLocation={getLocation} />
     </div>
   );
