@@ -5,11 +5,27 @@ import { IoLockClosedOutline } from "react-icons/io5";
 import logotxt from "../assets/logotxt.svg";
 import SquareButton from "../components/Buttons/SquareButton";
 import { useNavigate } from "react-router-dom";
+import api from "../api/api";
 
 function SignInPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
+
+  const handleLogin = async () => {
+    try {
+      const res = await api.post("/api/user/login", {
+        email: email,
+        password: pw,
+      });
+
+      console.log(res.data);
+      localStorage.setItem("accessToken", res.data.accessToken);
+      navigate("/");
+    } catch (err) {
+      console.log("Error handle login", err);
+    }
+  };
 
   return (
     <Wrapper>
@@ -41,7 +57,7 @@ function SignInPage() {
             </div>
           </FormDiv>
         </LoginDiv>
-        <SquareButton buttonTxt={"로그인"} onClick={() => alert("로그인")} />
+        <SquareButton buttonTxt={"로그인"} onClick={handleLogin} />
         <SignupBtn onClick={() => navigate("/signup")}>회원가입하기</SignupBtn>
       </div>
     </Wrapper>
