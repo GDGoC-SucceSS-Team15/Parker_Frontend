@@ -8,6 +8,7 @@ import { PiPhone } from "react-icons/pi";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { FaCircleCheck } from "react-icons/fa6";
 import SquareButton from "../components/Buttons/SquareButton";
+import api from "../api/api";
 
 function SignUpPage() {
   const navigate = useNavigate();
@@ -63,13 +64,25 @@ function SignUpPage() {
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     console.log("validate", validate);
     const isValid = Object.values(validate).every((value) => value === false);
 
     if (isValid) {
       console.log(formData);
-      setStep(5);
+      try {
+        const res = await api.post("/api/user/signup", {
+          email: formData.email,
+          phoneNumber: formData.phone,
+          password: formData.pw,
+          name: formData.name,
+        });
+
+        console.log(res.data);
+        setStep(5);
+      } catch (err) {
+        console.log("Error handle signup", err);
+      }
     } else {
       alert("올바르지 않은 형식이 포함되거나 작성하지 않은 필드가 있습니다.");
       console.log(formData);
