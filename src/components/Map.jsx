@@ -50,12 +50,68 @@ const Map = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [places, setPlaces] = useState([]); // 검색된 장소들
 
-
   useEffect(() => {
-    getLocation();
-  },[]);
+    if (!currentLocation) return; // 위치 정보가 없으면 실행하지 않음
 
-  // 내 위치 가져오기
+    // 🌍 카카오 지도 API 로드
+    const script = document.createElement("script");
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=908628d6d7a926beea64a0e883c70910&autoload=false`;
+    script.async = true;
+    document.head.appendChild(script);
+
+    script.onload = () => {
+      window.kakao.maps.load(() => {
+        const container = document.getElementById("map"); 
+        const options = {
+          center: new window.kakao.maps.LatLng(currentLocation.latitude, currentLocation.longitude), // 현재 위치
+          level: 3, // 확대 레벨
+        };
+
+        const newMap = new window.kakao.maps.Map(container, options); // 지도 생성
+        setMap(newMap);
+
+        // 📍 현재 위치 마커 
+        const markerImage = new window.kakao.maps.MarkerImage(
+        PositionMaker,
+        new window.kakao.maps.Size(70, 70), 
+        { offset: new window.kakao.maps.Point(25, 50) } // 마커 이미지의 중심 좌표
+        );
+
+        new window.kakao.maps.Marker({
+          position: new window.kakao.maps.LatLng(currentLocation.latitude, currentLocation.longitude), 
+          map: newMap,
+          image: markerImage,
+        });
+
+        
+        // 🅿️ 주차장 마커
+        const ParkingMark = new window.kakao.maps.MarkerImage(
+          ParkingMarker,
+          new window.kakao.maps.Size(50, 50), 
+          { offset: new window.kakao.maps.Point(25, 50) } // 마커 이미지의 중심 좌표
+          );
+        
+        parkingData.forEach((parking) => {
+          const marker = new window.kakao.maps.Marker({
+            position: new window.kakao.maps.LatLng(parking.latitude, parking.longitude),
+            map: newMap,
+            image: ParkingMark,
+          });
+
+          window.kakao.maps.event.addListener(marker, "click", () => {
+            setSelectedParking(parking);
+          });
+        });
+        
+        // ⚠️ 단속 구역 마커 
+      });
+    };
+    return () => {
+      document.head.removeChild(script); // 스크립트 정리
+    };
+  }, [currentLocation]);
+
+  // 📍 내 위치 가져오기
   const getLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -78,67 +134,10 @@ const Map = () => {
   };
 
   useEffect(() => {
-    if (!currentLocation) return; // 위치 정보가 없으면 실행하지 않음
+    getLocation();
+  },[]);
 
-    // 카카오 지도 API 로드
-    const script = document.createElement("script");
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=908628d6d7a926beea64a0e883c70910&autoload=false`;
-    script.async = true;
-    document.head.appendChild(script);
-
-    script.onload = () => {
-      window.kakao.maps.load(() => {
-        const container = document.getElementById("map"); 
-        const options = {
-          center: new window.kakao.maps.LatLng(currentLocation.latitude, currentLocation.longitude), // 현재 위치
-          level: 3, // 확대 레벨
-        };
-
-        const newMap = new window.kakao.maps.Map(container, options); // 지도 생성
-        setMap(newMap);
-
-        const markerImage = new window.kakao.maps.MarkerImage(
-        PositionMaker,
-        new window.kakao.maps.Size(70, 70), 
-        { offset: new window.kakao.maps.Point(25, 50) } // 마커 이미지의 중심 좌표
-        );
-
-        // 현재 위치 마커
-        new window.kakao.maps.Marker({
-          position: new window.kakao.maps.LatLng(currentLocation.latitude, currentLocation.longitude), 
-          map: newMap,
-          image: markerImage,
-        });
-
-        
-        // 주차장 마커
-        const ParkingMark = new window.kakao.maps.MarkerImage(
-          ParkingMarker,
-          new window.kakao.maps.Size(50, 50), 
-          { offset: new window.kakao.maps.Point(25, 50) } // 마커 이미지의 중심 좌표
-          );
-        
-        parkingData.forEach((parking) => {
-          const marker = new window.kakao.maps.Marker({
-            position: new window.kakao.maps.LatLng(parking.latitude, parking.longitude),
-            map: newMap,
-            image: ParkingMark,
-          });
-
-          window.kakao.maps.event.addListener(marker, "click", () => {
-            setSelectedParking(parking);
-          });
-        });
-        
-      });
-    };
-
-    return () => {
-      document.head.removeChild(script); // 스크립트 정리
-    };
-  }, [currentLocation]);
-
-  // 장소 검색 완료 시 호출되는 콜백 함수 
+  // 🔍 장소 검색 완료 시 호출되는 콜백 함수 
   useEffect(() => {
     if (!map || !searchQuery) return;
 
@@ -154,7 +153,7 @@ const Map = () => {
     });
   }, [searchQuery, map]);
 
-  // 검색 결과 마커 표출
+  // 🔍 검색 결과 마커 표출
   const displayPlaces = (places) => {
     const bounds = new window.kakao.maps.LatLngBounds();
     places.forEach((place) => {
