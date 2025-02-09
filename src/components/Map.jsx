@@ -5,6 +5,7 @@ import MarkerModal from "./Modals/MarkerModal"
 import ParkingMarkerContent from "./Modals/ParkingMarkerContent";
 import ParkingMarker from "./../assets/ParkingMarker.svg"
 import BottomBar from "./BottomBar"
+import TopBar from "./TopBar";
 
 const parkingData = [
   {
@@ -45,6 +46,10 @@ const Map = () => {
   const [currentLocation, setCurrentLocation] = useState(null); 
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태
   const [selectedParking, setSelectedParking] = useState(null);
+  const [map, setMap] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [places, setPlaces] = useState([]); // 검색된 장소들
+
 
   useEffect(() => {
     getLocation();
@@ -89,7 +94,8 @@ const Map = () => {
           level: 3, // 확대 레벨
         };
 
-        const map = new window.kakao.maps.Map(container, options); // 지도 생성
+        const newMap = new window.kakao.maps.Map(container, options); // 지도 생성
+        setMap(newMap);
 
         const markerImage = new window.kakao.maps.MarkerImage(
         PositionMaker,
@@ -99,7 +105,8 @@ const Map = () => {
 
         // 현재 위치 마커
         new window.kakao.maps.Marker({
-          position: new window.kakao.maps.LatLng(currentLocation.latitude, currentLocation.longitude), map,
+          position: new window.kakao.maps.LatLng(currentLocation.latitude, currentLocation.longitude), 
+          map: newMap,
           image: markerImage,
         });
 
@@ -114,7 +121,7 @@ const Map = () => {
         parkingData.forEach((parking) => {
           const marker = new window.kakao.maps.Marker({
             position: new window.kakao.maps.LatLng(parking.latitude, parking.longitude),
-            map,
+            map: newMap,
             image: ParkingMark,
           });
 
@@ -123,7 +130,6 @@ const Map = () => {
           });
         });
         
-
       });
     };
 
@@ -132,6 +138,34 @@ const Map = () => {
     };
   }, [currentLocation]);
 
+  // 장소 검색 완료 시 호출되는 콜백 함수 
+  useEffect(() => {
+    if (!map || !searchQuery) return;
+
+    const ps = new window.kakao.maps.services.Places();
+    ps.keywordSearch(searchQuery, (data, status) => {
+      if (status === window.kakao.maps.services.Status.OK) {
+        setPlaces(data);
+        displayPlaces(data);
+      } else {
+        setPlaces([]);
+        alert("검색 결과가 없습니다.");
+      }
+    });
+  }, [searchQuery, map]);
+
+  // 검색 결과 마커 표출
+  const displayPlaces = (places) => {
+    const bounds = new window.kakao.maps.LatLngBounds();
+    places.forEach((place) => {
+      const markerPosition = new window.kakao.maps.LatLng(place.y, place.x);
+      new window.kakao.maps.Marker({ position: markerPosition, map });
+      bounds.extend(markerPosition);
+    });
+    map.setBounds(bounds);
+  };
+
+
   if (isLoading) {
     return <LoadingContainer>현재 위치를 탐색 중...</LoadingContainer>;
   }
@@ -139,6 +173,7 @@ const Map = () => {
   return (
     <div>
       <MapContainer id="map" />
+      <TopBar onSearch={setSearchQuery} />
       {selectedParking && (
         <MarkerModal
           isOpen={!!selectedParking}
