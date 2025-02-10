@@ -28,7 +28,7 @@ const Menu = () => {
         <button onClick={() => navigate("/mypage")}>
           <img src={My_Page} alt="myPage" />마이페이지
         </button>
-        <button>
+        <button onClick={() => navigate("/bookmark")}>
           <img src={SavedParkingSpaces} alt="SavedParkingSpaces" />즐겨찾는 주차공간
         </button>
         <button onClick={() => navigate("/parking-spaces")}>
