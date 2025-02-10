@@ -7,26 +7,26 @@ import CustomModal from "../components/Modals/CustomModal";
 import ParkInfoContent from "../components/Modals/ParkInfoContent";
 import api from "../api/api";
 
-const parkingModalData = {
-  id: 1,
-  title: "역삼문화공원 제 1호 공영주차장",
-  division: "공영",
-  type: "노외",
-  compartment: "247",
-  opDays: "평일+토요일+공휴일",
-  weekday_start_time: "0:00",
-  weekday_end_time: "23:59",
-  saturday_start_time: "0:00",
-  saturday_end_time: "23:59",
-  holiday_start_time: "0:00",
-  holiday_end_time: "23:59",
-  base_parking_time: "5분",
-  base_parking_fee: "400원",
-  additional_unit_time: "5분",
-  additional_unit_fee: "400원",
-  management_agency: "강남구도시관리공단",
-  tel_number: "1544-3113",
-};
+// const parkingModalData = {
+//   id: 1,
+//   title: "역삼문화공원 제 1호 공영주차장",
+//   division: "공영",
+//   type: "노외",
+//   compartment: "247",
+//   opDays: "평일+토요일+공휴일",
+//   weekday_start_time: "0:00",
+//   weekday_end_time: "23:59",
+//   saturday_start_time: "0:00",
+//   saturday_end_time: "23:59",
+//   holiday_start_time: "0:00",
+//   holiday_end_time: "23:59",
+//   base_parking_time: "5분",
+//   base_parking_fee: "400원",
+//   additional_unit_time: "5분",
+//   additional_unit_fee: "400원",
+//   management_agency: "강남구도시관리공단",
+//   tel_number: "1544-3113",
+// };
 
 function ParkInfoPage() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -126,6 +126,7 @@ function ParkInfoPage() {
       <Header title="가까운 주차 공간" profileImg={defaultImg} />
       <ContentDiv>
         <SubTitle>현재 위치에서 가까운 순</SubTitle>
+        {isLoading && <div>로딩 중...</div>}
         {parkingSpaces.map((item) => (
           <ParkInfoListItem
             key={item.id}
