@@ -4,7 +4,7 @@ import styled from "styled-components";
 const ParkInfoContent = ({ parkingModalData }) => {
   return (
     <ContentWrapper>
-      <div className="parking_name">{parkingModalData.title}</div>
+      <div className="parking_name">{parkingModalData.parkingName}</div>
       <Line />
       <div className="title">주차장 구분 / 유형 / 구획수</div>
       <div className="info">
