@@ -88,6 +88,7 @@ const Location = styled.div`
     .title {
       font-weight: bold;
       font-size: 16px;
+      text-align: right;
     }
     .location {
       font-weight: bold;
