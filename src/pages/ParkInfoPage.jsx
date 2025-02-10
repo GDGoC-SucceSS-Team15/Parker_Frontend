@@ -1,90 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import defaultImg from "../assets/defaultImg.png";
 import Header from "../components/Headers/Header";
 import ParkInfoListItem from "../components/List/ParkInfoListItem";
 import CustomModal from "../components/Modals/CustomModal";
 import ParkInfoContent from "../components/Modals/ParkInfoContent";
-
-const parkingData = [
-  {
-    id: 1,
-    title: "역삼문화공원 제1호 공영주차장",
-    location: "서울특별시 강남구 역삼동 635-1",
-    km: "2.1",
-    min: "11",
-    start_time: "0:00",
-    end_time: "24:00",
-    unit_time: "5",
-    unit_fee: "300",
-  },
-  {
-    id: 2,
-    title: "역삼문화공원 제1호 공영주차장",
-    location: "서울특별시 강남구 역삼동 635-1",
-    km: "2.1",
-    min: "11",
-    start_time: "0:00",
-    end_time: "24:00",
-    unit_time: "5",
-    unit_fee: "300",
-  },
-  {
-    id: 3,
-    title: "역삼문화공원 제1호 공영주차장",
-    location: "서울특별시 강남구 역삼동 635-1",
-    km: "2.1",
-    min: "11",
-    start_time: "0:00",
-    end_time: "24:00",
-    unit_time: "5",
-    unit_fee: "300",
-  },
-  {
-    id: 4,
-    title: "역삼문화공원 제1호 공영주차장",
-    location: "서울특별시 강남구 역삼동 635-1",
-    km: "2.1",
-    min: "11",
-    start_time: "0:00",
-    end_time: "24:00",
-    unit_time: "5",
-    unit_fee: "300",
-  },
-  {
-    id: 5,
-    title: "역삼문화공원 제1호 공영주차장",
-    location: "서울특별시 강남구 역삼동 635-1",
-    km: "2.1",
-    min: "11",
-    start_time: "0:00",
-    end_time: "24:00",
-    unit_time: "5",
-    unit_fee: "300",
-  },
-  {
-    id: 6,
-    title: "역삼문화공원 제1호 공영주차장",
-    location: "서울특별시 강남구 역삼동 635-1",
-    km: "2.1",
-    min: "11",
-    start_time: "0:00",
-    end_time: "24:00",
-    unit_time: "5",
-    unit_fee: "300",
-  },
-  {
-    id: 7,
-    title: "역삼문화공원 제1호 공영주차장",
-    location: "서울특별시 강남구 역삼동 635-1",
-    km: "2.1",
-    min: "11",
-    start_time: "0:00",
-    end_time: "24:00",
-    unit_time: "5",
-    unit_fee: "300",
-  },
-];
+import api from "../api/api";
 
 const parkingModalData = {
   id: 1,
@@ -109,23 +30,114 @@ const parkingModalData = {
 
 function ParkInfoPage() {
   const [modalOpen, setModalOpen] = useState(false);
+
+  const [currentLocation, setCurrentLocation] = useState({});
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태
+  const [parkingSpaces, setParkingSpaces] = useState([]); // 주차장 데이터 저장
+
+  useEffect(() => {
+    getLocation();
+  }, []);
+
+  useEffect(() => {
+    const getParkingSpace = async () => {
+      try {
+        if (!currentLocation) {
+          return; // 위치 정보가 없으면 API 요청하지 않음
+        }
+
+        const res = await api.get("/api/parkingSpace/map", {
+          params: {
+            latitude: currentLocation.latitude,
+            longitude: currentLocation.longitude,
+          },
+        });
+
+        console.log(res.data);
+        setParkingSpaces(res.data.result); // 주차장 데이터 저장
+      } catch (err) {
+        console.error("Error get parkingspace", err);
+      }
+    };
+
+    getParkingSpace();
+  }, [currentLocation]);
+
+  // 내 위치 가져오기
+  const getLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setCurrentLocation({ latitude, longitude }); // 현재 위치 설정
+          setIsLoading(false); // 로딩 완료
+        },
+        () => {
+          // 위치 정보가 없으면 기본값 (서울)
+          setCurrentLocation({ latitude: 37.5665, longitude: 126.978 });
+          setIsLoading(false);
+        }
+      );
+    } else {
+      // Geolocation 미지원 시 기본값 설정
+      setCurrentLocation({ latitude: 37.5665, longitude: 126.978 });
+      setIsLoading(false);
+    }
+  };
+
+  const isHoliday = (date = new Date()) => {
+    const holidays = [
+      "01-01", // 신정
+      "03-01", // 삼일절
+      "05-05", // 어린이날
+      "06-06", // 현충일
+      "08-15", // 광복절
+      "10-03", // 개천절
+      "10-09", // 한글날
+      "12-25", // 크리스마스
+    ];
+
+    // 음력 기반 공휴일 (설날, 추석)은 API 필요..
+    const monthDay = `${String(date.getMonth() + 1).padStart(2, "0")}-${String(
+      date.getDate()
+    ).padStart(2, "0")}`;
+
+    if (holidays.includes(monthDay)) return "holiday";
+
+    const day = date.getDay();
+    if (day === 6) return "saturday";
+    if (day === 0) return "holiday"; // 일요일도 공휴일로 간주
+
+    return "weekday";
+  };
+
+  const daytype_start = isHoliday() + "StartTime";
+  const daytype_end = isHoliday() + "EndTime";
+
+  const [parkingSpacebyId, setParkingSpacebyId] = useState();
+
+  const handleModalOpen = (id) => {
+    setParkingSpacebyId(parkingSpaces.find((parking) => parking.id === id));
+    setModalOpen(true);
+  };
+
   return (
     <Wrapper>
       <Header title="가까운 주차 공간" profileImg={defaultImg} />
       <ContentDiv>
         <SubTitle>현재 위치에서 가까운 순</SubTitle>
-        {parkingData.map((item) => (
+        {parkingSpaces.map((item) => (
           <ParkInfoListItem
             key={item.id}
-            title={item.title}
-            location={item.location}
+            title={item.parkingName}
+            location={item.address}
             km={item.km}
             min={item.min}
-            start_time={item.start_time}
-            end_time={item.end_time}
-            unit_time={item.unit_time}
-            unit_fee={item.unit_fee}
-            onClick={() => setModalOpen(true)}
+            start_time={item[daytype_start]}
+            end_time={item[daytype_end]}
+            unit_time={item.baseParkingTime}
+            unit_fee={item.baseParkingFee}
+            onClick={() => handleModalOpen(item.id)}
           />
         ))}
       </ContentDiv>
@@ -133,7 +145,7 @@ function ParkInfoPage() {
         isOpen={modalOpen}
         onRequestClose={() => setModalOpen(false)}
       >
-        <ParkInfoContent parkingModalData={parkingModalData} />
+        <ParkInfoContent parkingModalData={parkingSpacebyId} />
       </CustomModal>
     </Wrapper>
   );
