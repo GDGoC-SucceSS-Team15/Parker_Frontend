@@ -14,12 +14,22 @@ const TopBar = ({ onSearch, onToggle }) => {
   const topBarRef = useRef(null); 
 
   // 검색어를 부모 컴포넌트로 전달
+  const handleChange = (e) => {
+    setInput(e.target.value);
+  };
+
   const handleSearch = () => {
-    if (input.trim() === "") {
+    if (!input.trim()) {
+      alert("검색어를 입력하세요.");
       return;
     }
     onSearch(input);
-    setInput("");  // 검색 후 입력값 초기화
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
   };
 
   const toggleMenu = () => {
@@ -60,7 +70,8 @@ const TopBar = ({ onSearch, onToggle }) => {
           type="text"
           placeholder="검색어를 입력하세요."
           value={input}
-          onChange={(e) => setInput(e.target.value)} 
+          onChange={handleChange}
+          onKeyPress={handleKeyPress} 
         />
         <SearchButton onClick={handleSearch} >
           <IoSearchSharp color="#636363" size={20}/>
