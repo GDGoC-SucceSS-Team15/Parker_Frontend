@@ -107,30 +107,32 @@ const Wrapper = styled.div`
 
 const HeaderWrapper = styled.div`
   display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
   width: 100%;
   max-width: 600px;
   position: relative;
+  gap: 10px;
 `;
 
 const BackButton = styled.div`
   position: absolute;
   left: 0;
   cursor: pointer;
-  padding: 10px;
+  padding: 30px;
 `;
 
 const Title = styled.h2`
   width: 100%;
   text-align: center;
-  margin: 0 auto;
 `;
 
 const ProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 80px;
+  margin-top: 70px;
   width: 100%;
   max-width: 600px;
 `;
