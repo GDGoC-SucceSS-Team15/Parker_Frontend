@@ -237,6 +237,8 @@ const ApprovalStatus = styled.p`
   justify-content: space-between;
   font-weight: bold;
   color: rgb(100, 100, 100);
+  text-align: right;
+  width: 100%;
 
   span {
     color: ${(props) =>
