@@ -13,23 +13,27 @@ function ProfileEditPage() {
     navigate(-1);
   };
 
-  const handleSubmit = async () => {
+  const handleNicknameChange = async (newNickname) => {
     try {
-      const response = await fetch("https://BE/api/profile", {
+      const response = await fetch("https://BE/api/update-nickname", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ nickname }),
+        body: JSON.stringify({ nickname: newNickname }),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
-        console.log("닉네임 변경 성공");
+        alert("닉네임이 변경되었습니다.");
+        setNickname(data.nickname);
       } else {
-        console.error("닉네임 변경 실패");
+        alert(data.message || "닉네임 변경 실패");
       }
     } catch (error) {
-      console.error("서버 오류:", error);
+      console.error("닉네임 변경 오류:", error);
+      alert("닉네임 변경 오류");
     }
   };
 
@@ -80,7 +84,9 @@ function ProfileEditPage() {
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
           />
-          <SubmitButton onClick={handleSubmit}>변경</SubmitButton>
+          <SubmitButton onClick={() => handleNicknameChange(nickname)}>
+            변경
+          </SubmitButton>{" "}
         </NicknameWrapper>
       </ProfileContainer>
     </Wrapper>
@@ -168,6 +174,8 @@ const NicknameWrapper = styled.div`
   width: 100%;
   max-width: 450px;
   gap: 10px;
+  align-self: center;
+  margin: 0 auto;
 `;
 
 const Label = styled.label`
