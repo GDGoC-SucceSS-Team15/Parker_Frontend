@@ -46,16 +46,16 @@ const Menu = () => {
 
       <EtcDiv>
         <button>
-          <CiSettings color="#3a3a3a" size={31} style={{ marginRight: "8px" }} />설정
+          <CiSettings color="#3a3a3a" size={25} style={{ marginRight: "8px" }} />설정
         </button>
         <button>
-          <IoInformationCircleOutline color="#3a3a3a" size={30} style={{ marginRight: "8px" }} />더보기
+          <IoInformationCircleOutline color="#3a3a3a" size={24} style={{ marginRight: "8px" }} />더보기
         </button>
         <button onClick={() => navigate("/signin")}>
-          <IoReturnDownBackOutline color="#3a3a3a" size={27} style={{ marginRight: "8px" }} />로그아웃
+          <IoReturnDownBackOutline color="#3a3a3a" size={21} style={{ marginRight: "8px" }} />로그아웃
         </button>
         <button>
-          <IoShareSocialOutline color="#3a3a3a" size={27} style={{ marginRight: "8px" }} />공유
+          <IoShareSocialOutline color="#3a3a3a" size={21} style={{ marginRight: "8px" }} />공유
         </button>
       </EtcDiv>
     </MenuDiv>
@@ -96,7 +96,7 @@ const ProfileDiv = styled.div`
   padding-bottom: 10%;
 
   img {
-    width: 60px;
+    width: 50px;
     border-radius: 50%;
     margin-bottom: 13px;
   }
@@ -108,8 +108,8 @@ const ProfileDiv = styled.div`
 
 const PageDiv = styled.div`
   border-bottom: 2px solid #ddd;
-  padding: 20px 30px;
-  padding-bottom: 30px;
+  padding: 10px 30px;
+  padding-bottom: 20px;
 
   button {
     border: none;
@@ -125,7 +125,7 @@ const PageDiv = styled.div`
     transition: transform 0.2s;
 
     img {
-      width: 25px;
+      width: 20px;
       margin-right: 10px;
     }
 
@@ -136,7 +136,7 @@ const PageDiv = styled.div`
 `;
 
 const EtcDiv = styled.div`
-  padding: 20px 30px;
+  padding: 10px 30px;
 
   button {
     border: none;
