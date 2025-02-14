@@ -42,10 +42,18 @@ const parkingData = [
   },
 ]
 
+const crackdownData = [
+  {
+    weekdayStartTime: "11:00",
+    weekdayEndTime: "21:00",
+  },
+]
+
 const Map = () => {
   const [currentLocation, setCurrentLocation] = useState(null); 
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태
   const [selectedParking, setSelectedParking] = useState(null);
+  const [selectedCrackdown, setSelectedCrackdown] = useState(null);
   const [map, setMap] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [places, setPlaces] = useState([]); // 검색된 장소들
@@ -103,7 +111,24 @@ const Map = () => {
           });
         });
         
-        // ⚠️ 단속 구역 마커 
+        // ⚠️ 단속 구역 마커
+        const CrackdownMark = new window.kakao.maps.MarkerImage(
+          ParkingMarker,
+          new window.kakao.maps.Size(50, 50), 
+          { offset: new window.kakao.maps.Point(25, 50) } // 마커 이미지의 중심 좌표
+          );
+        
+          crackdownData.forEach((parking) => {
+          const marker = new window.kakao.maps.Marker({
+            position: new window.kakao.maps.LatLng(parking.latitude, parking.longitude),
+            map: newMap,
+            image: ParkingMark,
+          });
+
+          window.kakao.maps.event.addListener(marker, "click", () => {
+            setSelectedCrackdown(parking);
+          });
+        }); 
       });
     };
     return () => {

@@ -60,17 +60,17 @@ const Menu = () => {
 export default Menu;
 
 const MenuDiv = styled.div`
-  width: 65%;
+  width: 45%;
   min-height: 100vh;
   height: 100%;
-  position: absolute;
+  position: fixed;
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   padding: 0;
   margin: 0;
-  z-index: 30;
+  z-index: 999;
   overflow: auto;
 `;
 

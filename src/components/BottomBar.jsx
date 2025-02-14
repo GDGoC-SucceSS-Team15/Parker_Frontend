@@ -23,14 +23,14 @@ const BottomBar = ({ onGetLocation }) => {
     <div>
       <BottombarDiv>
         <LeftGroup>
-          <button onClick={() => navigate("/mypage")}>
+          <button onClick={() => navigate("/crackdown")}>
             <img src={MyPage} alt="MyPage" />
           </button>
           <button onClick={() => navigate("/bookmark")}>
             <img src={SavedParkingSpaces} alt="SavedParkingSpaces" />
           </button>
         </LeftGroup>
-        <MainButton onClick={() => navigate("/")}>
+        <MainButton onClick={() => navigate("/mypage")}>
           <img src={Parker_Logo} alt="Parker_Logo" />
         </MainButton>
         <RightGroup>
@@ -101,7 +101,7 @@ const LeftGroup = styled.div`
     transition: transform 0.2s ease-in-out;
 
     img {
-      width: 27px;
+      width: 26px;
     }
   }
 `;

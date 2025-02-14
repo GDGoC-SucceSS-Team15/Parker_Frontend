@@ -22,7 +22,7 @@ const customStyles = {
     width: "80%",
     minHeight: "fit-content",
     position: "absolute",
-    top: "80%",
+    top: "81%",
     left: "50%",
     transform: "translate(-50%, -50%)",
     borderRadius: "20px",
