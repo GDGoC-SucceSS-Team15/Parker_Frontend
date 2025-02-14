@@ -65,7 +65,7 @@ const Menu = () => {
 export default Menu;
 
 const MenuDiv = styled.div`
-  width: 45%;
+  width: 65%;
   min-height: 100vh;
   height: 100%;
   position: fixed;

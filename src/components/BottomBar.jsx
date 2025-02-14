@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import Parker_Logo from "./../assets/LogoImage.svg";
-import MyPage from "./../assets/Bottom_Button/BT_MyPage.svg";
+import Crackdown from "./../assets/Bottom_Button/BT_Crackdown.svg";
 import SavedParkingSpaces from "./../assets/Bottom_Button/BT_SavedParkingSpaces.svg";
 import ParkingSpaces from "./../assets/Bottom_Button/BT_ParkingSpaces.svg";
 import ParkInfo from "./../assets/Bottom_Button/BT_ParkInfo.svg";
@@ -24,18 +24,18 @@ const BottomBar = ({ onGetLocation }) => {
       <BottombarDiv>
         <LeftGroup>
           <button onClick={() => navigate("/crackdown")}>
-            <img src={MyPage} alt="MyPage" />
+            <img src={Crackdown} alt="Crackdown" />
           </button>
-          <button onClick={() => navigate("/bookmark")}>
-            <img src={SavedParkingSpaces} alt="SavedParkingSpaces" />
+          <button onClick={() => navigate("/parking-spaces")}>
+            <img src={ParkingSpaces} alt="ParkingSpaces" />
           </button>
         </LeftGroup>
         <MainButton onClick={() => navigate("/mypage")}>
           <img src={Parker_Logo} alt="Parker_Logo" />
         </MainButton>
         <RightGroup>
-          <button onClick={() => navigate("/parking-spaces")}>
-            <img src={ParkingSpaces} alt="ParkingSpaces" />
+          <button onClick={() => navigate("/bookmark")}>
+            <img src={SavedParkingSpaces} alt="SavedParkingSpaces" />
           </button>
           <button onClick={() => navigate("/parkinginfo")}>
             <img src={ParkInfo} alt="ParkInforch_Button" />
