@@ -1,6 +1,8 @@
 import { styled } from "styled-components";
+import defaultImg from "./../assets/defaultImg.png"
 import Parker_Logo from "./../assets/LogoImage.svg"
-import My_Page from "./../assets/MenuButton/Menu_MyPage.svg"
+import MyPage from "./../assets/MenuButton/Menu_MyPage.svg"
+import Crackdown from "./../assets/MenuButton/Menu_Crackdown.svg"
 import SavedParkingSpaces from "./../assets/MenuButton/Menu_SavedParkingSpaces.svg"
 import ParkingSpaces from "./../assets/MenuButton/Menu_ParkingSpaces.svg"
 import Parking_Info from "./../assets/MenuButton/Menu_ParkInfo.svg"
@@ -20,19 +22,22 @@ const Menu = () => {
       </LogoDiv>
 
       <ProfileDiv>
-        <img src={My_Page} alt="profileImage"/>
+        <img src={defaultImg} alt="profileImage"/>
         <div>이름</div> 
       </ProfileDiv>
 
       <PageDiv>
         <button onClick={() => navigate("/mypage")}>
-          <img src={My_Page} alt="myPage" />마이페이지
+          <img src={MyPage} alt="myPage" />마이페이지
         </button>
-        <button onClick={() => navigate("/bookmark")}>
-          <img src={SavedParkingSpaces} alt="SavedParkingSpaces" />즐겨찾는 주차공간
+        <button onClick={() => navigate("/crackdown")}>
+          <img src={Crackdown} alt="crackdown" />주정차 금지구역
         </button>
         <button onClick={() => navigate("/parking-spaces")}>
           <img src={ParkingSpaces} alt="ParkingSpaces" />등록한 주차공간
+        </button>
+        <button onClick={() => navigate("/bookmark")}>
+          <img src={SavedParkingSpaces} alt="SavedParkingSpaces" />즐겨찾는 주차공간
         </button>
         <button onClick={() => navigate("/parkinginfo")}>
           <img src={Parking_Info} alt="parkingInfo" />주차 정보 페이지
