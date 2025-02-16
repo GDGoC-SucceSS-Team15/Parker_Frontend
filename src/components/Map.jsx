@@ -3,7 +3,8 @@ import styled from "styled-components";
 import PositionMaker from "./../assets/PositionMaker.png"
 import MarkerModal from "./Modals/MarkerModal"
 import ParkingMarkerContent from "./Modals/ParkingMarkerContent";
-import ParkingMarker from "./../assets/ParkingMarker.svg"
+import ParkingMarker from "./../assets/ParkingMarker.svg";
+import CrackdownMarker from "./../assets/CrackdownMarker.svg";
 import BottomBar from "./BottomBar"
 import TopBar from "./TopBar";
 
@@ -12,8 +13,8 @@ const parkingData = [
     id: 1,
     parkingName: "역삼문화공원 제1호 공영주차장",
     address: "서울특별시 강남구 역삼동 635-1",
-    latitude: 37.6300,
-    longitude: 127.0270,
+    latitude: 37.4978,
+    longitude: 127.0361,
     distance: 500, // 임의로 추가
     estimatedTime: 5, // 임의로 추가
     weekdayStartTime: "11:00",
@@ -44,9 +45,19 @@ const parkingData = [
 
 const crackdownData = [
   {
-    weekdayStartTime: "11:00",
-    weekdayEndTime: "21:00",
-  },
+        address: "무교동 33-3번지",
+        latitude: 37.6500,
+        longitude: 127.0001,
+        areaName: "무교동 어린이재단빌딩 인근",
+        classification: "불법주정차구역"
+      },
+      {
+        address: "다동 10번지앞",
+        latitude: 37.641701,
+        longitude: 127.016792,
+        areaName: "청계천변 하이커그라운드 인근",
+        classification: "불법주정차구역"
+      },
 ]
 
 const Map = () => {
@@ -113,7 +124,7 @@ const Map = () => {
         
         // ⚠️ 단속 구역 마커
         const CrackdownMark = new window.kakao.maps.MarkerImage(
-          ParkingMarker,
+          CrackdownMarker,
           new window.kakao.maps.Size(50, 50), 
           { offset: new window.kakao.maps.Point(25, 50) } // 마커 이미지의 중심 좌표
           );
@@ -122,7 +133,7 @@ const Map = () => {
           const marker = new window.kakao.maps.Marker({
             position: new window.kakao.maps.LatLng(parking.latitude, parking.longitude),
             map: newMap,
-            image: ParkingMark,
+            image: CrackdownMark,
           });
 
           window.kakao.maps.event.addListener(marker, "click", () => {
