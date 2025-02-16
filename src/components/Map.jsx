@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import PositionMaker from "./../assets/PositionMaker.png";
 import MarkerModal from "./Modals/MarkerModal";
@@ -52,6 +52,57 @@ const Map = () => {
   const [places, setPlaces] = useState([]); // 검색된 장소들
   const [parkingSpaces, setParkingSpaces] = useState([]); // 주차장 데이터 저장
 
+  // 📍 내 위치 가져오기
+  const getLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setCurrentLocation({ latitude, longitude }); // 현재 위치 설정
+          setIsLoading(false); // 로딩 완료
+        },
+        () => {
+          // 위치 정보가 없으면 기본값 (서울)
+          setCurrentLocation({ latitude: 37.5665, longitude: 126.978 });
+          setIsLoading(false);
+        }
+      );
+    } else {
+      // Geolocation 미지원 시 기본값 설정
+      setCurrentLocation({ latitude: 37.5665, longitude: 126.978 });
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getLocation();
+  }, []);
+
+  // 주차 공간 api 연동
+  useEffect(() => {
+    const getParkingSpace = async () => {
+      try {
+        if (!currentLocation) {
+          return; // 위치 정보가 없으면 API 요청하지 않음
+        }
+
+        const res = await api.get("/api/parker/parking-space/nearby", {
+          params: {
+            latitude: currentLocation.latitude,
+            longitude: currentLocation.longitude,
+          },
+        });
+
+        console.log(res.data.result.parkingSpaceNearbyResponseList);
+        setParkingSpaces(res.data.result.parkingSpaceNearbyResponseList); // 주차장 데이터 저장
+      } catch (err) {
+        console.error("Error get parkingspace", err);
+      }
+    };
+
+    getParkingSpace();
+  }, [currentLocation]);
+
   useEffect(() => {
     if (!currentLocation) return; // 위치 정보가 없으면 실행하지 않음
 
@@ -92,7 +143,7 @@ const Map = () => {
         });
 
         // 🅿️ 주차장 마커
-        const ParkingMark = new window.kakao.maps.MarkerImage(
+        const parkingMark = new window.kakao.maps.MarkerImage(
           ParkingMarker,
           new window.kakao.maps.Size(50, 50),
           { offset: new window.kakao.maps.Point(25, 50) } // 마커 이미지의 중심 좌표
@@ -105,8 +156,10 @@ const Map = () => {
               parking.longitude
             ),
             map: newMap,
-            image: ParkingMark,
+            image: parkingMark,
           });
+
+          marker.setVisible(true);
 
           window.kakao.maps.event.addListener(marker, "click", () => {
             setSelectedParking(parking);
@@ -121,56 +174,21 @@ const Map = () => {
     };
   }, [currentLocation, parkingSpaces]);
 
-  // 📍 내 위치 가져오기
-  const getLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setCurrentLocation({ latitude, longitude }); // 현재 위치 설정
-          setIsLoading(false); // 로딩 완료
-        },
-        () => {
-          // 위치 정보가 없으면 기본값 (서울)
-          setCurrentLocation({ latitude: 37.5665, longitude: 126.978 });
-          setIsLoading(false);
-        }
-      );
-    } else {
-      // Geolocation 미지원 시 기본값 설정
-      setCurrentLocation({ latitude: 37.5665, longitude: 126.978 });
-      setIsLoading(false);
-    }
-  };
+  const displayPlaces = useCallback(
+    (places) => {
+      if (!map) return; // map이 없을 경우 실행하지 않음
 
-  useEffect(() => {
-    getLocation();
-  }, []);
+      const bounds = new window.kakao.maps.LatLngBounds();
+      places.forEach((place) => {
+        const markerPosition = new window.kakao.maps.LatLng(place.y, place.x);
+        new window.kakao.maps.Marker({ position: markerPosition, map });
+        bounds.extend(markerPosition);
+      });
 
-  // 주차 공간 api 연동
-  useEffect(() => {
-    const getParkingSpace = async () => {
-      try {
-        if (!currentLocation) {
-          return; // 위치 정보가 없으면 API 요청하지 않음
-        }
-
-        const res = await api.get("/api/parkingSpace/map", {
-          params: {
-            latitude: currentLocation.latitude,
-            longitude: currentLocation.longitude,
-          },
-        });
-
-        console.log(res.data);
-        setParkingSpaces(res.data.result); // 주차장 데이터 저장
-      } catch (err) {
-        console.error("Error get parkingspace", err);
-      }
-    };
-
-    getParkingSpace();
-  }, [currentLocation]);
+      map.setBounds(bounds);
+    },
+    [map] // ✅ map이 변경될 때만 함수가 새로 생성됨
+  );
 
   // 🔍 장소 검색 완료 시 호출되는 콜백 함수
   useEffect(() => {
@@ -186,18 +204,7 @@ const Map = () => {
         alert("검색 결과가 없습니다.");
       }
     });
-  }, [searchQuery, map]);
-
-  // 🔍 검색 결과 마커 표출
-  const displayPlaces = (places) => {
-    const bounds = new window.kakao.maps.LatLngBounds();
-    places.forEach((place) => {
-      const markerPosition = new window.kakao.maps.LatLng(place.y, place.x);
-      new window.kakao.maps.Marker({ position: markerPosition, map });
-      bounds.extend(markerPosition);
-    });
-    map.setBounds(bounds);
-  };
+  }, [searchQuery, map, displayPlaces]);
 
   if (isLoading) {
     return <LoadingContainer>현재 위치를 탐색 중...</LoadingContainer>;
@@ -217,13 +224,9 @@ const Map = () => {
               key={selectedParking.id}
               parkingName={selectedParking.parkingName}
               distance={selectedParking.distance}
-              estimatedTime={selectedParking.estimatedTime}
-              weekdayStartTime={selectedParking.weekdayStartTime}
-              weekdayEndTime={selectedParking.weekdayEndTime}
-              saturdayStartTime={selectedParking.saturdayStartTime}
-              saturdayEndTime={selectedParking.saturdayEndTime}
-              holidayStartTime={selectedParking.holidayStartTime}
-              holidayEndTime={selectedParking.holidayEndTime}
+              weekdayTime={selectedParking.weekdayTime}
+              saturdayTime={selectedParking.saturdayTime}
+              holidayTime={selectedParking.holidayTime}
               baseParkingTime={selectedParking.baseParkingTime}
               baseParkingFee={selectedParking.baseParkingFee}
               onClose={() => setSelectedParking(null)}

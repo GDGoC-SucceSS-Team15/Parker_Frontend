@@ -2,20 +2,16 @@ import React from "react";
 import styled from "styled-components";
 import { IoArrowBack } from "react-icons/io5";
 import { FaRegStar } from "react-icons/fa6";
-import { PiClock } from "react-icons/pi"; 
+import { PiClock } from "react-icons/pi";
 import { BiDollarCircle } from "react-icons/bi";
-import { LuMapPin } from "react-icons/lu"; 
+import { LuMapPin } from "react-icons/lu";
 
 const ParkingMarkerContent = ({
   parkingName,
   distance,
-  estimatedTime,
-  weekdayStartTime,
-  weekdayEndTime,
-  saturdayStartTime,
-  saturdayEndTime,
-  holidayStartTime,
-  holidayEndTime,
+  weekdayTime,
+  saturdayTime,
+  holidayTime,
   baseParkingTime,
   baseParkingFee,
   onClose,
@@ -34,7 +30,7 @@ const ParkingMarkerContent = ({
 
       <InfoRow>
         <LuMapPin size={18} />
-        <InfoText>{distance}m / {estimatedTime}분</InfoText>
+        <InfoText>{distance}</InfoText>
       </InfoRow>
 
       <InfoRow>
@@ -42,12 +38,13 @@ const ParkingMarkerContent = ({
         <InfoText>
           평일 운영 시간 <br />
           토요일 운영 시간 <br />
-          공휴일 운영 시간 
+          공휴일 운영 시간
         </InfoText>
-        <InfoText style={{ marginLeft: 'auto' }}>
-          {weekdayStartTime} ~ {weekdayEndTime} <br />
-          {saturdayStartTime} ~ {saturdayEndTime} <br />
-          {holidayStartTime} ~ {holidayEndTime} 
+        <InfoText style={{ marginLeft: "auto" }}>
+          {weekdayTime} <br />
+          {saturdayTime}
+          <br />
+          {holidayTime}
         </InfoText>
       </InfoRow>
 
@@ -96,7 +93,7 @@ const Title = styled.div`
   max-width: 80%;
   margin: 0 auto 5px auto;
   display: block;
-  text-wrap: balance;
+  //text-wrap: balance;
 `;
 
 const StarBtn = styled.button`
