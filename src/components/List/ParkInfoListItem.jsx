@@ -9,8 +9,7 @@ const ParkInfoListItem = ({
   min,
   title,
   location,
-  start_time,
-  end_time,
+  time,
   unit_fee,
   unit_time,
   onClick,
@@ -35,9 +34,7 @@ const ParkInfoListItem = ({
       <TimeFee>
         <div className="time">
           <FiClock />
-          <div>
-            운영시간 : {start_time} ~ {end_time}
-          </div>
+          <div>운영시간 : {time}</div>
         </div>
         <div className="fee">
           <AiOutlineDollar />

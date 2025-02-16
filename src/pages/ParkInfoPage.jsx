@@ -46,7 +46,7 @@ function ParkInfoPage() {
           return; // 위치 정보가 없으면 API 요청하지 않음
         }
 
-        const res = await api.get("/api/parkingSpace/map", {
+        const res = await api.get("/api/parker/parking-space/nearby", {
           params: {
             latitude: currentLocation.latitude,
             longitude: currentLocation.longitude,
@@ -54,7 +54,7 @@ function ParkInfoPage() {
         });
 
         console.log(res.data);
-        setParkingSpaces(res.data.result); // 주차장 데이터 저장
+        setParkingSpaces(res.data.result.parkingSpaceNearbyResponseList); // 주차장 데이터 저장
       } catch (err) {
         console.error("Error get parkingspace", err);
       }
@@ -102,17 +102,16 @@ function ParkInfoPage() {
       date.getDate()
     ).padStart(2, "0")}`;
 
-    if (holidays.includes(monthDay)) return "holiday";
+    if (holidays.includes(monthDay)) return "holidayTime";
 
     const day = date.getDay();
-    if (day === 6) return "saturday";
-    if (day === 0) return "holiday"; // 일요일도 공휴일로 간주
+    if (day === 6) return "saturdayTime";
+    if (day === 0) return "holidayTime"; // 일요일도 공휴일로 간주
 
     return "weekday";
   };
 
-  const daytype_start = isHoliday() + "StartTime";
-  const daytype_end = isHoliday() + "EndTime";
+  const daytype = isHoliday();
 
   const [parkingSpacebyId, setParkingSpacebyId] = useState();
 
@@ -134,8 +133,7 @@ function ParkInfoPage() {
             location={item.address}
             km={item.km}
             min={item.min}
-            start_time={item[daytype_start]}
-            end_time={item[daytype_end]}
+            time={item[daytype]}
             unit_time={item.baseParkingTime}
             unit_fee={item.baseParkingFee}
             onClick={() => handleModalOpen(item.id)}
