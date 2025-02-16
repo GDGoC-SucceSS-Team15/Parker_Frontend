@@ -19,8 +19,8 @@ function SignInPage() {
         password: pw,
       });
 
-      console.log(res.data);
-      localStorage.setItem("accessToken", res.data.accessToken);
+      console.log(res);
+      localStorage.setItem("accessToken", res.data.result.accessToken);
       navigate("/");
     } catch (err) {
       console.log("Error handle login", err);
