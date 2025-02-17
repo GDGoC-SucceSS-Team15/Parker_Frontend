@@ -5,28 +5,7 @@ import Header from "../components/Headers/Header";
 import ParkInfoListItem from "../components/List/ParkInfoListItem";
 import CustomModal from "../components/Modals/CustomModal";
 import ParkInfoContent from "../components/Modals/ParkInfoContent";
-import api from "../api/api";
-
-// const parkingModalData = {
-//   id: 1,
-//   title: "역삼문화공원 제 1호 공영주차장",
-//   division: "공영",
-//   type: "노외",
-//   compartment: "247",
-//   opDays: "평일+토요일+공휴일",
-//   weekday_start_time: "0:00",
-//   weekday_end_time: "23:59",
-//   saturday_start_time: "0:00",
-//   saturday_end_time: "23:59",
-//   holiday_start_time: "0:00",
-//   holiday_end_time: "23:59",
-//   base_parking_time: "5분",
-//   base_parking_fee: "400원",
-//   additional_unit_time: "5분",
-//   additional_unit_fee: "400원",
-//   management_agency: "강남구도시관리공단",
-//   tel_number: "1544-3113",
-// };
+import { parkingApi } from "../api/parkingSpace";
 
 function ParkInfoPage() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -41,23 +20,8 @@ function ParkInfoPage() {
 
   useEffect(() => {
     const getParkingSpace = async () => {
-      try {
-        if (!currentLocation) {
-          return; // 위치 정보가 없으면 API 요청하지 않음
-        }
-
-        const res = await api.get("/api/parker/parking-space/nearby", {
-          params: {
-            latitude: currentLocation.latitude,
-            longitude: currentLocation.longitude,
-          },
-        });
-
-        console.log(res.data);
-        setParkingSpaces(res.data.result.parkingSpaceNearbyResponseList); // 주차장 데이터 저장
-      } catch (err) {
-        console.error("Error get parkingspace", err);
-      }
+      const parkingData = await parkingApi.getNearby(currentLocation);
+      setParkingSpaces(parkingData);
     };
 
     getParkingSpace();
@@ -116,14 +80,11 @@ function ParkInfoPage() {
   const [parkingSpacebyId, setParkingSpacebyId] = useState();
 
   const handleModalOpen = async (id) => {
-    try {
-      const res = await api.get(`/api/parker/parking-space/nearby/${id}`);
+    //주자장 세부 정보 조회
+    const parkingIdData = await parkingApi.getNearbyId(id);
+    // 주차장 세부 정보 저장
+    setParkingSpacebyId(parkingIdData);
 
-      console.log("주차장 세부 정보 조회 성공", res);
-      setParkingSpacebyId(res.data.result);
-    } catch (error) {
-      console.error("주차장 세부 정보 조회 실패", error);
-    }
     setModalOpen(true);
   };
 
@@ -133,7 +94,7 @@ function ParkInfoPage() {
       <ContentDiv>
         <SubTitle>현재 위치에서 가까운 순</SubTitle>
         {isLoading && <div>로딩 중...</div>}
-        {parkingSpaces.map((item) => (
+        {parkingSpaces?.map((item) => (
           <ParkInfoListItem
             key={item.id}
             title={item.parkingName}
