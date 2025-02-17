@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from "styled-components";
 import { Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -6,29 +6,33 @@ import { AiOutlineArrowLeft } from "react-icons/ai";
 import profileImg from "../assets/profile.svg";
 import CustomModal from "../components/Modals/CustomModal";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import axios from "axios";
 
 function MyParkingPage() {
   const navigate = useNavigate();
-  const [parkingSpaces, setParkingSpaces] = useState([
-    {
-      id: 1,
-      name: "주차장 1",
-      address: "서울시 서초구 456",
-      startTime: "11:00 am",
-      endTime: "05:00 pm",
-      paid: true,
-      type: "실내주차장",
-    },
-    {
-      id: 2,
-      name: "주차장 2",
-      address: "주소",
-      startTime: "09:00 am",
-      endTime: "06:00 pm",
-      paid: false,
-      type: "실외주차장",
-    },
-  ]);
+  const [parkingSpaces, setParkingSpaces] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchParkingSpaces = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const response = await axios.get("https://api.example.com/parking");
+        setParkingSpaces(response.data);
+      } catch (err) {
+        alert("데이터를 불러오지 못했습니다.");
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchParkingSpaces();
+  }, []);
 
   const handleBack = () => {
     if (window.history.length > 1) {
@@ -37,8 +41,6 @@ function MyParkingPage() {
       navigate("/");
     }
   };
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const removeParking = (id) => {
     setParkingSpaces((prevSpaces) =>
@@ -61,37 +63,45 @@ function MyParkingPage() {
           <h2>등록된 주차 공간</h2>
           <ProfileImage src={profileImg} alt="profile" />
         </HeaderWrapper>
-        <ParkingList>
-          {parkingSpaces.map((space) => (
-            <ParkingItem key={space.id}>
-              <ParkingContent>
-                <ParkingNameWrapper>
-                  <ParkingName>{space.name}</ParkingName>
-                  <ParkingType>{space.type}</ParkingType>
-                </ParkingNameWrapper>
-                <Divider />
-                <Address>{space.address}</Address>
-                <TimeWrapper>
-                  <TimeLabel>운영 시작 시간:</TimeLabel>
-                  <TimeValue>{space.startTime}</TimeValue>
-                </TimeWrapper>
-                <TimeWrapper>
-                  <TimeLabel>운영 종료 시간:</TimeLabel>
-                  <TimeValue>{space.endTime}</TimeValue>
-                </TimeWrapper>
-                <Payments>
-                  <PaymentsLabel>유무료 구분:</PaymentsLabel>
-                  <PaymentStatus paid={space.paid}>
-                    {space.paid ? "유료" : "무료"}
-                  </PaymentStatus>
-                </Payments>
-              </ParkingContent>
-              <DeleteButton onClick={() => removeParking(space.id)}>
-                <Trash2 size={20} />
-              </DeleteButton>
-            </ParkingItem>
-          ))}
-        </ParkingList>
+        {loading ? (
+          <p>로딩 중...</p>
+        ) : error ? (
+          <p style={{ color: "red" }}>에러 발생: {error}</p>
+        ) : parkingSpaces.length === 0 ? (
+          <p>즐겨찾기한 주차 공간이 없습니다.</p>
+        ) : (
+          <ParkingList>
+            {parkingSpaces.map((space) => (
+              <ParkingItem key={space.id}>
+                <ParkingContent>
+                  <ParkingNameWrapper>
+                    <ParkingName>{space.name}</ParkingName>
+                    <ParkingType>{space.type}</ParkingType>
+                  </ParkingNameWrapper>
+                  <Divider />
+                  <Address>{space.address}</Address>
+                  <TimeWrapper>
+                    <TimeLabel>운영 시작 시간:</TimeLabel>
+                    <TimeValue>{space.startTime}</TimeValue>
+                  </TimeWrapper>
+                  <TimeWrapper>
+                    <TimeLabel>운영 종료 시간:</TimeLabel>
+                    <TimeValue>{space.endTime}</TimeValue>
+                  </TimeWrapper>
+                  <Payments>
+                    <PaymentsLabel>유무료 구분:</PaymentsLabel>
+                    <PaymentStatus paid={space.paid}>
+                      {space.paid ? "유료" : "무료"}
+                    </PaymentStatus>
+                  </Payments>
+                </ParkingContent>
+                <DeleteButton onClick={() => removeParking(space.id)}>
+                  <Trash2 size={20} />
+                </DeleteButton>
+              </ParkingItem>
+            ))}
+          </ParkingList>
+        )}
 
         <CustomModal isOpen={isModalOpen} onRequestClose={closeModal}>
           <ModalContainer>
