@@ -36,37 +36,31 @@ const TopBar = ({ onSearch, onToggle }) => {
   };
 
   const toggleMenu = () => {
-    setIsMenuVisible((prevState) => !prevState);
-  };
-
-  const closeMenu = () => {
-    setIsMenuVisible(false);
+    setIsMenuVisible((prev) => !prev);
   };
 
   // 클릭한 곳이 메뉴 외부인 경우 메뉴 닫기
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // 메뉴 외부를 클릭한 경우
       if (
         menuRef.current &&
         !menuRef.current.contains(event.target) &&
         topBarRef.current &&
         !topBarRef.current.contains(event.target)
       ) {
-        closeMenu();
+        setIsMenuVisible(false);
       }
     };
 
-    document.addEventListener("click", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
-      document.removeEventListener("click", handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
   return (
     <>
-      {isMenuVisible && <div onClick={closeMenu}></div>}
       <TopBarDiv ref={topBarRef}>
         <MenuButton onClick={toggleMenu}>
           <FiMenu color="#636363" size={20} />
@@ -84,9 +78,9 @@ const TopBar = ({ onSearch, onToggle }) => {
       </TopBarDiv>
 
       {isMenuVisible && (
-        <div ref={menuRef}>
+        <MenuWrapper ref={menuRef}>
           <Menu />
-        </div>
+        </MenuWrapper>
       )}
 
       <ButtonWrapper>
@@ -115,6 +109,18 @@ const TopBar = ({ onSearch, onToggle }) => {
 };
 
 export default TopBar;
+
+// 스타일 컴포넌트 추가
+const MenuWrapper = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 20;
+  background-color: white;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+`;
 
 const TopBarDiv = styled.div`
   display: flex;
@@ -176,6 +182,9 @@ const ButtonWrapper = styled.div`
   display: flex;
   position: absolute;
   padding: 5px 7px;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 10px;
   justify-content: center;
   gap: 15px;
   margin-top: 10px;

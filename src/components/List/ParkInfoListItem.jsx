@@ -6,11 +6,9 @@ import { AiOutlineDollar } from "react-icons/ai";
 
 const ParkInfoListItem = ({
   km,
-  min,
   title,
   location,
-  start_time,
-  end_time,
+  time,
   unit_fee,
   unit_time,
   onClick,
@@ -22,12 +20,10 @@ const ParkInfoListItem = ({
           <div>
             <LuSquareParking color="#015900" size={30} />
           </div>
-          <div>
-            {km}km / {min}분
-          </div>
+          <div>{km}</div>
         </div>
         <div className="Right">
-          <div className="title">{title}</div>
+          <div className="title">{title} 주차장</div>
           <div className="location">{location}</div>
         </div>
       </Location>
@@ -35,9 +31,7 @@ const ParkInfoListItem = ({
       <TimeFee>
         <div className="time">
           <FiClock />
-          <div>
-            운영시간 : {start_time} ~ {end_time}
-          </div>
+          <div>운영시간 : {time}</div>
         </div>
         <div className="fee">
           <AiOutlineDollar />
@@ -88,6 +82,7 @@ const Location = styled.div`
     .title {
       font-weight: bold;
       font-size: 16px;
+      text-align: right;
     }
     .location {
       font-weight: bold;
