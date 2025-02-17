@@ -4,6 +4,7 @@ import PositionMaker from "./../assets/PositionMaker.png";
 import MarkerModal from "./Modals/MarkerModal";
 import ParkingMarkerContent from "./Modals/ParkingMarkerContent";
 import ParkingMarker from "./../assets/ParkingMarker.svg";
+//import NewParkingMarker from "../assets/NewParkingMarker.svg";
 import BottomBar from "./BottomBar";
 import TopBar from "./TopBar";
 import { mapApi } from "../api/map";
@@ -79,6 +80,7 @@ const Map = () => {
             currentLocation.longitude
           ), // 현재 위치
           level: 3, // 확대 레벨
+          draggable: true, // 모바일에서 드래그 가능
         };
 
         const newMap = new window.kakao.maps.Map(container, options); // 지도 생성
