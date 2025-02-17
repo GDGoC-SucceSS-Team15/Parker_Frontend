@@ -4,6 +4,7 @@ import { BsPaperclip } from "react-icons/bs";
 import useCurrentLocation from "../../hooks/useCurrentLocation";
 import PositionMaker from "../../assets/PositionMaker.png";
 import { reportApi } from "../../api/report";
+import { useNavigate } from "react-router-dom";
 
 const ReportContent = () => {
   const [map, setMap] = useState(null);
@@ -14,12 +15,9 @@ const ReportContent = () => {
   const [inputLocation, setinputLocation] = useState(""); // 주소 직접
   const [places, setPlaces] = useState([]); // 검색된 장소들
   const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
 
   const { currentLocation, isLoading } = useCurrentLocation(); // 현재 위치 반환 커스텀훅
-
-  useEffect(() => {
-    console.log("📍 현재 위치:", currentLocation);
-  }, [currentLocation]);
 
   useEffect(() => {
     if (!currentLocation) return; // 위치 정보가 없으면 실행하지 않음
@@ -108,8 +106,6 @@ const ReportContent = () => {
     });
   }, [searchQuery, map, displayPlaces]);
 
-  console.log("검색 장소들", places);
-
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     setFile(file);
@@ -123,11 +119,18 @@ const ReportContent = () => {
   const handleSearch = () => {
     setLocation(inputLocation);
     setSearchQuery(inputLocation);
+    console.log(places);
   };
 
   const handlePost = async () => {
     console.log("파일", file);
-    reportApi.postReport(inputLocation, file);
+    try {
+      reportApi.postReport(inputLocation, file);
+      alert("신고가 정상적으로 처리되었습니다");
+      navigate("/report");
+    } catch (err) {
+      alert("신고 접수 실패");
+    }
   };
   return (
     <div style={{ width: "80%", margin: "auto" }}>
