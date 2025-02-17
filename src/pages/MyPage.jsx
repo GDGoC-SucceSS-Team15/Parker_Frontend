@@ -1,52 +1,52 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from "styled-components";
+import { Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import {
-  AiOutlineArrowLeft,
-  AiOutlineSetting,
-  AiOutlineCamera,
-} from "react-icons/ai";
+import { AiOutlineArrowLeft } from "react-icons/ai";
 import profileImg from "../assets/profile.svg";
-import logoImg from "../assets/logoimg.svg";
+import CustomModal from "../components/Modals/CustomModal";
+import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import axios from "axios";
 
-function MyPage() {
+function ReportPage() {
   const navigate = useNavigate();
-  const [showAllBadges, setShowAllBadges] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(profileImg);
+  const [reports, setReports] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchReports = async () => {
+      try {
+        const response = await axios.get("https://BE/api/reports");
+        setReports(response.data);
+      } catch (error) {
+        console.error("신고 내역 불러오기 실패:", error);
+      }
+    };
+
+    fetchReports();
+  }, []);
+
+  const removeReport = async (id) => {
+    try {
+      await axios.delete(`https://BE/api/reports/${id}`);
+      setReports((prevReports) =>
+        prevReports.filter((report) => report.id !== id)
+      );
+      setIsModalOpen(true);
+    } catch (error) {
+      console.error("신고 삭제 실패:", error);
+    }
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   const handleBack = () => {
     if (window.history.length > 1) {
       navigate(-1);
     } else {
       navigate("/");
-    }
-  };
-
-  const badges = [
-    { id: 1, text: "단속 구역 정보 마스터" },
-    { id: 2, text: "동네 탐험가" },
-    { id: 3, text: "도로의 수호자" },
-    { id: 4, text: "베테랑 운전자" },
-    { id: 5, text: "주차밭의 파수꾼" },
-  ];
-
-  const handleImageChange = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const formData = new FormData();
-      formData.append("profileImage", file);
-
-      try {
-        const response = await fetch("https://BE/api/upload", {
-          method: "POST",
-          body: formData,
-        });
-
-        const data = await response.json();
-        setSelectedImage(data.imageUrl);
-      } catch (error) {
-        console.error("이미지 업로드 실패:", error);
-      }
     }
   };
 
@@ -57,62 +57,43 @@ function MyPage() {
           <BackButton onClick={handleBack}>
             <AiOutlineArrowLeft size={25} />
           </BackButton>
+          <h2>신고 내역</h2>
+          <ProfileImage src={profileImg} alt="profile" />
         </HeaderWrapper>
-        <ProfileDiv>
-          <ProfileLabel>
-            <ProfileImage src={selectedImage || profileImg} alt="profile" />
-            <CameraIcon>
-              <AiOutlineCamera size={23} />
-              <ImgFileInput
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-              />
-            </CameraIcon>
-          </ProfileLabel>
-          <ProfileInfo>
-            <Nickname onClick={() => navigate("/nickname-edit")}>
-              <span style={{ fontWeight: "bold" }}>김고수</span>님
-            </Nickname>
-          </ProfileInfo>
-        </ProfileDiv>
-        <BadgeDiv>
-          <span style={{ fontWeight: "bold", fontSize: "18px" }}>
-            보유 중인 배지
-          </span>
-          <MoreButton onClick={() => setShowAllBadges(!showAllBadges)}>
-            {showAllBadges ? "접기" : "더보기"}
-          </MoreButton>
-          <BadgeWrapper>
-            {(showAllBadges ? badges : badges.slice(0, 2)).map((badge) => (
-              <Badge key={badge.id}>
-                <LogoImage src={logoImg} alt="badge logo" />
-                {badge.text}
-              </Badge>
-            ))}
-          </BadgeWrapper>
-        </BadgeDiv>
-        <ServiceDiv>
-          <span style={{ fontWeight: "bold", fontSize: "22px" }}>서비스</span>
-          <Service onClick={() => navigate("/nickname-edit")}>
-            <AiOutlineSetting size={30} />
-            개인 정보 수정
-          </Service>
-          <Service onClick={() => navigate("/parking-spaces")}>
-            <AiOutlineSetting size={30} />
-            개인 설정 관리
-          </Service>
-          <Service onClick={() => navigate("/bookmark")}>
-            <AiOutlineSetting size={30} />
-            활동 기록
-          </Service>
-        </ServiceDiv>
+        <ReportList>
+          {reports.map((report) => (
+            <ReportItem key={report.id}>
+              <ReportContent>
+                <DateTimeWrapper>
+                  <Date>{report.date}</Date>
+                  <Time>{report.time}</Time>
+                </DateTimeWrapper>
+                <Divider />
+                <Address>{report.address}</Address>
+                <ApprovalStatus status={report.status}>
+                  승인 여부 <span>{report.status}</span>
+                </ApprovalStatus>
+              </ReportContent>
+              <DeleteButton onClick={() => removeReport(report.id)}>
+                <Trash2 size={20} />
+              </DeleteButton>
+            </ReportItem>
+          ))}
+        </ReportList>
+
+        <CustomModal isOpen={isModalOpen} onRequestClose={closeModal}>
+          <ModalContainer>
+            <IoMdCheckmarkCircleOutline size={60} color="#4CAF50" />
+            <ModalTitle>신고 철회 완료</ModalTitle>
+            <ModalText>신고하신 내역이 철회되었습니다.</ModalText>
+          </ModalContainer>
+        </CustomModal>
       </Content>
     </Wrapper>
   );
 }
 
-export default MyPage;
+export default ReportPage;
 
 const Wrapper = styled.div`
   width: 100%;
@@ -124,7 +105,7 @@ const Wrapper = styled.div`
 
 const Content = styled.div`
   width: 85%;
-  padding-top: 20px;
+  text-align: center;
 `;
 
 const HeaderWrapper = styled.div`
@@ -133,6 +114,7 @@ const HeaderWrapper = styled.div`
   align-items: center;
   width: 100%;
   position: relative;
+  margin-bottom: 20px;
 `;
 
 const BackButton = styled.div`
@@ -140,135 +122,129 @@ const BackButton = styled.div`
   color: #000000;
 `;
 
-const ProfileDiv = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 50px;
-  margin-top: 50px;
-`;
-
 const ProfileImage = styled.img`
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  object-fit: cover;
-  cursor: pointer;
-  border: 2px solid #ccc;
-`;
-
-const ProfileLabel = styled.label`
-  position: relative;
-  cursor: pointer;
-`;
-
-const ImgFileInput = styled.input`
-  display: none;
-`;
-
-const CameraIcon = styled.div`
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.6);
-  color: white;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-
-  input {
-    opacity: 0;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    cursor: pointer;
-  }
-`;
-
-const LogoImage = styled.img`
-  width: 20px;
-  height: 30px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   object-fit: cover;
 `;
 
-const ProfileInfo = styled.div`
+const ReportList = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  width: 100%;
   text-align: center;
 `;
 
-const Nickname = styled.h2`
-  font-size: 25px;
-  cursor: pointer;
-  font-weight: normal;
-  margin-left: 20px;
-  &:hover {
-    text-decoration: underline;
-  }
-`;
-
-const MoreButton = styled.button`
+const ReportItem = styled.div`
   display: flex;
-  justify-content: right;
-  background: none;
-  border: none;
-  font-size: 18px;
-  color: rgb(115, 115, 115);
-  cursor: pointer;
-  margin-bottom: 5px;
-
-  &:hover {
-    text-decoration: underline;
-  }
-`;
-
-const BadgeDiv = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
-`;
-
-const BadgeWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-`;
-
-const Badge = styled.div`
-  display: inline-flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 8px;
-  background-color: white;
+  width: 93%;
+  position: relative;
+  padding: 15px;
   border: 1px solid #ddd;
-  padding: 8px 12px;
   border-radius: 7px;
-  font-size: 16px;
-  cursor: pointer;
+  box-shadow: 0 7px 7px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
+  transition: box-shadow 0.3s ease-in-out;
   &:hover {
-    background-color: #f0f0f0;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
   }
 `;
 
-const ServiceDiv = styled.div`
+const ReportContent = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  margin-top: 50px;
+  align-items: flex-start;
 `;
 
-const Service = styled.div`
+const DateTimeWrapper = styled.div`
   display: flex;
-  padding: 10px 15px;
-  cursor: pointer;
+  justify-content: space-between;
+  width: 100%;
+  font-weight: bold;
+`;
+
+const Date = styled.div`
+  flex-grow: 1;
   text-align: left;
-  font-size: 18px;
+  font-size: 16px;
+  padding: 5px;
+`;
+
+const Time = styled.div`
+  flex-grow: 1;
+  text-align: right;
+  font-size: 16px;
+  padding: 5px;
+  color: rgb(100, 100, 100);
+`;
+
+const Divider = styled.div`
+  width: 100%;
+  height: 1px;
+  background-color: #ddd;
+`;
+
+const Address = styled.p`
+  color: #000000;
+  font-weight: bold;
+  text-align: center;
+  font-size: 17px;
+`;
+
+const ApprovalStatus = styled.p`
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  color: rgb(100, 100, 100);
+
+  span {
+    color: ${(props) =>
+      props.status === "승인"
+        ? "green"
+        : props.status === "미승인"
+        ? "red"
+        : "orange"};
+  }
+`;
+
+const DeleteButton = styled.button`
+  position: absolute;
+  left: 50%;
+  bottom: -25px;
+  transform: translateX(-50%);
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
   align-items: center;
-  gap: 15px;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 2px 6px 6px rgba(0, 0, 0, 0.2);
+`;
+
+const ModalContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+`;
+
+const ModalTitle = styled.h2`
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 10px;
+`;
+
+const ModalText = styled.p`
+  color: gray;
+  font-size: 14px;
+  margin-top: 5px;
 `;

@@ -3,6 +3,7 @@ import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineArrowLeft, AiOutlineCamera } from "react-icons/ai";
 import profileImg from "../assets/profile.svg";
+import axios from "axios";
 
 function ProfileEditPage() {
   const navigate = useNavigate();
@@ -15,21 +16,15 @@ function ProfileEditPage() {
 
   const handleNicknameChange = async (newNickname) => {
     try {
-      const response = await fetch("https://BE/api/update-nickname", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ nickname: newNickname }),
+      const response = await axios.post("https://BE/api/update-nickname", {
+        nickname: newNickname,
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
+      if (response.status === 200) {
         alert("닉네임이 변경되었습니다.");
-        setNickname(data.nickname);
+        setNickname(response.data.nickname);
       } else {
-        alert(data.message || "닉네임 변경 실패");
+        alert(response.data.message || "닉네임 변경 실패");
       }
     } catch (error) {
       console.error("닉네임 변경 오류:", error);
@@ -44,13 +39,11 @@ function ProfileEditPage() {
       formData.append("profileImage", file);
 
       try {
-        const response = await fetch("https://BE/api/upload", {
-          method: "POST",
-          body: formData,
+        const response = await axios.post("https://BE/api/upload", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
         });
 
-        const data = await response.json();
-        setSelectedImage(data.imageUrl);
+        setSelectedImage(response.data.imageUrl);
       } catch (error) {
         console.error("이미지 업로드 실패:", error);
       }
