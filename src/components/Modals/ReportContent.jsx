@@ -138,7 +138,7 @@ const ReportContent = () => {
         <h2>불법 주정차 위치 신고</h2>
         <div className="question">해당 위치로 등록하시겠습니까?</div>
         <CurrentLoc>
-          {isLoading && <div>로딩 중..</div>}
+          {isLoading && <div className="loading">로딩 중..</div>}
           <div id="map-modal" style={{ width: "100%", height: "100%" }}></div>
         </CurrentLoc>
         <div className="place-name">{location}</div>
@@ -197,6 +197,16 @@ const CurrentLoc = styled.div`
   border-radius: 14px;
   margin: 10px;
   position: relative;
+
+  .loading {
+    width: 100%;
+    height: 100%;
+    background-color: #b7b7b7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #898989;
+  }
 `;
 const InputDiv = styled.div`
   display: flex;
