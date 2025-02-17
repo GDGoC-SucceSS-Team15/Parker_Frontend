@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
 
-const useCurrentLocation = (
-  defaultLocation = { latitude: 37.5665, longitude: 126.978 }
-) => {
-  const [currentLocation, setCurrentLocation] = useState(defaultLocation);
+const useCurrentLocation = () => {
+  const [currentLocation, setCurrentLocation] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
