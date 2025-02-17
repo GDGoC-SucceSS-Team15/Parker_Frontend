@@ -22,7 +22,7 @@ const ParkingMarkerContent = ({
         <BackBtn onClick={onClose}>
           <IoArrowBack size={25} />
         </BackBtn>
-        <Title>{parkingName}</Title>
+        <Title>{parkingName} 주차장</Title>
         <StarBtn>
           <FaRegStar size={22} />
         </StarBtn>

@@ -6,42 +6,8 @@ import ParkingMarkerContent from "./Modals/ParkingMarkerContent";
 import ParkingMarker from "./../assets/ParkingMarker.svg";
 import BottomBar from "./BottomBar";
 import TopBar from "./TopBar";
-import api from "../api/api";
-
-// const parkingData = [
-//   {
-//     id: 1,
-//     parkingName: "역삼문화공원 제1호 공영주차장",
-//     address: "서울특별시 강남구 역삼동 635-1",
-//     latitude: 37.63,
-//     longitude: 127.027,
-//     distance: 500, // 임의로 추가
-//     estimatedTime: 5, // 임의로 추가
-//     weekdayStartTime: "11:00",
-//     weekdayEndTime: "21:00",
-//     saturdayStartTime: "11:00",
-//     saturdayEndTime: "21:00",
-//     holidayStartTime: "11:00",
-//     holidayEndTime: "21:00",
-//     baseParkingTime: 5,
-//     baseParkingFee: 500,
-//   },
-//   {
-//     id: 2,
-//     parkingName: "역삼문화공원 제2호 공영주차장",
-//     address: "서울특별시 강남구 역삼동 635-1",
-//     latitude: 37.65,
-//     longitude: 127.028,
-//     weekdayStartTime: "11:00",
-//     weekdayEndTime: "21:00",
-//     saturdayStartTime: "11:00",
-//     saturdayEndTime: "21:00",
-//     holidayStartTime: "11:00",
-//     holidayEndTime: "21:00",
-//     baseParkingTime: 5,
-//     baseParkingFee: 500,
-//   },
-// ];
+import { mapApi } from "../api/map";
+import { parkingApi } from "../api/parkingSpace";
 
 const Map = () => {
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -51,6 +17,7 @@ const Map = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [places, setPlaces] = useState([]); // 검색된 장소들
   const [parkingSpaces, setParkingSpaces] = useState([]); // 주차장 데이터 저장
+  const [cctvLoc, setCctvLoc] = useState([]); // 단속카메라 데이터 저장
 
   // 📍 내 위치 가져오기
   const getLocation = () => {
@@ -78,26 +45,13 @@ const Map = () => {
     getLocation();
   }, []);
 
-  // 주차 공간 api 연동
+  // 주차장 & 단속카메라 위치 조회
   useEffect(() => {
     const getParkingSpace = async () => {
-      try {
-        if (!currentLocation) {
-          return; // 위치 정보가 없으면 API 요청하지 않음
-        }
-
-        const res = await api.get("/api/parker/parking-space/nearby", {
-          params: {
-            latitude: currentLocation.latitude,
-            longitude: currentLocation.longitude,
-          },
-        });
-
-        console.log(res.data.result.parkingSpaceNearbyResponseList);
-        setParkingSpaces(res.data.result.parkingSpaceNearbyResponseList); // 주차장 데이터 저장
-      } catch (err) {
-        console.error("Error get parkingspace", err);
-      }
+      // 전체 위치 조회
+      const allData = await mapApi.getAll(currentLocation);
+      setParkingSpaces(allData.parkingSpaces); // 주차장 위치
+      setCctvLoc(allData.cameraLocations); // 단속카메라 위치
     };
 
     getParkingSpace();
@@ -159,10 +113,9 @@ const Map = () => {
             image: parkingMark,
           });
 
-          marker.setVisible(true);
-
-          window.kakao.maps.event.addListener(marker, "click", () => {
-            setSelectedParking(parking);
+          window.kakao.maps.event.addListener(marker, "click", async () => {
+            const parkingIdData = await parkingApi.getNearbyId(parking.id);
+            setSelectedParking(parkingIdData);
           });
         });
 
