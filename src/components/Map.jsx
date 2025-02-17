@@ -50,8 +50,12 @@ const Map = () => {
     const getParkingSpace = async () => {
       // 전체 위치 조회
       const allData = await mapApi.getAll(currentLocation);
-      setParkingSpaces(allData.parkingSpaces); // 주차장 위치
-      setCctvLoc(allData.cameraLocations); // 단속카메라 위치
+      if (!allData) {
+        return;
+      }
+
+      setParkingSpaces(allData.parkingSpaces || []); // 주차장 위치
+      setCctvLoc(allData.cameraLocations || []); // 단속카메라 위치
     };
 
     getParkingSpace();
@@ -103,7 +107,7 @@ const Map = () => {
           { offset: new window.kakao.maps.Point(25, 50) } // 마커 이미지의 중심 좌표
         );
 
-        parkingSpaces.forEach((parking) => {
+        parkingSpaces?.forEach((parking) => {
           const marker = new window.kakao.maps.Marker({
             position: new window.kakao.maps.LatLng(
               parking.latitude,
