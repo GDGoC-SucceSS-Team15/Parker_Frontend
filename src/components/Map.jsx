@@ -4,6 +4,7 @@ import PositionMaker from "./../assets/PositionMaker.png";
 import MarkerModal from "./Modals/MarkerModal";
 import ParkingMarkerContent from "./Modals/ParkingMarkerContent";
 import ParkingMarker from "./../assets/ParkingMarker.svg";
+//import NewParkingMarker from "../assets/NewParkingMarker.svg";
 import BottomBar from "./BottomBar";
 import TopBar from "./TopBar";
 import { mapApi } from "../api/map";
