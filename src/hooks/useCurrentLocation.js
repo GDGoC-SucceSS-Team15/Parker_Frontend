@@ -1,3 +1,8 @@
+// 현재 위치를 반환하는 커스텀훅
+// currentLocation: 현재 위치 { latitude, longitude }
+// isLoading: 로딩 상태
+// error: 에러 텍스트
+
 import { useState, useEffect } from "react";
 
 const useCurrentLocation = () => {

@@ -1,3 +1,5 @@
+// 현재 날짜 기반으로 daytype을 반환하는 커스텀훅
+
 export function useDayType(date = new Date()) {
   const holidays = [
     "01-01", // 신정
