@@ -110,6 +110,7 @@ function SignUpPage() {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
+                onKeyDown={(e) => e.key === "Enter" && setStep(2)}
               />
             </div>
             <SquareButton onClick={() => setStep(2)} buttonTxt={"다음"} />
@@ -133,6 +134,7 @@ function SignUpPage() {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
+                onKeyDown={(e) => e.key === "Enter" && setStep(3)}
               />
               {formData.email && validate.email && (
                 <ErrMsg>이메일 형식이 올바르지 않습니다.</ErrMsg>
@@ -159,6 +161,7 @@ function SignUpPage() {
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
+                onKeyDown={(e) => e.key === "Enter" && setStep(4)}
               />
               {formData.phone && validate.phone && (
                 <ErrMsg>전화번호는 숫자 10~11자로 입력해주세요.</ErrMsg>
@@ -201,6 +204,7 @@ function SignUpPage() {
                 name="pwcheck"
                 value={formData.pwcheck}
                 onChange={handleChange}
+                onKeyDown={(e) => e.key === "Enter" && handleSubmit}
               />
               {formData.pwcheck && validate.pwcheck && (
                 <ErrMsg>입력한 비밀번호와 다릅니다.</ErrMsg>

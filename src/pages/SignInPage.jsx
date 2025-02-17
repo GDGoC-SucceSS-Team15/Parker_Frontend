@@ -27,6 +27,12 @@ function SignInPage() {
     }
   };
 
+  const activeEnter = (e) => {
+    if (e.key === "Enter") {
+      handleLogin();
+    }
+  };
+
   return (
     <Wrapper>
       <div style={{ width: "80%" }}>
@@ -53,6 +59,7 @@ function SignInPage() {
                 value={pw}
                 onChange={(e) => setPw(e.target.value)}
                 placeholder="비밀번호"
+                onKeyDown={(e) => activeEnter(e)}
               />
             </div>
           </FormDiv>
