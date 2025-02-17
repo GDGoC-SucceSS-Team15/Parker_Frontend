@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from "styled-components";
 import { Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -6,40 +6,36 @@ import { AiOutlineArrowLeft } from "react-icons/ai";
 import profileImg from "../assets/profile.svg";
 import CustomModal from "../components/Modals/CustomModal";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import axios from "axios";
 
 function ReportPage() {
   const navigate = useNavigate();
-  const [reports, setReports] = useState([
-    {
-      id: 1,
-      date: "2025.01.15",
-      time: "11:00",
-      address: "서울특별시 용산구 효창로 91",
-      status: "미승인",
-    },
-    {
-      id: 2,
-      date: "신고 날짜",
-      time: "시간",
-      address: "주소",
-      status: "승인",
-    },
-    {
-      id: 3,
-      date: "신고 날짜",
-      time: "시간",
-      address: "주소",
-      status: "대기",
-    },
-  ]);
-
+  const [reports, setReports] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const removeReport = (id) => {
-    setReports((prevReports) =>
-      prevReports.filter((report) => report.id !== id)
-    );
-    setIsModalOpen(true);
+  useEffect(() => {
+    const fetchReports = async () => {
+      try {
+        const response = await axios.get("https://BE/api/reports");
+        setReports(response.data);
+      } catch (error) {
+        console.error("신고 내역 불러오기 실패:", error);
+      }
+    };
+
+    fetchReports();
+  }, []);
+
+  const removeReport = async (id) => {
+    try {
+      await axios.delete(`https://BE/api/reports/${id}`);
+      setReports((prevReports) =>
+        prevReports.filter((report) => report.id !== id)
+      );
+      setIsModalOpen(true);
+    } catch (error) {
+      console.error("신고 삭제 실패:", error);
+    }
   };
 
   const closeModal = () => {
@@ -170,39 +166,6 @@ const DateTimeWrapper = styled.div`
   width: 100%;
   font-weight: bold;
 `;
-
-// const Date = styled.span`
-//   font-size: 14px;
-//   color: #555;
-// `;
-
-// const Time = styled.span`
-//   font-size: 14px;
-//   color: #555;
-// `;
-
-// const Divider = styled.hr`
-//   border: 0;
-//   border-top: 1px solid #ddd;
-//   margin: 10px 0;
-// `;
-
-// const Address = styled.p`
-//   font-size: 14px;
-//   color: #555;
-// `;
-
-// const ApprovalStatus = styled.div`
-//   font-size: 14px;
-//   color: ${(props) =>
-//     props.status === "승인"
-//       ? "#4CAF50"
-//       : props.status === "미승인"
-//       ? "#FF4D4D"
-//       : "#FFC107"};
-//   span {
-//     font-weight: bold;
-//   }`;
 
 const Date = styled.div`
   flex-grow: 1;
