@@ -1,15 +1,24 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import warning from "../../assets/warning.svg";
-import imageIcon from "../../assets/image.svg";
 import uploadImg from "../../assets/uploadImg.svg";
+import imageIcon from "../../assets/image.svg";
 
 const UploadModal = () => {
   const [result, setResult] = useState("");
+  const [preview, setPreview] = useState(null);
 
   const handlePostImage = () => {
     setResult("error");
   };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setPreview(URL.createObjectURL(file));
+    }
+  };
+
   return (
     <Wrapper>
       <div className="icon">
@@ -21,12 +30,10 @@ const UploadModal = () => {
       </div>
       <Text>
         {result === "error" ? (
-          <>
-            <div className="title">
-              가이드에 맞게 촬영된 <br />
-              이미지를 업로드해주세요
-            </div>
-          </>
+          <div className="title">
+            가이드에 맞게 촬영된 <br />
+            이미지를 업로드해주세요
+          </div>
         ) : (
           <>
             <div className="title">
@@ -45,11 +52,20 @@ const UploadModal = () => {
           찍어주세요.
         </div>
         <Input>
-          <input id="ai-image" type="file" />
-          <label for="ai-image">
-            <div className="icon">
-              <img src={imageIcon} alt="imageIcon" />
-            </div>
+          <input
+            id="ai-image"
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+          />
+          <label htmlFor="ai-image">
+            {preview ? (
+              <PreviewImage src={preview} alt="preview" />
+            ) : (
+              <div className="icon">
+                <img src={imageIcon} alt="imageIcon" />
+              </div>
+            )}
           </label>
         </Input>
       </Text>
@@ -103,12 +119,19 @@ const Input = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     width: 100%;
     height: 260px;
     background-color: #f1f1f1;
     border: 1px solid #cdcdcd;
     cursor: pointer;
   }
+`;
+
+const PreviewImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 `;
 
 const ConfirmBtn = styled.button`
