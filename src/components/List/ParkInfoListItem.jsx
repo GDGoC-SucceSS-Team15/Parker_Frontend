@@ -6,7 +6,6 @@ import { AiOutlineDollar } from "react-icons/ai";
 
 const ParkInfoListItem = ({
   km,
-  min,
   title,
   location,
   time,
@@ -21,12 +20,10 @@ const ParkInfoListItem = ({
           <div>
             <LuSquareParking color="#015900" size={30} />
           </div>
-          <div>
-            {km}km / {min}분
-          </div>
+          <div>{km}</div>
         </div>
         <div className="Right">
-          <div className="title">{title}</div>
+          <div className="title">{title} 주차장</div>
           <div className="location">{location}</div>
         </div>
       </Location>

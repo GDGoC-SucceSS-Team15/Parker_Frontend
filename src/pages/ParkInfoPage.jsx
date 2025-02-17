@@ -108,15 +108,22 @@ function ParkInfoPage() {
     if (day === 6) return "saturdayTime";
     if (day === 0) return "holidayTime"; // 일요일도 공휴일로 간주
 
-    return "weekday";
+    return "weekdayTime";
   };
 
   const daytype = isHoliday();
 
   const [parkingSpacebyId, setParkingSpacebyId] = useState();
 
-  const handleModalOpen = (id) => {
-    setParkingSpacebyId(parkingSpaces.find((parking) => parking.id === id));
+  const handleModalOpen = async (id) => {
+    try {
+      const res = await api.get(`/api/parker/parking-space/nearby/${id}`);
+
+      console.log("주차장 세부 정보 조회 성공", res);
+      setParkingSpacebyId(res.data.result);
+    } catch (error) {
+      console.error("주차장 세부 정보 조회 실패", error);
+    }
     setModalOpen(true);
   };
 
@@ -131,9 +138,8 @@ function ParkInfoPage() {
             key={item.id}
             title={item.parkingName}
             location={item.address}
-            km={item.km}
-            min={item.min}
-            time={item[daytype]}
+            km={item.distance}
+            time={item[daytype] === "00:00 ~ 00:00" ? "휴무" : item[daytype]}
             unit_time={item.baseParkingTime}
             unit_fee={item.baseParkingFee}
             onClick={() => handleModalOpen(item.id)}
@@ -163,6 +169,13 @@ const ContentDiv = styled.div`
   padding: 0 30px;
   overflow-y: auto;
   flex: 1;
+  & {
+    -ms-overflow-style: none; /* 인터넷 익스플로러 */
+    scrollbar-width: none; /* 파이어폭스 */
+  }
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const SubTitle = styled.div`
