@@ -6,78 +6,27 @@ import ParkInfoListItem from "../components/List/ParkInfoListItem";
 import CustomModal from "../components/Modals/CustomModal";
 import ParkInfoContent from "../components/Modals/ParkInfoContent";
 import { parkingApi } from "../api/parkingSpace";
+import { useDayType } from "../hooks/useDayType";
+import useCurrentLocation from "../hooks/useCurrentLocation";
 
 function ParkInfoPage() {
   const [modalOpen, setModalOpen] = useState(false);
-
-  const [currentLocation, setCurrentLocation] = useState({});
-  const [isLoading, setIsLoading] = useState(true); // 로딩 상태
   const [parkingSpaces, setParkingSpaces] = useState([]); // 주차장 데이터 저장
+  const [parkingSpacebyId, setParkingSpacebyId] = useState(); // 주차장 세부 정보 저장
+  const daytype = useDayType(); // 오늘 날짜 daytype 반환 커스텀훅
 
-  useEffect(() => {
-    getLocation();
-  }, []);
+  const { currentLocation, isLoading } = useCurrentLocation(); // 현재 위치 반환 커스텀훅
 
   useEffect(() => {
     const getParkingSpace = async () => {
+      // 근처 주차장 조회
       const parkingData = await parkingApi.getNearby(currentLocation);
+      // 근처 주차장 정보 저장
       setParkingSpaces(parkingData);
     };
 
     getParkingSpace();
   }, [currentLocation]);
-
-  // 내 위치 가져오기
-  const getLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setCurrentLocation({ latitude, longitude }); // 현재 위치 설정
-          setIsLoading(false); // 로딩 완료
-        },
-        () => {
-          // 위치 정보가 없으면 기본값 (서울)
-          setCurrentLocation({ latitude: 37.5665, longitude: 126.978 });
-          setIsLoading(false);
-        }
-      );
-    } else {
-      // Geolocation 미지원 시 기본값 설정
-      setCurrentLocation({ latitude: 37.5665, longitude: 126.978 });
-      setIsLoading(false);
-    }
-  };
-
-  const isHoliday = (date = new Date()) => {
-    const holidays = [
-      "01-01", // 신정
-      "03-01", // 삼일절
-      "05-05", // 어린이날
-      "06-06", // 현충일
-      "08-15", // 광복절
-      "10-03", // 개천절
-      "10-09", // 한글날
-      "12-25", // 크리스마스
-    ];
-
-    // 음력 기반 공휴일 (설날, 추석)은 API 필요..
-    const monthDay = `${String(date.getMonth() + 1).padStart(2, "0")}-${String(
-      date.getDate()
-    ).padStart(2, "0")}`;
-
-    if (holidays.includes(monthDay)) return "holidayTime";
-
-    const day = date.getDay();
-    if (day === 6) return "saturdayTime";
-    if (day === 0) return "holidayTime"; // 일요일도 공휴일로 간주
-
-    return "weekdayTime";
-  };
-
-  const daytype = isHoliday();
-
-  const [parkingSpacebyId, setParkingSpacebyId] = useState();
 
   const handleModalOpen = async (id) => {
     //주자장 세부 정보 조회
