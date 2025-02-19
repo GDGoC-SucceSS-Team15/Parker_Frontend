@@ -19,7 +19,7 @@ function ProfileEditPage() {
     try {
       console.log("닉네임 변경 요청 시작:", nickname);
 
-      const response = await axios.patch(
+      const response = await axios.post(
         "/api/my-page/user-info",
         { name: nickname },
         { headers: { "Content-Type": "application/json" } }
@@ -29,7 +29,7 @@ function ProfileEditPage() {
 
       if (response.status === 200) {
         alert("닉네임이 변경되었습니다.");
-        setNickname(response.data.name);
+        setNickname(response.data.result.nickname);
       } else {
         alert(response.data.message || "닉네임 변경 실패");
       }
@@ -53,7 +53,9 @@ function ProfileEditPage() {
           headers: { "Content-Type": "multipart/form-data" },
         });
 
-        setSelectedImage(response.data.imageUrl);
+        if (response.status === 200) {
+          setSelectedImage(response.data.result.profileImageUrl);
+        }
       } catch (error) {
         console.error("이미지 업로드 실패:", error);
       }

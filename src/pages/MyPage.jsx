@@ -66,6 +66,8 @@ function MyPage() {
       } catch (error) {
         console.error("이미지 업로드 실패:", error);
       }
+    } else {
+      alert("파일을 선택해주세요.");
     }
   };
 
