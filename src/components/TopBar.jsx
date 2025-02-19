@@ -10,6 +10,7 @@ import styled from "styled-components";
 const TopBar = ({ onSearch, onToggle }) => {
   const [input, setInput] = useState("");
   const [isMenuVisible, setIsMenuVisible] = useState(false);
+ 
   const menuRef = useRef(null);
   const topBarRef = useRef(null);
 
@@ -34,6 +35,11 @@ const TopBar = ({ onSearch, onToggle }) => {
 
   const toggleMenu = () => {
     setIsMenuVisible((prev) => !prev);
+  };
+
+  // 필터링
+  const handleClick = (filterType) => {
+    onToggle(filterType);
   };
 
   // 클릭한 곳이 메뉴 외부인 경우 메뉴 닫기
@@ -81,13 +87,13 @@ const TopBar = ({ onSearch, onToggle }) => {
       )}
 
       <ButtonWrapper>
-        <FilterButton onClick={() => onToggle("parking")}>
+        <FilterButton onClick={() => handleClick("parking")}>
           <img src={Parking} alt="Parking" />
           주차공간
         </FilterButton>
-        <FilterButton onClick={() => onToggle("enforcement")}>
-          <img src={Warning} alt="enforcement" />
-          단속 구역
+        <FilterButton onClick={() => handleClick("crackdown")}>
+          <img src={Warning} alt="crackdown" />
+          단속구역
         </FilterButton>
         <FilterButton>
           <img src={Fire} alt="probability" />

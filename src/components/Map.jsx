@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, memo } from "react";
 import styled from "styled-components";
 import PositionMaker from "./../assets/PositionMaker.png"
 import MarkerModal from "./Modals/MarkerModal"
@@ -68,6 +68,9 @@ const Map = () => {
   const [map, setMap] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [places, setPlaces] = useState([]); // 검색된 장소들
+  const [showParking, setShowParking] = useState(true);
+  const [showCrackdown, setShowCrackdown] = useState(true);
+  const [toggle, setToggle] = useState("");
 
   useEffect(() => {
     if (!currentLocation) return; // 위치 정보가 없으면 실행하지 않음
@@ -110,6 +113,7 @@ const Map = () => {
           { offset: new window.kakao.maps.Point(25, 50) } // 마커 이미지의 중심 좌표
           );
         
+          if (showParking) {
         parkingData.forEach((parking) => {
           const marker = new window.kakao.maps.Marker({
             position: new window.kakao.maps.LatLng(parking.latitude, parking.longitude),
@@ -121,31 +125,65 @@ const Map = () => {
             setSelectedParking(parking);
           });
         });
-        
+      }
         // ⚠️ 단속 구역 마커
+        if (showCrackdown) {
         const CrackdownMark = new window.kakao.maps.MarkerImage(
           CrackdownMarker,
           new window.kakao.maps.Size(50, 50), 
           { offset: new window.kakao.maps.Point(25, 50) } // 마커 이미지의 중심 좌표
           );
         
-          crackdownData.forEach((parking) => {
+          crackdownData.forEach((crackdown) => {
           const marker = new window.kakao.maps.Marker({
-            position: new window.kakao.maps.LatLng(parking.latitude, parking.longitude),
+            position: new window.kakao.maps.LatLng(crackdown.latitude, crackdown.longitude),
             map: newMap,
             image: CrackdownMark,
           });
 
           window.kakao.maps.event.addListener(marker, "click", () => {
-            setSelectedCrackdown(parking);
+            setSelectedCrackdown(crackdown);
           });
         }); 
+          }
       });
     };
     return () => {
       document.head.removeChild(script); // 스크립트 정리
     };
-  }, [currentLocation]);
+  }, [currentLocation, showParking, showCrackdown]);
+
+  // 필터링
+  const handleToggle = (filterType) => {
+    setToggle(filterType);
+    switch (filterType) {
+      case "parking":
+        if (showParking && showCrackdown) {
+          setShowCrackdown(false);
+        } else if (showParking && !showCrackdown) {
+          setShowCrackdown(true);
+        } else {
+          setShowParking(true);
+          setShowCrackdown(true);
+        }
+        break;
+        
+      case "crackdown":
+        // 단속구역 버튼을 눌렀을 때
+        if (showParking && showCrackdown) {
+          setShowParking(false);
+        } else if (!showParking && showCrackdown) {
+          setShowParking(true);
+        } else {
+          setShowParking(true);
+          setShowCrackdown(true);
+        }
+        break;
+  
+      default:
+        break;
+    }
+  };
 
   // 📍 내 위치 가져오기
   const getLocation = () => {
@@ -208,7 +246,7 @@ const Map = () => {
   return (
     <div>
       <MapContainer id="map" />
-      <TopBar onSearch={setSearchQuery} />
+      <TopBar onSearch={setSearchQuery} onToggle={handleToggle} />
       {selectedParking && (
         <MarkerModal
           isOpen={!!selectedParking}
@@ -238,7 +276,7 @@ const Map = () => {
   );
 };
 
-export default Map;
+export default memo(Map);
 
 const MapContainer = styled.div`
   width: 100%;
