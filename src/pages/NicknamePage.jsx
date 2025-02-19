@@ -10,6 +10,7 @@ function ProfileEditPage() {
   const [selectedImage, setSelectedImage] = useState(profileImg);
   const [nickname, setNickname] = useState("");
 
+
   const handleBack = () => {
     navigate(-1);
   };
