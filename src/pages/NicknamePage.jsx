@@ -1,15 +1,62 @@
 import React, { useState } from "react";
 import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { AiOutlineArrowLeft } from "react-icons/ai";
+import { AiOutlineArrowLeft, AiOutlineCamera } from "react-icons/ai";
 import profileImg from "../assets/profile.svg";
+import axios from "axios";
 
 function ProfileEditPage() {
   const navigate = useNavigate();
-  const [nickname, setNickname] = useState("김고수");
+  const [selectedImage, setSelectedImage] = useState(profileImg);
+  const [nickname, setNickname] = useState("");
 
   const handleBack = () => {
     navigate(-1);
+  };
+
+  const handleNicknameChange = async () => {
+    try {
+      console.log("닉네임 변경 요청 시작:", nickname);
+
+      const response = await axios.patch(
+        "/api/my-page/user-info",
+        { name: nickname },
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+      console.log("서버 응답:", response);
+
+      if (response.status === 200) {
+        alert("닉네임이 변경되었습니다.");
+        setNickname(response.data.name);
+      } else {
+        alert(response.data.message || "닉네임 변경 실패");
+      }
+    } catch (error) {
+      console.error("닉네임 변경 오류:", error.response || error);
+      alert(
+        "닉네임 변경 오류: " +
+          (error.response?.data?.message || "알 수 없는 오류")
+      );
+    }
+  };
+
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append("profileImage", file);
+
+      try {
+        const response = await axios.post("/api/my-page/user-info", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+
+        setSelectedImage(response.data.imageUrl);
+      } catch (error) {
+        console.error("이미지 업로드 실패:", error);
+      }
+    }
   };
 
   return (
@@ -20,10 +67,18 @@ function ProfileEditPage() {
         </BackButton>
         <Title>프로필 수정</Title>
       </HeaderWrapper>
-
       <ProfileContainer>
-        <ProfileImage src={profileImg} alt="Profile" />
-
+        <ProfileLabel>
+          <ProfileImage src={selectedImage || profileImg} alt="profile" />
+          <CameraIcon>
+            <AiOutlineCamera size={23} />
+            <ImgFileInput
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+            />
+          </CameraIcon>
+        </ProfileLabel>
         <NicknameWrapper>
           <Label>닉네임</Label>
           <NicknameInput
@@ -31,6 +86,9 @@ function ProfileEditPage() {
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
           />
+          <SubmitButton onClick={() => handleNicknameChange(nickname)}>
+            변경
+          </SubmitButton>{" "}
         </NicknameWrapper>
       </ProfileContainer>
     </Wrapper>
@@ -51,31 +109,32 @@ const Wrapper = styled.div`
 
 const HeaderWrapper = styled.div`
   display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
   width: 100%;
   max-width: 600px;
   position: relative;
+  gap: 10px;
 `;
 
 const BackButton = styled.div`
   position: absolute;
   left: 0;
   cursor: pointer;
-  padding: 10px;
+  padding: 30px;
 `;
 
 const Title = styled.h2`
   width: 100%;
   text-align: center;
-  margin: 0 auto;
-  margin-right: 10px;
 `;
 
 const ProfileContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 80px;
+  margin-top: 70px;
   width: 100%;
   max-width: 600px;
 `;
@@ -85,8 +144,32 @@ const ProfileImage = styled.img`
   height: 100px;
   border-radius: 50%;
   object-fit: cover;
-  margin-bottom: 40px;
+  cursor: pointer;
   border: 2px solid #ccc;
+`;
+
+const ProfileLabel = styled.label`
+  position: relative;
+  cursor: pointer;
+`;
+
+const ImgFileInput = styled.input`
+  display: none;
+`;
+
+const CameraIcon = styled.div`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 `;
 
 const NicknameWrapper = styled.div`
@@ -95,7 +178,8 @@ const NicknameWrapper = styled.div`
   width: 100%;
   max-width: 450px;
   gap: 10px;
-  padding-right: 60px;
+  align-self: center;
+  margin: 0 auto;
 `;
 
 const Label = styled.label`
@@ -105,14 +189,29 @@ const Label = styled.label`
 `;
 
 const NicknameInput = styled.input`
-  width: 100%;
-  padding: 10px;
   flex: 1;
+  padding: 10px;
   font-size: 18px;
-  border: 1px solid #ddd;
+  border: 0.5px solid black;
   border-radius: 7px;
   outline: none;
-  &:focus {
-    border-color: #888;
+`;
+
+const SubmitButton = styled.button`
+  width: 100%;
+  max-width: 450px;
+  margin-top: 20px;
+  padding: 15px;
+  font-size: 18px;
+  font-weight: bold;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+
+  &:hover {
+    background-color: #333;
   }
 `;

@@ -1,14 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { AiOutlineArrowLeft, AiOutlineSetting } from "react-icons/ai";
+import {
+  AiOutlineArrowLeft,
+  AiOutlineSetting,
+  AiOutlineCamera,
+} from "react-icons/ai";
 import profileImg from "../assets/profile.svg";
 import logoImg from "../assets/logoimg.svg";
+import axios from "axios";
 
 function MyPage() {
   const navigate = useNavigate();
   const [showAllBadges, setShowAllBadges] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(profileImg);
+  const [userInfo, setUserInfo] = useState({
+    name: "",
+    nickname: "",
+    profileImageUrl: profileImg,
+  });
+
+  useEffect(() => {
+    axios
+      .get("/api/my-page/user-info")
+      .then((response) => {
+        if (response.data.isSuccess) {
+          setUserInfo(response.data.result);
+        }
+      })
+      .catch((error) => console.error("유저 정보 불러오기 실패:", error));
+  }, []);
 
   const handleBack = () => {
     if (window.history.length > 1) {
@@ -26,11 +46,26 @@ function MyPage() {
     { id: 5, text: "주차밭의 파수꾼" },
   ];
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setSelectedImage(imageUrl);
+      const formData = new FormData();
+      formData.append("profileImage", file);
+
+      try {
+        const response = await axios.post("/api/my-page/user-info", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+
+        if (response.data.isSuccess) {
+          setUserInfo((prev) => ({
+            ...prev,
+            profileImageUrl: response.data.result.profileImageUrl,
+          }));
+        }
+      } catch (error) {
+        console.error("이미지 업로드 실패:", error);
+      }
     }
   };
 
@@ -44,16 +79,25 @@ function MyPage() {
         </HeaderWrapper>
         <ProfileDiv>
           <ProfileLabel>
-            <ProfileImage src={selectedImage || profileImg} alt="profile" />
-            <HiddenFileInput
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
+            <ProfileImage
+              src={userInfo.profileImageUrl || profileImg}
+              alt="profile"
             />
+            <CameraIcon>
+              <AiOutlineCamera size={23} />
+              <ImgFileInput
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+              />
+            </CameraIcon>
           </ProfileLabel>
           <ProfileInfo>
             <Nickname onClick={() => navigate("/nickname-edit")}>
-              <span style={{ fontWeight: "bold" }}>김고수</span>님
+              <span style={{ fontWeight: "bold" }}>
+                {userInfo.nickname || "사용자"}
+              </span>
+              님
             </Nickname>
           </ProfileInfo>
         </ProfileDiv>
@@ -76,16 +120,13 @@ function MyPage() {
         <ServiceDiv>
           <span style={{ fontWeight: "bold", fontSize: "22px" }}>서비스</span>
           <Service onClick={() => navigate("/nickname-edit")}>
-            <AiOutlineSetting size={30} />
-            개인 정보 수정
+            <AiOutlineSetting size={30} /> 개인 정보 수정
           </Service>
           <Service onClick={() => navigate("/parking-spaces")}>
-            <AiOutlineSetting size={30} />
-            개인 설정 관리
+            <AiOutlineSetting size={30} /> 개인 설정 관리
           </Service>
           <Service onClick={() => navigate("/bookmark")}>
-            <AiOutlineSetting size={30} />
-            활동 기록
+            <AiOutlineSetting size={30} /> 활동 기록
           </Service>
         </ServiceDiv>
       </Content>
@@ -144,8 +185,31 @@ const ProfileLabel = styled.label`
   cursor: pointer;
 `;
 
-const HiddenFileInput = styled.input`
+const ImgFileInput = styled.input`
   display: none;
+`;
+
+const CameraIcon = styled.div`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  input {
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    cursor: pointer;
+  }
 `;
 
 const LogoImage = styled.img`
@@ -166,7 +230,7 @@ const Nickname = styled.h2`
   font-size: 25px;
   cursor: pointer;
   font-weight: normal;
-  margin-left: 20px;
+  margin-left: 10px;
   &:hover {
     text-decoration: underline;
   }
