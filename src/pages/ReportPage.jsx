@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -6,44 +6,31 @@ import { AiOutlineArrowLeft } from "react-icons/ai";
 import profileImg from "../assets/profile.svg";
 import CustomModal from "../components/Modals/CustomModal";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { reportApi } from "../api/report";
 
 function ReportPage() {
   const navigate = useNavigate();
-  const [reports, setReports] = useState([
-    {
-      id: 1,
-      date: "2025.01.15",
-      time: "11:00",
-      address: "서울특별시 용산구 효창로 91",
-      status: "미승인",
-    },
-    {
-      id: 2,
-      date: "신고 날짜",
-      time: "시간",
-      address: "주소",
-      status: "승인",
-    },
-    {
-      id: 3,
-      date: "신고 날짜",
-      time: "시간",
-      address: "주소",
-      status: "대기",
-    },
-  ]);
+  const [reports, setReports] = useState([]);
+
+  const getReport = async () => {
+    const reportData = await reportApi.getMyReport();
+    setReports(reportData);
+  };
+
+  useEffect(() => {
+    getReport();
+  }, []);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const removeReport = (id) => {
-    setReports((prevReports) =>
-      prevReports.filter((report) => report.id !== id)
-    );
+    reportApi.delMyReport(id);
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
+    getReport();
   };
 
   const handleBack = () => {
@@ -65,17 +52,18 @@ function ReportPage() {
           <ProfileImage src={profileImg} alt="profile" />
         </HeaderWrapper>
         <ReportList>
+          {reports.length === 0 && <div>신고 내역이 없습니다.</div>}
           {reports.map((report) => (
             <ReportItem key={report.id}>
               <ReportContent>
                 <DateTimeWrapper>
-                  <Date>{report.date}</Date>
-                  <Time>{report.time}</Time>
+                  <Date>{report.createdDate}</Date>
+                  <Time>{report.createdTime}</Time>
                 </DateTimeWrapper>
                 <Divider />
                 <Address>{report.address}</Address>
                 <ApprovalStatus status={report.status}>
-                  승인 여부 <span>{report.status}</span>
+                  승인 여부 <span>{report.approvalStatus}</span>
                 </ApprovalStatus>
               </ReportContent>
               <DeleteButton onClick={() => removeReport(report.id)}>
