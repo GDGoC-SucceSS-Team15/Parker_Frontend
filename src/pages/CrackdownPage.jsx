@@ -7,19 +7,14 @@ import CrackdownListItem from "../components/List/CrackdownListItem";
 const parkingData = [
   {
     id: 1,
-    km: "2.1",
-    min: "11",
     sidoName: "경기도",
     sigunguName: "가평군",
     roadName: "오리나무길",
     detailedLocation: "가평읍 홍농종묘앞",
     managementPhoneNumber: "031-580-2075",
-    weekdayStartTime: "08:00",
-    weekdayEndTime: "19:00",
-    saturdayStartTime: "00:00",
-    saturdayEndTime: "00:00",
-    holidayStartTime: "00:00",
-    holidayEndTime: "00:00"
+    weekdayTime: "08:00",
+    saturdayTime: "00:00",
+    holidayTime: "00:00",
   },
 ];
 
@@ -37,12 +32,9 @@ function CrackdownPage() {
             roadName={item.roadName}
             detailedLocation={item.detailedLocation}
             managementPhoneNumber={item.managementPhoneNumber}
-            weekdayStartTime={item.weekdayStartTime}
-            weekdayEndTime={item.weekdayEndTime}
-            saturdayStartTime={item.saturdayStartTime}
-            saturdayEndTime={item.saturdayEndTime}
-            holidayStartTime={item.holidayStartTime}
-            holidayEndTime={item.holidayEndTime}
+            weekdayTime={item.weekdayTime}
+            saturdayTime={item.saturdayTime}
+            holidayTime={item.holidayTime}
           />
         ))}
       </ContentDiv>

@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { IoWarningOutline } from "react-icons/io5";
 import { FiClock } from "react-icons/fi";
 import { BsTelephone } from "react-icons/bs";
-import { LuMapPin } from "react-icons/lu"; 
 
 const CrackdownListItem = ({
   km,
@@ -13,12 +12,9 @@ const CrackdownListItem = ({
   roadName,
   detailedLocation,
   managementPhoneNumber,
-  weekdayStartTime,
-  weekdayEndTime,
-  saturdayStartTime,
-  saturdayEndTime,
-  holidayStartTime,
-  holidayEndTime,
+  weekdayTime,
+  saturdayTime,
+  holidayTime,
 }) => {
   return (
     <ItemWrapper >
@@ -34,12 +30,6 @@ const CrackdownListItem = ({
       </Location>
       <Line />
       <InfoRow>
-        <LuMapPin size={18} />
-        <InfoText>
-          {km}km / {min}분
-        </InfoText>
-      </InfoRow>
-      <InfoRow>
         <FiClock size={18} />
         <InfoText>
           평일 단속 시간 <br />
@@ -47,9 +37,9 @@ const CrackdownListItem = ({
           공휴일 단속 시간 
         </InfoText>
         <InfoText style={{ marginLeft: 'auto' }}>
-          {weekdayStartTime} ~ {weekdayEndTime} <br />
-          {saturdayStartTime} ~ {saturdayEndTime} <br />
-          {holidayStartTime} ~ {holidayEndTime} 
+          {weekdayTime} <br />
+          {saturdayTime} <br />
+          {holidayTime}
         </InfoText>
       </InfoRow>
       <InfoRow>

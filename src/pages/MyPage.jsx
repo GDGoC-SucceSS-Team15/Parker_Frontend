@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { AiOutlineArrowLeft, AiOutlineSetting } from "react-icons/ai";
+import {
+  AiOutlineArrowLeft,
+  AiOutlineSetting,
+  AiOutlineCamera,
+} from "react-icons/ai";
 import profileImg from "../assets/profile.svg";
 import logoImg from "../assets/logoimg.svg";
 
@@ -26,11 +30,23 @@ function MyPage() {
     { id: 5, text: "주차밭의 파수꾼" },
   ];
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setSelectedImage(imageUrl);
+      const formData = new FormData();
+      formData.append("profileImage", file);
+
+      try {
+        const response = await fetch("https://BE/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await response.json();
+        setSelectedImage(data.imageUrl);
+      } catch (error) {
+        console.error("이미지 업로드 실패:", error);
+      }
     }
   };
 
@@ -45,11 +61,14 @@ function MyPage() {
         <ProfileDiv>
           <ProfileLabel>
             <ProfileImage src={selectedImage || profileImg} alt="profile" />
-            <HiddenFileInput
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-            />
+            <CameraIcon>
+              <AiOutlineCamera size={23} />
+              <ImgFileInput
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+              />
+            </CameraIcon>
           </ProfileLabel>
           <ProfileInfo>
             <Nickname onClick={() => navigate("/nickname-edit")}>
@@ -144,8 +163,31 @@ const ProfileLabel = styled.label`
   cursor: pointer;
 `;
 
-const HiddenFileInput = styled.input`
+const ImgFileInput = styled.input`
   display: none;
+`;
+
+const CameraIcon = styled.div`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  input {
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    cursor: pointer;
+  }
 `;
 
 const LogoImage = styled.img`
