@@ -5,11 +5,23 @@ import { IoLockClosedOutline } from "react-icons/io5";
 import logotxt from "../assets/logotxt.svg";
 import SquareButton from "../components/Buttons/SquareButton";
 import { useNavigate } from "react-router-dom";
+import { userApi } from "../api/user";
 
 function SignInPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
+
+  const handleLogin = async () => {
+    userApi.signIn(email, pw);
+    navigate("/");
+  };
+
+  const activeEnter = (e) => {
+    if (e.key === "Enter") {
+      handleLogin();
+    }
+  };
 
   return (
     <Wrapper>
@@ -37,11 +49,12 @@ function SignInPage() {
                 value={pw}
                 onChange={(e) => setPw(e.target.value)}
                 placeholder="비밀번호"
+                onKeyDown={(e) => activeEnter(e)}
               />
             </div>
           </FormDiv>
         </LoginDiv>
-        <SquareButton buttonTxt={"로그인"} onClick={() => alert("로그인")} />
+        <SquareButton buttonTxt={"로그인"} onClick={handleLogin} />
         <SignupBtn onClick={() => navigate("/signup")}>회원가입하기</SignupBtn>
       </div>
     </Wrapper>

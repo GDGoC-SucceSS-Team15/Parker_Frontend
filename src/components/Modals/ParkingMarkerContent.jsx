@@ -1,40 +1,46 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { IoArrowBack } from "react-icons/io5";
 import { FaRegStar } from "react-icons/fa6";
-import { PiClock } from "react-icons/pi"; 
+import { PiClock } from "react-icons/pi";
 import { BiDollarCircle } from "react-icons/bi";
-import { LuMapPin } from "react-icons/lu"; 
+import { LuMapPin } from "react-icons/lu";
+import { bookmarkApi } from "../../api/bookmark";
+import { FaStar } from "react-icons/fa";
+import useCheckClosed from "../../hooks/useCheckClosed";
 
 const ParkingMarkerContent = ({
+  parkingId,
+  bookmarked,
   parkingName,
   distance,
-  estimatedTime,
-  weekdayStartTime,
-  weekdayEndTime,
-  saturdayStartTime,
-  saturdayEndTime,
-  holidayStartTime,
-  holidayEndTime,
+  weekdayTime,
+  saturdayTime,
+  holidayTime,
   baseParkingTime,
   baseParkingFee,
   onClose,
 }) => {
+  const [bmState, setBmState] = useState(bookmarked);
+  const handleBookmark = async (id) => {
+    bookmarkApi.toggleBookmark(id);
+    setBmState(!bmState);
+  };
   return (
     <Container>
       <Header>
         <BackBtn onClick={onClose}>
           <IoArrowBack size={25} />
         </BackBtn>
-        <Title>{parkingName}</Title>
-        <StarBtn>
-          <FaRegStar size={22} />
+        <Title>{parkingName} 주차장</Title>
+        <StarBtn onClick={() => handleBookmark(parkingId)}>
+          {bmState ? <FaStar size={22} /> : <FaRegStar size={22} />}
         </StarBtn>
       </Header>
 
       <InfoRow>
         <LuMapPin size={18} />
-        <InfoText>{distance}m / {estimatedTime}분</InfoText>
+        <InfoText>{distance}</InfoText>
       </InfoRow>
 
       <InfoRow>
@@ -42,12 +48,13 @@ const ParkingMarkerContent = ({
         <InfoText>
           평일 운영 시간 <br />
           토요일 운영 시간 <br />
-          공휴일 운영 시간 
+          공휴일 운영 시간
         </InfoText>
-        <InfoText style={{ marginLeft: 'auto' }}>
-          {weekdayStartTime} ~ {weekdayEndTime} <br />
-          {saturdayStartTime} ~ {saturdayEndTime} <br />
-          {holidayStartTime} ~ {holidayEndTime} 
+        <InfoText style={{ marginLeft: "auto", textAlign: "end" }}>
+          {useCheckClosed(weekdayTime)} <br />
+          {useCheckClosed(saturdayTime)}
+          <br />
+          {useCheckClosed(holidayTime)}
         </InfoText>
       </InfoRow>
 
@@ -96,7 +103,7 @@ const Title = styled.div`
   max-width: 80%;
   margin: 0 auto 5px auto;
   display: block;
-  text-wrap: balance;
+  //text-wrap: balance;
 `;
 
 const StarBtn = styled.button`

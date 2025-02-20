@@ -8,6 +8,7 @@ import { PiPhone } from "react-icons/pi";
 import { IoLockClosedOutline } from "react-icons/io5";
 import { FaCircleCheck } from "react-icons/fa6";
 import SquareButton from "../components/Buttons/SquareButton";
+import { userApi } from "../api/user";
 
 function SignUpPage() {
   const navigate = useNavigate();
@@ -15,15 +16,15 @@ function SignUpPage() {
   const [validate, setValidate] = useState({
     name: true,
     email: true,
-    phone: true,
-    pw: true,
+    phoneNumber: true,
+    password: true,
     pwcheck: true,
   });
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    phone: "",
-    pw: "",
+    phoneNumber: "",
+    password: "",
     pwcheck: "",
   });
 
@@ -46,14 +47,14 @@ function SignUpPage() {
     } else if (name === "email") {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       isValid = emailRegex.test(value);
-    } else if (name === "phone") {
+    } else if (name === "phoneNumber") {
       const phoneRegex = /^\d{10,11}$/; // 전화번호: 숫자 10~11자
       isValid = phoneRegex.test(value);
-    } else if (name === "pw") {
+    } else if (name === "password") {
       const pwRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,16}$/;
       isValid = pwRegex.test(value);
     } else if (name === "pwcheck") {
-      isValid = value === formData.pw; // 비밀번호 확인: 비밀번호와 일치 여부
+      isValid = value === formData.password; // 비밀번호 확인: 비밀번호와 일치 여부
     }
 
     // validate 상태 업데이트
@@ -63,12 +64,13 @@ function SignUpPage() {
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     console.log("validate", validate);
     const isValid = Object.values(validate).every((value) => value === false);
 
     if (isValid) {
       console.log(formData);
+      userApi.signUp(formData);
       setStep(5);
     } else {
       alert("올바르지 않은 형식이 포함되거나 작성하지 않은 필드가 있습니다.");
@@ -97,6 +99,7 @@ function SignUpPage() {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
+                onKeyDown={(e) => e.key === "Enter" && setStep(2)}
               />
             </div>
             <SquareButton onClick={() => setStep(2)} buttonTxt={"다음"} />
@@ -120,6 +123,7 @@ function SignUpPage() {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
+                onKeyDown={(e) => e.key === "Enter" && setStep(3)}
               />
               {formData.email && validate.email && (
                 <ErrMsg>이메일 형식이 올바르지 않습니다.</ErrMsg>
@@ -143,11 +147,12 @@ function SignUpPage() {
               <input
                 type="tel"
                 placeholder="예) 01012345678"
-                name="phone"
-                value={formData.phone}
+                name="phoneNumber"
+                value={formData.phoneNumber}
                 onChange={handleChange}
+                onKeyDown={(e) => e.key === "Enter" && setStep(4)}
               />
-              {formData.phone && validate.phone && (
+              {formData.phoneNumber && validate.phoneNumber && (
                 <ErrMsg>전화번호는 숫자 10~11자로 입력해주세요.</ErrMsg>
               )}
             </div>
@@ -169,11 +174,11 @@ function SignUpPage() {
               <input
                 type="password"
                 placeholder="영문, 숫자 조합 8~16자"
-                name="pw"
-                value={formData.pw}
+                name="password"
+                value={formData.password}
                 onChange={handleChange}
               />
-              {formData.pw && validate.pw && (
+              {formData.password && validate.password && (
                 <ErrMsg>
                   비밀번호는 영문과 숫자를 조합하여 8~16자로 입력해야 합니다.
                 </ErrMsg>
@@ -188,6 +193,7 @@ function SignUpPage() {
                 name="pwcheck"
                 value={formData.pwcheck}
                 onChange={handleChange}
+                onKeyDown={(e) => e.key === "Enter" && handleSubmit}
               />
               {formData.pwcheck && validate.pwcheck && (
                 <ErrMsg>입력한 비밀번호와 다릅니다.</ErrMsg>
