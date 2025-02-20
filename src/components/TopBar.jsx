@@ -8,6 +8,7 @@ import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import CustomModal from "./Modals/CustomModal";
 import UploadModal from "./Ai/UploadModal";
+import { LuSquareParking } from "react-icons/lu";
 
 const TopBar = ({ onSearch, onToggle }) => {
   const [input, setInput] = useState("");
@@ -91,7 +92,7 @@ const TopBar = ({ onSearch, onToggle }) => {
 
       <ButtonWrapper>
         <FilterButton onClick={() => handleClick("parking")}>
-          <img src={Parking} alt="Parking" />
+          <LuSquareParking color="#015900" size={22} />
           주차공간
         </FilterButton>
         <FilterButton onClick={() => handleClick("crackdown")}>
