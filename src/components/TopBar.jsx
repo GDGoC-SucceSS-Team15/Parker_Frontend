@@ -6,12 +6,15 @@ import Warning from "./../assets/WarningIcon.svg";
 import Fire from "./../assets/FireIcon.svg";
 import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
+import CustomModal from "./Modals/CustomModal";
+import UploadModal from "./Ai/UploadModal";
 
 const TopBar = ({ onSearch, onToggle }) => {
   const [input, setInput] = useState("");
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   const menuRef = useRef(null);
   const topBarRef = useRef(null);
+  const [openModal, setOpenModal] = useState(false);
 
   // 검색어를 부모 컴포넌트로 전달
   const handleChange = (e) => {
@@ -41,9 +44,9 @@ const TopBar = ({ onSearch, onToggle }) => {
     const handleClickOutside = (event) => {
       if (
         menuRef.current &&
-        !menuRef.current.contains(event.target) && // 메뉴 외부 클릭 감지
+        !menuRef.current.contains(event.target) &&
         topBarRef.current &&
-        !topBarRef.current.contains(event.target) // 상단바도 제외
+        !topBarRef.current.contains(event.target)
       ) {
         setIsMenuVisible(false);
       }
@@ -89,11 +92,18 @@ const TopBar = ({ onSearch, onToggle }) => {
           <img src={Warning} alt="enforcement" />
           단속 구역
         </FilterButton>
-        <FilterButton>
+        <FilterButton onClick={() => setOpenModal(true)}>
           <img src={Fire} alt="probability" />
           단속확률
         </FilterButton>
       </ButtonWrapper>
+
+      <CustomModal
+        isOpen={openModal}
+        onRequestClose={() => setOpenModal(false)}
+      >
+        <UploadModal />
+      </CustomModal>
     </>
   );
 };
@@ -172,6 +182,9 @@ const ButtonWrapper = styled.div`
   display: flex;
   position: absolute;
   padding: 5px 7px;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 10px;
   justify-content: center;
   gap: 15px;
   margin-top: 10px;
