@@ -3,57 +3,40 @@ import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineArrowLeft, AiOutlineCamera } from "react-icons/ai";
 import profileImg from "../assets/profile.svg";
+import profileEditApi from "../api/profileEdit";
 
 function ProfileEditPage() {
   const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState(profileImg);
-  const [nickname, setNickname] = useState("김고수");
+  const [nickname, setNickname] = useState("");
 
   const handleBack = () => {
     navigate(-1);
   };
 
-  const handleNicknameChange = async (newNickname) => {
+  const handleNicknameChange = async () => {
     try {
-      const response = await fetch("https://BE/api/update-nickname", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ nickname: newNickname }),
-      });
+      console.log("닉네임 변경 요청 시작:", nickname);
+      const data = await profileEditApi.updateNickname(nickname);
 
-      const data = await response.json();
-
-      if (response.ok) {
-        alert("닉네임이 변경되었습니다.");
-        setNickname(data.nickname);
-      } else {
-        alert(data.message || "닉네임 변경 실패");
-      }
+      alert("닉네임이 변경되었습니다.");
+      setNickname(data.result.nickname);
     } catch (error) {
-      console.error("닉네임 변경 오류:", error);
-      alert("닉네임 변경 오류");
+      console.error("닉네임 변경 오류:", error.response?.data || error);
+      alert(error.response?.data?.message || "닉네임 변경 실패");
     }
   };
 
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const formData = new FormData();
-      formData.append("profileImage", file);
+    if (!file) return;
 
-      try {
-        const response = await fetch("https://BE/api/upload", {
-          method: "POST",
-          body: formData,
-        });
-
-        const data = await response.json();
-        setSelectedImage(data.imageUrl);
-      } catch (error) {
-        console.error("이미지 업로드 실패:", error);
-      }
+    try {
+      const data = await profileEditApi.uploadProfileImage(file);
+      setSelectedImage(data.result.profileImageUrl);
+    } catch (error) {
+      console.error("이미지 업로드 실패:", error);
+      alert(error.message || "이미지 업로드 실패");
     }
   };
 
@@ -84,9 +67,7 @@ function ProfileEditPage() {
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
           />
-          <SubmitButton onClick={() => handleNicknameChange(nickname)}>
-            변경
-          </SubmitButton>{" "}
+          <SubmitButton onClick={handleNicknameChange}>변경</SubmitButton>
         </NicknameWrapper>
       </ProfileContainer>
     </Wrapper>
