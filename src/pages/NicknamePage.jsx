@@ -21,7 +21,7 @@ function ProfileEditPage() {
 
       const response = await axios.post(
         "/api/my-page/user-info",
-        { name: nickname },
+        { nickname },
         { headers: { "Content-Type": "application/json" } }
       );
 
