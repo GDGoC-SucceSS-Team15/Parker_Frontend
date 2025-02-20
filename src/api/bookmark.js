@@ -1,0 +1,25 @@
+import api from "./api";
+
+// 즐겨찾기 api
+export const bookmarkApi = {
+  toggleBookmark: async (id) => {
+    try {
+      const res = await api.post(`/api/bookmark/parking-space/${id}`);
+
+      console.log("즐겨찾기 토글 성공", res);
+    } catch (err) {
+      console.log("즐겨찾기 토글 실패", err);
+    }
+  },
+  getBookmark: async () => {
+    try {
+      const res = await api.get("/api/bookmark/parking-space-list");
+
+      console.log("즐겨찾기 조회 성공", res);
+      const bmData = res.data;
+      return bmData;
+    } catch (err) {
+      console.log("즐겨찾기 조회 실패", err);
+    }
+  },
+};
