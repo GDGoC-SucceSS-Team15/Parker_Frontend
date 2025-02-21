@@ -9,7 +9,7 @@ import { IoLockClosedOutline } from "react-icons/io5";
 import { FaCircleCheck } from "react-icons/fa6";
 import SquareButton from "../components/Buttons/SquareButton";
 import { userApi } from "../api/user";
-import api from "../api/api";
+import useNotificationStore from "../store/notificationStore.js";
 
 function SignUpPage() {
   const navigate = useNavigate();
@@ -28,6 +28,8 @@ function SignUpPage() {
     password: "",
     pwcheck: "",
   });
+
+  const { showNotification } = useNotificationStore();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -71,9 +73,13 @@ function SignUpPage() {
 
     if (isValid) {
       console.log(formData);
+      userApi.signUp(formData);
+      showNotification("✨ 회원가입 성공");
       setStep(5);
     } else {
-      alert("올바르지 않은 형식이 포함되거나 작성하지 않은 필드가 있습니다.");
+      showNotification(
+        "⚠️ 올바르지 않은 형식이 포함되거나 작성하지 않은 필드가 있습니다."
+      );
       console.log(formData);
     }
   };
@@ -227,7 +233,7 @@ function SignUpPage() {
                 회원가입이 완료되었습니다.
               </h2>
               <SquareButton
-                onClick={() => navigate("/signin")}
+                onClick={() => navigate("/")}
                 buttonTxt={"로그인하러 가기"}
               />
             </div>

@@ -26,7 +26,7 @@ const BottomBar = ({ onGetLocation }) => {
           <button onClick={() => navigate("/crackdown")}>
             <img src={Crackdown} alt="Crackdown" />
           </button>
-          <button onClick={() => navigate("/parking-spaces")}>
+          <button onClick={() => navigate("/report")}>
             <img src={ParkingSpaces} alt="ParkingSpaces" />
           </button>
         </LeftGroup>

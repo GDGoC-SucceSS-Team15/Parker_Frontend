@@ -8,6 +8,7 @@ import { LuMapPin } from "react-icons/lu";
 import { bookmarkApi } from "../../api/bookmark";
 import { FaStar } from "react-icons/fa";
 import useCheckClosed from "../../hooks/useCheckClosed";
+import useNotificationStore from "../../store/notificationStore";
 
 const ParkingMarkerContent = ({
   parkingId,
@@ -22,8 +23,14 @@ const ParkingMarkerContent = ({
   onClose,
 }) => {
   const [bmState, setBmState] = useState(bookmarked);
+  const { showNotification } = useNotificationStore();
   const handleBookmark = async (id) => {
     bookmarkApi.toggleBookmark(id);
+    if (bmState) {
+      showNotification("🗑️ 즐겨찾기 삭제");
+    } else {
+      showNotification("⭐️ 즐겨찾기 추가");
+    }
     setBmState(!bmState);
   };
   return (
@@ -32,7 +39,7 @@ const ParkingMarkerContent = ({
         <BackBtn onClick={onClose}>
           <IoArrowBack size={25} />
         </BackBtn>
-        <Title>{parkingName}</Title>
+        <Title>{parkingName} 주차장</Title>
         <StarBtn onClick={() => handleBookmark(parkingId)}>
           {bmState ? <FaStar size={22} /> : <FaRegStar size={22} />}
         </StarBtn>
@@ -50,11 +57,11 @@ const ParkingMarkerContent = ({
           토요일 운영 시간 <br />
           공휴일 운영 시간
         </InfoText>
-        <InfoText style={{ marginLeft: 'auto' }}>
+        <InfoText style={{ marginLeft: "auto", textAlign: "end" }}>
           {useCheckClosed(weekdayTime)} <br />
           {useCheckClosed(saturdayTime)}
           <br />
-          {useCheckClosed(holidayTime)} 
+          {useCheckClosed(holidayTime)}
         </InfoText>
       </InfoRow>
 

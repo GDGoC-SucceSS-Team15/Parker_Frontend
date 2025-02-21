@@ -3,48 +3,48 @@ import styled from "styled-components";
 import { IoIosArrowBack } from "react-icons/io";
 
 const RESULT_DATA = {
-  fireZone: {
+  0: {
     background: "#FF7373",
     text: '"소화전 구역,\n불법주정차 신고 대상입니다."',
     fine: "과태료 8~9만원",
     icon: "https://cdn-icons-png.flaticon.com/128/3477/3477085.png",
   },
-  intersection: {
+  1: {
     background: "#FF7373",
     text: '"교차로 모퉁이,\n불법주정차 신고 대상입니다."',
     fine: "과태료 4~5만원",
     icon: "https://cdn-icons-png.flaticon.com/128/3477/3477085.png",
   },
-  busStop: {
+  2: {
     background: "#FF7373",
     text: '"버스 정류장 인근,\n불법주정차 신고 대상입니다."',
     fine: "과태료 4~5만원",
     icon: "https://cdn-icons-png.flaticon.com/128/3477/3477085.png",
   },
-  schoolZone: {
+  3: {
     background: "#FF7373",
     text: '"어린이 보호구역,\n불법주정차 신고 대상입니다."',
     fine: "과태료 12만원",
     icon: "https://cdn-icons-png.flaticon.com/128/3477/3477085.png",
   },
-  yellowDoubleLine: {
-    background: "#FF7373",
-    text: '"황색 복선 구역,\n불법주정차 신고 대상입니다."',
-    fine: "과태료 4~5만원",
-    icon: "https://cdn-icons-png.flaticon.com/128/3477/3477085.png",
-  },
-  yellowLine: {
+  4: {
     background: "#FFECA1",
     text: '"황색 실선 구역,\n시간·요일에 따라 탄력적 주정차 가능."',
     fine: "주차 가능 여부는 현장 확인 필요",
     icon: "https://cdn-icons-png.flaticon.com/128/4285/4285398.png",
   },
-  yellowDottedLine: {
+  5: {
     background: "#FFECA1",
     text: '"흰색 점선 구역,\n5분 이내 정차만 가능."',
     icon: "https://cdn-icons-png.flaticon.com/128/4285/4285398.png",
   },
-  whiteLine: {
+  6: {
+    background: "#FF7373",
+    text: '"황색 복선 구역,\n불법주정차 신고 대상입니다."',
+    fine: "과태료 4~5만원",
+    icon: "https://cdn-icons-png.flaticon.com/128/3477/3477085.png",
+  },
+  7: {
     background: "#C0FEC5",
     text: '"흰색 실선 구역,\n주정차 가능합니다."',
     icon: "https://cdn-icons-png.flaticon.com/128/5201/5201653.png",
@@ -52,7 +52,7 @@ const RESULT_DATA = {
 };
 
 const ResultModal = ({ isOpen, onRequestClose, type = "fireZone" }) => {
-  const data = RESULT_DATA[type] || RESULT_DATA.fireZone;
+  const data = RESULT_DATA[type] || RESULT_DATA[0];
 
   return (
     isOpen && (
@@ -94,6 +94,7 @@ const ModalOverlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 9999; /* z-index 충분히 높이기 */
 `;
 
 const ModalContent = styled.div`
