@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled, { keyframes, css } from "styled-components";
-import useNotificationStore from "../../store/useNotification.js";
+import useNotificationStore from "../../store/notificationStore.js";
 
 const fadeIn = keyframes`
   from {

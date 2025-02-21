@@ -6,7 +6,7 @@ import logotxt from "../assets/logotxt.svg";
 import SquareButton from "../components/Buttons/SquareButton";
 import { useNavigate } from "react-router-dom";
 import { userApi } from "../api/user";
-import useNotificationStore from "../store/useNotification.js";
+import useNotificationStore from "../store/notificationStore.js";
 
 function SignInPage() {
   const navigate = useNavigate();

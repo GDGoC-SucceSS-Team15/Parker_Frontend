@@ -9,7 +9,7 @@ import { IoLockClosedOutline } from "react-icons/io5";
 import { FaCircleCheck } from "react-icons/fa6";
 import SquareButton from "../components/Buttons/SquareButton";
 import { userApi } from "../api/user";
-import useNotificationStore from "../store/useNotification.js";
+import useNotificationStore from "../store/notificationStore.js";
 
 function SignUpPage() {
   const navigate = useNavigate();
