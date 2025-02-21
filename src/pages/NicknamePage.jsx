@@ -67,6 +67,9 @@ function ProfileEditPage() {
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
           />
+          <SubmitButton onClick={() => handleNicknameChange(nickname)}>
+            변경
+          </SubmitButton>{" "}
         </NicknameWrapper>
       </ProfileContainer>
     </Wrapper>
