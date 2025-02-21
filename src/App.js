@@ -16,11 +16,11 @@ function App() {
   return (
     <div className="mobile-container">
       <Routes>
-        <Route path="/" element={<MainPage />} />
+        <Route path="/map" element={<MainPage />} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/parking-spaces" element={<MyParkingPage />} />
         <Route path="/signup" element={<SignUpPage />} />
-        <Route path="/signin" element={<SignInPage />} />
+        <Route path="/" element={<SignInPage />} />
         <Route path="/parkinginfo" element={<ParkInfoPage />} />
         <Route path="/report" element={<ReportPage />} />
         <Route path="/nickname-edit" element={<NicknamePage />} />
