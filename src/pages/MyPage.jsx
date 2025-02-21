@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
-import {
-  AiOutlineArrowLeft,
-  AiOutlineSetting,
-  AiOutlineCamera,
-} from "react-icons/ai";
+import { AiOutlineArrowLeft, AiOutlineSetting } from "react-icons/ai";
 import profileImg from "../assets/profile.svg";
 import logoImg from "../assets/logoimg.svg";
-import axios from "axios";
+import mypageApi from "../api/mypage";
 
 function MyPage() {
   const navigate = useNavigate();
@@ -20,14 +16,18 @@ function MyPage() {
   });
 
   useEffect(() => {
-    axios
-      .get("/api/my-page/user-info")
-      .then((response) => {
-        if (response.data.isSuccess) {
-          setUserInfo(response.data.result);
+    const fetchUserInfo = async () => {
+      try {
+        const response = await mypageApi.getUserInfo();
+        if (response.isSuccess) {
+          setUserInfo(response.result);
         }
-      })
-      .catch((error) => console.error("유저 정보 불러오기 실패:", error));
+      } catch (error) {
+        console.error("유저 정보 불러오기 실패:", error);
+      }
+    };
+
+    fetchUserInfo();
   }, []);
 
   const handleBack = () => {
@@ -46,31 +46,6 @@ function MyPage() {
     { id: 5, text: "주차밭의 파수꾼" },
   ];
 
-  const handleImageChange = async (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const formData = new FormData();
-      formData.append("profileImage", file);
-
-      try {
-        const response = await axios.post("/api/my-page/user-info", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-
-        if (response.data.isSuccess) {
-          setUserInfo((prev) => ({
-            ...prev,
-            profileImageUrl: response.data.result.profileImageUrl,
-          }));
-        }
-      } catch (error) {
-        console.error("이미지 업로드 실패:", error);
-      }
-    } else {
-      alert("파일을 선택해주세요.");
-    }
-  };
-
   return (
     <Wrapper>
       <Content>
@@ -80,24 +55,14 @@ function MyPage() {
           </BackButton>
         </HeaderWrapper>
         <ProfileDiv>
-          <ProfileLabel>
-            <ProfileImage
-              src={userInfo.profileImageUrl || profileImg}
-              alt="profile"
-            />
-            <CameraIcon>
-              <AiOutlineCamera size={23} />
-              <ImgFileInput
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-              />
-            </CameraIcon>
-          </ProfileLabel>
+          <ProfileImage
+            src={userInfo.profileImageUrl || profileImg}
+            alt="profile"
+          />
           <ProfileInfo>
             <Nickname onClick={() => navigate("/nickname-edit")}>
               <span style={{ fontWeight: "bold" }}>
-                {userInfo.nickname || "사용자"}
+                {userInfo.nickname || "김고수"}
               </span>
               님
             </Nickname>
@@ -178,40 +143,7 @@ const ProfileImage = styled.img`
   height: 100px;
   border-radius: 50%;
   object-fit: cover;
-  cursor: pointer;
   border: 2px solid #ccc;
-`;
-
-const ProfileLabel = styled.label`
-  position: relative;
-  cursor: pointer;
-`;
-
-const ImgFileInput = styled.input`
-  display: none;
-`;
-
-const CameraIcon = styled.div`
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.6);
-  color: white;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-
-  input {
-    opacity: 0;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    cursor: pointer;
-  }
 `;
 
 const LogoImage = styled.img`
