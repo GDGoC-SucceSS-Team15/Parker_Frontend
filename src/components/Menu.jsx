@@ -1,19 +1,41 @@
+import React, { useState, useEffect } from "react";
 import { styled } from "styled-components";
 import defaultImg from "./../assets/defaultImg.png"
 import Parker_Logo from "./../assets/LogoImage.svg"
 import MyPage from "./../assets/MenuButton/Menu_MyPage.svg"
 import Crackdown from "./../assets/MenuButton/Menu_Crackdown.svg"
 import SavedParkingSpaces from "./../assets/MenuButton/Menu_SavedParkingSpaces.svg"
-import ParkingSpaces from "./../assets/MenuButton/Menu_ParkingSpaces.svg"
 import Parking_Info from "./../assets/MenuButton/Menu_ParkInfo.svg"
+import profileImg from "../assets/profile.svg";
 import { CiSettings } from "react-icons/ci";
 import { IoInformationCircleOutline } from "react-icons/io5";
 import { IoReturnDownBackOutline } from "react-icons/io5";
 import { IoShareSocialOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
+import mypageApi from "../api/mypage";
 
 const Menu = () => {
   const navigate = useNavigate();
+  const [userInfo, setUserInfo] = useState({
+    name: "",
+    nickname: "",
+    profileImageUrl: profileImg,
+  });
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const response = await mypageApi.getUserInfo();
+        if (response.isSuccess) {
+          setUserInfo(response.result);
+        }
+      } catch (error) {
+        console.error("유저 정보 불러오기 실패:", error);
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
 
   return(
     <MenuDiv>
@@ -21,9 +43,17 @@ const Menu = () => {
         <img src={Parker_Logo} alt="parkerLogo" />
       </LogoDiv>
 
-      <ProfileDiv>
-        <img src={defaultImg} alt="profileImage"/>
-        <div>이름</div> 
+      <ProfileDiv onClick={() => navigate("/mypage")}>
+        <img 
+          src={userInfo.profileImageUrl || profileImg}
+          alt="profile"
+        />
+        <Nickname onClick={() => navigate("/nickname-edit")}>
+          <span style={{ fontWeight: "bold" }}>
+            {userInfo.nickname || userInfo.name || "김고수"}
+          </span>
+          <span style={{ fontSize: "0.8em", color: "gray" }}> 님</span>
+        </Nickname>
       </ProfileDiv>
 
       <PageDiv>
@@ -32,9 +62,6 @@ const Menu = () => {
         </button>
         <button onClick={() => navigate("/crackdown")}>
           <img src={Crackdown} alt="crackdown" />주정차 금지구역
-        </button>
-        <button onClick={() => navigate("/parking-spaces")}>
-          <img src={ParkingSpaces} alt="ParkingSpaces" />등록한 주차공간
         </button>
         <button onClick={() => navigate("/bookmark")}>
           <img src={SavedParkingSpaces} alt="SavedParkingSpaces" />즐겨찾는 주차공간
@@ -100,11 +127,17 @@ const ProfileDiv = styled.div`
     border-radius: 50%;
     margin-bottom: 13px;
   }
-
-  div {
-    font-size: 1.2rem;
-  }
 `;
+
+const Nickname = styled.div`
+  font-size: 19px;
+  cursor: pointer;
+  font-weight: normal;
+  margin-left: 10px;
+  &:hover {
+    text-decoration: underline;
+  } 
+`
 
 const PageDiv = styled.div`
   border-bottom: 2px solid #ddd;
