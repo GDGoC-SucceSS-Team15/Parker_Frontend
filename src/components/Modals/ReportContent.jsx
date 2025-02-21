@@ -5,6 +5,7 @@ import useCurrentLocation from "../../hooks/useCurrentLocation";
 import PositionMaker from "../../assets/PositionMaker.png";
 import { reportApi } from "../../api/report";
 import { useNavigate } from "react-router-dom";
+import useNotificationStore from "../../store/notificationStore.js";
 
 const ReportContent = () => {
   const [map, setMap] = useState(null);
@@ -18,6 +19,7 @@ const ReportContent = () => {
   const navigate = useNavigate();
 
   const { currentLocation, isLoading } = useCurrentLocation(); // 현재 위치 반환 커스텀훅
+  const { showNotification } = useNotificationStore();
 
   useEffect(() => {
     if (!currentLocation) return; // 위치 정보가 없으면 실행하지 않음
@@ -101,10 +103,10 @@ const ReportContent = () => {
         displayPlaces(data);
       } else {
         setPlaces([]);
-        alert("검색 결과가 없습니다.");
+        showNotification("⚠️ 검색 결과가 없습니다.");
       }
     });
-  }, [searchQuery, map, displayPlaces]);
+  }, [searchQuery, map, displayPlaces, showNotification]);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -126,10 +128,10 @@ const ReportContent = () => {
     console.log("파일", file);
     try {
       reportApi.postReport(inputLocation, file);
-      alert("신고가 정상적으로 처리되었습니다");
+      showNotification("✅ 신고가 정상적으로 처리되었습니다");
       navigate("/report");
     } catch (err) {
-      alert("신고 접수 실패");
+      showNotification("⚠️ 신고 접수 실패");
     }
   };
   return (

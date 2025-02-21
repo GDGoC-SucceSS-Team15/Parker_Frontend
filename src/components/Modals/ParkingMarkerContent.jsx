@@ -8,6 +8,7 @@ import { LuMapPin } from "react-icons/lu";
 import { bookmarkApi } from "../../api/bookmark";
 import { FaStar } from "react-icons/fa";
 import useCheckClosed from "../../hooks/useCheckClosed";
+import useNotificationStore from "../../store/notificationStore";
 
 const ParkingMarkerContent = ({
   parkingId,
@@ -22,8 +23,14 @@ const ParkingMarkerContent = ({
   onClose,
 }) => {
   const [bmState, setBmState] = useState(bookmarked);
+  const { showNotification } = useNotificationStore();
   const handleBookmark = async (id) => {
     bookmarkApi.toggleBookmark(id);
+    if (bmState) {
+      showNotification("🗑️ 즐겨찾기 삭제");
+    } else {
+      showNotification("⭐️ 즐겨찾기 추가");
+    }
     setBmState(!bmState);
   };
   return (

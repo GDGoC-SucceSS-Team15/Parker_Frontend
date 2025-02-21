@@ -10,7 +10,6 @@ function MainPage() {
       <BottomBar />
       <Map />
     </div>
-    
   );
 }
 

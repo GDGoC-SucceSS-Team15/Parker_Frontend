@@ -1,10 +1,11 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, memo } from "react";
 import styled from "styled-components";
 import PositionMaker from "./../assets/PositionMaker.png";
 import MarkerModal from "./Modals/MarkerModal";
 import ParkingMarkerContent from "./Modals/ParkingMarkerContent";
 import ParkingMarker from "./../assets/ParkingMarker.svg";
 //import NewParkingMarker from "../assets/NewParkingMarker.svg";
+import CrackdownMarker from "./../assets/CrackdownMarker.svg";
 import BottomBar from "./BottomBar";
 import TopBar from "./TopBar";
 import { mapApi } from "../api/map";
@@ -18,6 +19,11 @@ const Map = () => {
   const [places, setPlaces] = useState([]); // 검색된 장소들
   const [parkingSpaces, setParkingSpaces] = useState([]); // 주차장 데이터 저장
   const [cctvLoc, setCctvLoc] = useState([]); // 단속카메라 데이터 저장
+  const [showParking, setShowParking] = useState(true);
+  const [showCrackdown, setShowCrackdown] = useState(true);
+  const [toggle, setToggle] = useState("");
+  const [parkingMarkers, setParkingMarkers] = useState([]);
+  const [crackdownMarkers, setCrackdownMarkers] = useState([]);
 
   // 📍 내 위치 가져오기
   const getLocation = () => {
@@ -54,6 +60,7 @@ const Map = () => {
         return;
       }
 
+      console.log("단속 카메라 데이터:", allData.cameraLocations);
       setParkingSpaces(allData.parkingSpaces || []); // 주차장 위치
       setCctvLoc(allData.cameraLocations || []); // 단속카메라 위치
     };
@@ -101,39 +108,118 @@ const Map = () => {
           image: markerImage,
         });
 
-        // 🅿️ 주차장 마커
-        const parkingMark = new window.kakao.maps.MarkerImage(
-          ParkingMarker,
-          new window.kakao.maps.Size(50, 50),
-          { offset: new window.kakao.maps.Point(25, 50) } // 마커 이미지의 중심 좌표
-        );
-
-        parkingSpaces?.forEach((parking) => {
-          const marker = new window.kakao.maps.Marker({
-            position: new window.kakao.maps.LatLng(
-              parking.latitude,
-              parking.longitude
-            ),
-            map: newMap,
-            image: parkingMark,
-          });
-
-          window.kakao.maps.event.addListener(marker, "click", async () => {
-            const parkingIdData = await mapApi.getPakringById(
-              parking.id,
-              currentLocation
-            );
-            setSelectedParking(parkingIdData);
-          });
-        });
-
-        // ⚠️ 단속 구역 마커
+        setMap(newMap);
       });
     };
     return () => {
       document.head.removeChild(script); // 스크립트 정리
     };
-  }, [currentLocation, parkingSpaces]);
+  }, [currentLocation]);
+
+  useEffect(() => {
+    if (!map) return;
+    updateParkingMarkers();
+  }, [map, parkingSpaces, showParking]);
+
+  useEffect(() => {
+    if (!map) return;
+    updateCrackdownMarkers();
+  }, [map, showCrackdown]);
+
+  // 🅿️ 주차장 마커 추가 & 제거
+  const updateParkingMarkers = () => {
+    // 기존 마커 삭제
+    parkingMarkers.forEach((marker) => marker.setMap(null));
+    setParkingMarkers([]);
+
+    if (!showParking) return;
+    console.log("주차장 마커 추가");
+
+    const parkingMark = new window.kakao.maps.MarkerImage(
+      ParkingMarker,
+      new window.kakao.maps.Size(50, 50),
+      { offset: new window.kakao.maps.Point(25, 50) }
+    );
+
+    const newMarkers = parkingSpaces?.map((parking) => {
+      const marker = new window.kakao.maps.Marker({
+        position: new window.kakao.maps.LatLng(
+          parking.latitude,
+          parking.longitude
+        ),
+        map: map,
+        image: parkingMark,
+      });
+
+      window.kakao.maps.event.addListener(marker, "click", async () => {
+        const parkingIdData = await mapApi.getPakringById(
+          parking.id,
+          currentLocation
+        );
+        setSelectedParking(parkingIdData);
+      });
+
+      return marker;
+    });
+
+    setParkingMarkers(newMarkers);
+  };
+
+  // ⚠️ 단속 카메라 마커 추가 & 제거
+  const updateCrackdownMarkers = () => {
+    // 기존 마커 삭제
+    crackdownMarkers.forEach((marker) => marker.setMap(null));
+    setCrackdownMarkers([]);
+
+    if (!showCrackdown) return;
+    console.log("단속 카메라 마커 추가");
+
+    const CrackdownMark = new window.kakao.maps.MarkerImage(
+      CrackdownMarker,
+      new window.kakao.maps.Size(50, 50),
+      { offset: new window.kakao.maps.Point(25, 50) }
+    );
+
+    const newMarkers = cctvLoc?.map((crackdown) => {
+      const marker = new window.kakao.maps.Marker({
+        position: new window.kakao.maps.LatLng(
+          crackdown.latitude,
+          crackdown.longitude
+        ),
+        map: map,
+        image: CrackdownMark,
+      });
+
+      return marker;
+    });
+
+    setCrackdownMarkers(newMarkers);
+  };
+
+  // 🅿️ & ⚠️ 필터링
+  const handleToggle = (filterType) => {
+    setToggle(filterType);
+    console.log("토글 변경:", filterType);
+
+    switch (filterType) {
+      case "parking":
+        setShowCrackdown((prev) => {
+          console.log(prev ? "단속 카메라 숨김" : "단속 카메라 표시");
+          return !prev;
+        });
+        break;
+
+      case "crackdown":
+        setShowParking((prev) => {
+          console.log(prev ? "주차장 숨김" : "주차장 표시");
+          return !prev;
+        });
+        break;
+
+      default:
+        break;
+    }
+  };
 
   const displayPlaces = useCallback(
     (places) => {
@@ -174,7 +260,7 @@ const Map = () => {
   return (
     <div>
       <MapContainer id="map" />
-      <TopBar onSearch={setSearchQuery} />
+      <TopBar onSearch={setSearchQuery} onToggle={handleToggle} />
       {selectedParking && (
         <MarkerModal
           isOpen={!!selectedParking}
@@ -202,7 +288,7 @@ const Map = () => {
   );
 };
 
-export default Map;
+export default memo(Map);
 
 const MapContainer = styled.div`
   width: 100%;
