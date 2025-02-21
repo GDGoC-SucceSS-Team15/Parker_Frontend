@@ -12,10 +12,12 @@ import BookmarkPage from "./pages/BookmarkPage";
 import TestPage from "./pages/TestPage";
 import CrackdownPage from "./pages/CrackdownPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import Notification from "./components/Notification/Notification";
 
 function App() {
   return (
     <div className="mobile-container">
+      <Notification />
       <Routes>
         <Route path="*" element={<NotFoundPage />} />
         <Route path="/map" element={<MainPage />} />
