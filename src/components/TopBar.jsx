@@ -2,12 +2,13 @@ import Menu from "./Menu";
 import { IoSearchSharp } from "react-icons/io5";
 import { FiMenu } from "react-icons/fi";
 import { LuSquareParking } from "react-icons/lu";
-import Warning from "./../assets/WarningIcon.svg"
-import Fire from "./../assets/FireIcon.svg"
+import Warning from "./../assets/WarningIcon.svg";
+import Fire from "./../assets/FireIcon.svg";
 import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import CustomModal from "./Modals/CustomModal";
 import UploadModal from "./Ai/UploadModal";
+import ResultModal from "./Ai/Result/ResultModal";
 
 const TopBar = ({ onSearch, onToggle }) => {
   const [input, setInput] = useState("");
@@ -15,6 +16,9 @@ const TopBar = ({ onSearch, onToggle }) => {
   const menuRef = useRef(null);
   const topBarRef = useRef(null);
   const [openModal, setOpenModal] = useState(false);
+
+  const [modal, setModal] = useState(false);
+  const [result, setResult] = useState(null);
 
   // 검색어를 부모 컴포넌트로 전달
   const handleChange = (e) => {
@@ -42,7 +46,6 @@ const TopBar = ({ onSearch, onToggle }) => {
   // 필터링
   const handleClick = (filterType) => {
     onToggle(filterType);
-
   };
 
   // 클릭한 곳이 메뉴 외부인 경우 메뉴 닫기
@@ -108,8 +111,13 @@ const TopBar = ({ onSearch, onToggle }) => {
         isOpen={openModal}
         onRequestClose={() => setOpenModal(false)}
       >
-        <UploadModal />
+        <UploadModal setModal={setModal} setResult={setResult} />
       </CustomModal>
+      <ResultModal
+        isOpen={modal}
+        onRequestClose={() => setModal(false)}
+        type={result?.class_id}
+      />
     </>
   );
 };
