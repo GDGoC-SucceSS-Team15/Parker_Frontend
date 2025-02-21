@@ -21,7 +21,7 @@ const Menu = () => {
         <img src={Parker_Logo} alt="parkerLogo" />
       </LogoDiv>
 
-      <ProfileDiv>
+      <ProfileDiv onClick={() => navigate("/mypage")}>
         <img src={defaultImg} alt="profileImage"/>
         <div>이름</div> 
       </ProfileDiv>
