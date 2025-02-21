@@ -210,7 +210,7 @@ const FilterButton = styled.button`
   padding: 10px 0;
   border-radius: 20px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: bold;
   width: 30%;
   color: #333;
