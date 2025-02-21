@@ -1,7 +1,6 @@
 import Menu from "./Menu";
 import { IoSearchSharp } from "react-icons/io5";
 import { FiMenu } from "react-icons/fi";
-import Parking from "./../assets/ParkingIcon.svg"
 import Warning from "./../assets/WarningIcon.svg"
 import Fire from "./../assets/FireIcon.svg"
 import { useState, useEffect, useRef } from "react";

@@ -11,23 +11,6 @@ import TopBar from "./TopBar";
 import { mapApi } from "../api/map";
 import { parkingApi } from "../api/parkingSpace";
 
-const crackdownData = [
-  {
-        address: "무교동 33-3번지",
-        latitude: 37.6500,
-        longitude: 127.0001,
-        areaName: "무교동 어린이재단빌딩 인근",
-        classification: "불법주정차구역"
-      },
-      {
-        address: "다동 10번지앞",
-        latitude: 37.641701,
-        longitude: 127.016792,
-        areaName: "청계천변 하이커그라운드 인근",
-        classification: "불법주정차구역"
-      },
-]
-
 const Map = () => {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태
@@ -78,6 +61,7 @@ const Map = () => {
         return;
       }
 
+      console.log("단속 카메라 데이터:", allData.cameraLocations);
       setParkingSpaces(allData.parkingSpaces || []); // 주차장 위치
       setCctvLoc(allData.cameraLocations || []); // 단속카메라 위치
     };

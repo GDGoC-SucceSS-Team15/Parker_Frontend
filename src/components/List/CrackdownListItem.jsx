@@ -5,8 +5,6 @@ import { FiClock } from "react-icons/fi";
 import { BsTelephone } from "react-icons/bs";
 
 const CrackdownListItem = ({
-  km,
-  min,
   sidoName,
   sigunguName,
   roadName,
@@ -25,7 +23,18 @@ const CrackdownListItem = ({
           </div>
         </div>
         <div className="Right">
-          <div className="title">{sidoName} {sigunguName} {roadName} {detailedLocation}</div>
+        <div className="title">
+          {sidoName} {sigunguName} {roadName}{" "}
+          {detailedLocation.includes("(") ? ( // 괄호 나오면 줄바꿈
+            <>
+              {detailedLocation.split("(")[0]}
+              <br />
+              {"(" + detailedLocation.split("(")[1]}
+            </>
+          ) : (
+            detailedLocation
+          )}
+        </div>
         </div>
       </Location>
       <Line />
@@ -91,6 +100,7 @@ const Location = styled.div`
     .title {
       font-weight: bold;
       font-size: 16px;
+      text-align: right;
     }
     .location {
       font-weight: bold;

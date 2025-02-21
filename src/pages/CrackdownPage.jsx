@@ -1,30 +1,32 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import defaultImg from "../assets/defaultImg.png";
 import Header from "../components/Headers/Header";
 import CrackdownListItem from "../components/List/CrackdownListItem";
-
-const parkingData = [
-  {
-    id: 1,
-    sidoName: "경기도",
-    sigunguName: "가평군",
-    roadName: "오리나무길",
-    detailedLocation: "가평읍 홍농종묘앞",
-    managementPhoneNumber: "031-580-2075",
-    weekdayTime: "08:00",
-    saturdayTime: "00:00",
-    holidayTime: "00:00",
-  },
-];
+import { crackdownApi } from "../api/crackdown"
+import useCurrentLocation from "../hooks/useCurrentLocation";
 
 function CrackdownPage() {
+  const [Crackdowns, setCrackdowns] = useState([]); // 주차장 데이터 저장
+  const { currentLocation, isLoading } = useCurrentLocation(); // 현재 위치 반환 커스텀훅
+
+  useEffect(() => {
+      const getCrackdown = async () => {
+        // 근처 주정차 단속구역 조회
+        const crackdownData = await crackdownApi.getNearby(currentLocation);
+        // 근처 주정차 단속구역 저장
+        setCrackdowns(crackdownData);
+      };
+  
+      getCrackdown();
+    }, [currentLocation]);
+
   return (
     <Wrapper>
       <Header title="불법 주정차 단속 구역" profileImg={defaultImg} />
       <ContentDiv>
         <SubTitle>현재 위치에서 가까운 순</SubTitle>
-        {parkingData.map((item) => (
+        {Crackdowns?.map((item) => (
           <CrackdownListItem
             key={item.id}
             sidoName={item.sidoName}
