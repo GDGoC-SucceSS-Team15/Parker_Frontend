@@ -6,15 +6,23 @@ import logotxt from "../assets/logotxt.svg";
 import SquareButton from "../components/Buttons/SquareButton";
 import { useNavigate } from "react-router-dom";
 import { userApi } from "../api/user";
+import useNotificationStore from "../store/useNotification.js";
 
 function SignInPage() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
+  const { showNotification } = useNotificationStore();
 
   const handleLogin = async () => {
-    userApi.signIn(email, pw);
-    navigate("/");
+    try {
+      userApi.signIn(email, pw);
+      showNotification("✅ 로그인 성공");
+    } catch (err) {
+      console.log("로그인 실패", err);
+    }
+
+    navigate("/map");
   };
 
   const activeEnter = (e) => {
