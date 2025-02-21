@@ -39,7 +39,7 @@ const ParkingMarkerContent = ({
         <BackBtn onClick={onClose}>
           <IoArrowBack size={25} />
         </BackBtn>
-        <Title>{parkingName} 주차장</Title>
+        <Title>{parkingName}</Title>
         <StarBtn onClick={() => handleBookmark(parkingId)}>
           {bmState ? <FaStar size={22} /> : <FaRegStar size={22} />}
         </StarBtn>
