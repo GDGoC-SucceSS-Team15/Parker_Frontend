@@ -12,11 +12,15 @@ import TestPage from "./pages/TestPage";
 import CrackdownPage from "./pages/CrackdownPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import Notification from "./components/Notification/Notification";
+import Loading from "./components/Loading/Loading";
+import { useIsLoading } from "./store/loadingStore";
 
 function App() {
+  const { isLoading } = useIsLoading();
   return (
     <div className="mobile-container">
       <Notification />
+      {isLoading && <Loading />}
       <Routes>
         <Route path="*" element={<NotFoundPage />} />
         <Route path="/map" element={<MainPage />} />
