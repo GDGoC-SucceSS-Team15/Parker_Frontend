@@ -13,8 +13,20 @@ api.interceptors.request.use(
       config.headers.Authorization = `Bearer ${token}`;
     }
 
-    const { startLoading } = loadingStore.getState(); // 로딩 처리
-    startLoading();
+    const includedUrls = [
+      "/api/report/my",
+      "/api/report",
+      "/api/bookmark/parking-space-list",
+      "/api/parker/parking-space/nearby",
+      "/api/parking-violation/nearby",
+    ]; // 로딩을 부여할 요청만 포함
+
+    const shouldShowLoading = includedUrls.includes(config.url); // 해당 URL이 로딩 포함 목록에 있는지 확인
+
+    if (shouldShowLoading) {
+      const { startLoading } = loadingStore.getState();
+      startLoading();
+    }
 
     return config;
   },
