@@ -11,11 +11,13 @@ import NicknamePage from "./pages/NicknamePage";
 import BookmarkPage from "./pages/BookmarkPage";
 import TestPage from "./pages/TestPage";
 import CrackdownPage from "./pages/CrackdownPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
   return (
     <div className="mobile-container">
       <Routes>
+        <Route path="*" element={<NotFoundPage />} />
         <Route path="/map" element={<MainPage />} />
         <Route path="/mypage" element={<MyPage />} />
         <Route path="/parking-spaces" element={<MyParkingPage />} />
