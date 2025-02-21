@@ -22,6 +22,7 @@ export const mapApi = {
       console.error("주차장 & 단속카메라 위치 조회 실패", err);
     }
   },
+  
   // 주차장 세부 정보 조회
   getPakringById: async (id, currentLocation) => {
     try {

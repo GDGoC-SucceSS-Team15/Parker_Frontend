@@ -32,7 +32,7 @@ const ParkingMarkerContent = ({
         <BackBtn onClick={onClose}>
           <IoArrowBack size={25} />
         </BackBtn>
-        <Title>{parkingName} 주차장</Title>
+        <Title>{parkingName}</Title>
         <StarBtn onClick={() => handleBookmark(parkingId)}>
           {bmState ? <FaStar size={22} /> : <FaRegStar size={22} />}
         </StarBtn>
@@ -50,11 +50,11 @@ const ParkingMarkerContent = ({
           토요일 운영 시간 <br />
           공휴일 운영 시간
         </InfoText>
-        <InfoText style={{ marginLeft: "auto", textAlign: "end" }}>
+        <InfoText style={{ marginLeft: 'auto' }}>
           {useCheckClosed(weekdayTime)} <br />
           {useCheckClosed(saturdayTime)}
           <br />
-          {useCheckClosed(holidayTime)}
+          {useCheckClosed(holidayTime)} 
         </InfoText>
       </InfoRow>
 
