@@ -9,6 +9,7 @@ import ParkInfoPage from "./pages/ParkInfoPage";
 import ReportPage from "./pages/ReportPage";
 import NicknamePage from "./pages/NicknamePage";
 import BookmarkPage from "./pages/BookmarkPage";
+import TestPage from "./pages/TestPage";
 import CrackdownPage from "./pages/CrackdownPage";
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
         <Route path="/report" element={<ReportPage />} />
         <Route path="/nickname-edit" element={<NicknamePage />} />
         <Route path="/bookmark" element={<BookmarkPage />} />
+        <Route path="/test" element={<TestPage />} />
         <Route path="/crackdown" element={<CrackdownPage />} />
       </Routes>
     </div>

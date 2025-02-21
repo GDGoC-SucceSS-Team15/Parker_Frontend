@@ -92,7 +92,7 @@ const Map = () => {
   
         const newMap = new window.kakao.maps.Map(container, options); // 지도 생성
         setMap(newMap);
-  
+
         // 📍 현재 위치 마커
         const markerImage = new window.kakao.maps.MarkerImage(
           PositionMaker,
@@ -258,20 +258,24 @@ const handleToggle = (filterType) => {
           isOpen={!!selectedParking}
           onRequestClose={() => setSelectedParking(null)}
         >
-          {selectedParking && (
-            <ParkingMarkerContent
-              key={selectedParking.id}
-              parkingName={selectedParking.parkingName}
-              distance={selectedParking.distance}
-              weekdayTime={selectedParking.weekdayTime}
-              saturdayTime={selectedParking.saturdayTime}
-              holidayTime={selectedParking.holidayTime}
-              baseParkingTime={selectedParking.baseParkingTime}
-              baseParkingFee={selectedParking.baseParkingFee}
-              onClose={() => setSelectedParking(null)}
-            />
-          )}
-        </MarkerModal>
+        {selectedParking && (
+          <ParkingMarkerContent
+            key={selectedParking.id}
+            parkingName={selectedParking.parkingName}
+            distance={selectedParking.distance}
+            estimatedTime={selectedParking.estimatedTime}
+            weekdayStartTime={selectedParking.weekdayStartTime}
+            weekdayEndTime={selectedParking.weekdayEndTime}
+            saturdayStartTime={selectedParking.saturdayStartTime}
+            saturdayEndTime={selectedParking.saturdayEndTime}
+            holidayStartTime={selectedParking.holidayStartTime}
+            holidayEndTime={selectedParking.holidayEndTime}
+            baseParkingTime={selectedParking.baseParkingTime}
+            baseParkingFee={selectedParking.baseParkingFee}
+            onClose={() => setSelectedParking(null)}
+          />
+        )}
+      </MarkerModal>
       )}
       <BottomBar onGetLocation={getLocation} />
     </div>

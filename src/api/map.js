@@ -22,4 +22,22 @@ export const mapApi = {
       console.error("주차장 & 단속카메라 위치 조회 실패", err);
     }
   },
+  
+  // 주차장 세부 정보 조회
+  getPakringById: async (id, currentLocation) => {
+    try {
+      const res = await api.get(`/api/parker/parking-space/${id}`, {
+        params: {
+          latitude: currentLocation.latitude,
+          longitude: currentLocation.longitude,
+        },
+      });
+
+      console.log("주차장 세부 정보 조회 성공", res);
+      const parkingData = res.data.result;
+      return parkingData;
+    } catch (err) {
+      console.log("주차장 세부 정보 조회 실패", err);
+    }
+  },
 };

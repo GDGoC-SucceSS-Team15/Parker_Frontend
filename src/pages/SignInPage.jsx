@@ -5,7 +5,7 @@ import { IoLockClosedOutline } from "react-icons/io5";
 import logotxt from "../assets/logotxt.svg";
 import SquareButton from "../components/Buttons/SquareButton";
 import { useNavigate } from "react-router-dom";
-import api from "../api/api";
+import { userApi } from "../api/user";
 
 function SignInPage() {
   const navigate = useNavigate();
@@ -13,18 +13,8 @@ function SignInPage() {
   const [pw, setPw] = useState("");
 
   const handleLogin = async () => {
-    try {
-      const res = await api.post("/api/user/login", {
-        email: email,
-        password: pw,
-      });
-
-      console.log(res);
-      localStorage.setItem("accessToken", res.data.result.accessToken);
-      navigate("/");
-    } catch (err) {
-      console.log("Error handle login", err);
-    }
+    userApi.signIn(email, pw);
+    navigate("/");
   };
 
   const activeEnter = (e) => {

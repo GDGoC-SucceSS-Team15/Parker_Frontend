@@ -1,12 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { IoArrowBack } from "react-icons/io5";
 import { FaRegStar } from "react-icons/fa6";
 import { PiClock } from "react-icons/pi";
 import { BiDollarCircle } from "react-icons/bi";
 import { LuMapPin } from "react-icons/lu";
+import { bookmarkApi } from "../../api/bookmark";
+import { FaStar } from "react-icons/fa";
+import useCheckClosed from "../../hooks/useCheckClosed";
 
 const ParkingMarkerContent = ({
+  parkingId,
+  bookmarked,
   parkingName,
   distance,
   weekdayTime,
@@ -16,6 +21,11 @@ const ParkingMarkerContent = ({
   baseParkingFee,
   onClose,
 }) => {
+  const [bmState, setBmState] = useState(bookmarked);
+  const handleBookmark = async (id) => {
+    bookmarkApi.toggleBookmark(id);
+    setBmState(!bmState);
+  };
   return (
     <Container>
       <Header>
@@ -23,8 +33,8 @@ const ParkingMarkerContent = ({
           <IoArrowBack size={25} />
         </BackBtn>
         <Title>{parkingName}</Title>
-        <StarBtn>
-          <FaRegStar size={22} />
+        <StarBtn onClick={() => handleBookmark(parkingId)}>
+          {bmState ? <FaStar size={22} /> : <FaRegStar size={22} />}
         </StarBtn>
       </Header>
 
@@ -40,11 +50,11 @@ const ParkingMarkerContent = ({
           토요일 운영 시간 <br />
           공휴일 운영 시간
         </InfoText>
-        <InfoText style={{ marginLeft: "auto" }}>
-          {weekdayTime} <br />
-          {saturdayTime}
+        <InfoText style={{ marginLeft: 'auto' }}>
+          {useCheckClosed(weekdayTime)} <br />
+          {useCheckClosed(saturdayTime)}
           <br />
-          {holidayTime}
+          {useCheckClosed(holidayTime)} 
         </InfoText>
       </InfoRow>
 

@@ -1,13 +1,13 @@
 import Menu from "./Menu";
 import { IoSearchSharp } from "react-icons/io5";
 import { FiMenu } from "react-icons/fi";
+import { LuSquareParking } from "react-icons/lu";
 import Warning from "./../assets/WarningIcon.svg"
 import Fire from "./../assets/FireIcon.svg"
 import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import CustomModal from "./Modals/CustomModal";
 import UploadModal from "./Ai/UploadModal";
-import { LuSquareParking } from "react-icons/lu";
 
 const TopBar = ({ onSearch, onToggle }) => {
   const [input, setInput] = useState("");
