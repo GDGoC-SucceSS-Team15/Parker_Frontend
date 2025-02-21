@@ -233,7 +233,7 @@ function SignUpPage() {
                 회원가입이 완료되었습니다.
               </h2>
               <SquareButton
-                onClick={() => navigate("/signin")}
+                onClick={() => navigate("/")}
                 buttonTxt={"로그인하러 가기"}
               />
             </div>
