@@ -8,7 +8,6 @@ import ParkingMarker from "./../assets/ParkingMarker.svg";
 import BottomBar from "./BottomBar";
 import TopBar from "./TopBar";
 import { mapApi } from "../api/map";
-import { parkingApi } from "../api/parkingSpace";
 
 const Map = () => {
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -120,7 +119,10 @@ const Map = () => {
           });
 
           window.kakao.maps.event.addListener(marker, "click", async () => {
-            const parkingIdData = await parkingApi.getNearbyId(parking.id);
+            const parkingIdData = await mapApi.getPakringById(
+              parking.id,
+              currentLocation
+            );
             setSelectedParking(parkingIdData);
           });
         });
@@ -181,6 +183,8 @@ const Map = () => {
           {selectedParking && (
             <ParkingMarkerContent
               key={selectedParking.id}
+              parkingId={selectedParking.id}
+              bookmarked={selectedParking.bookmarked}
               parkingName={selectedParking.parkingName}
               distance={selectedParking.distance}
               weekdayTime={selectedParking.weekdayTime}

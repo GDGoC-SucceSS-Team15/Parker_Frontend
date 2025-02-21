@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -7,50 +7,23 @@ import { FaSortAmountDown } from "react-icons/fa";
 import profileImg from "../assets/profile.svg";
 import CustomModal from "../components/Modals/CustomModal";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { bookmarkApi } from "../api/bookmark";
 
 function BookmarkPage() {
   const navigate = useNavigate();
   const [sortOrder, setSortOrder] = useState("latest");
-  const [parkingSpaces, setParkingSpaces] = useState([
-    {
-      id: 1,
-      name: "주차장 이름",
-      address: "주소",
-      call: "02-3220-1224",
-      size: "72",
-      paid: true,
-      type: "주차장 종류",
-    },
-    {
-      id: 2,
-      name: "초안산근린공원주차장(구)",
-      address: "도봉구 창동 24-0",
-      call: "02-3220-1224",
-      size: "72",
-      paid: true,
-      type: "노외 주차장",
-    },
-    {
-      id: 3,
-      name: "주차장 이름",
-      address: "주소",
-      call: "02-3220-1224",
-      size: "72",
-      paid: true,
-      type: "공영 주차장",
-    },
-    {
-      id: 4,
-      name: "주차장 이름",
-      address: "주소",
-      call: "02-3220-1224",
-      size: "72",
-      paid: true,
-      type: "주차장 종류",
-    },
-  ]);
+  const [parkingSpaces, setParkingSpaces] = useState([]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    const getBookMark = async () => {
+      const bookmarkData = await bookmarkApi.getBookmark();
+      setParkingSpaces(bookmarkData);
+    };
+
+    getBookMark();
+  }, []);
 
   const handleBack = () => {
     if (window.history.length > 1) {
@@ -90,22 +63,32 @@ function BookmarkPage() {
           {sortOrder === "latest" ? "최신순" : "오래된순"}
         </SortButton>
         <ParkingList>
-          {parkingSpaces.map((space) => (
+          {parkingSpaces?.map((space) => (
             <ParkingItem key={space.id}>
               <ParkingContent>
                 <ParkingNameWrapper>
-                  <ParkingName>{space.name}</ParkingName>
+                  <ParkingName>{space.parkingName} 주차장</ParkingName>
                   <ParkingType>{space.type}</ParkingType>
                 </ParkingNameWrapper>
                 <Divider />
                 <Address>{space.address}</Address>
                 <DetailWrapper>
-                  <Label>전화번호:</Label>
-                  <Value>{space.call}</Value>
+                  <Label>평일:</Label>
+                  <Value>
+                    {space.weekdayStartTime} - {space.weekdayEndTime}
+                  </Value>
                 </DetailWrapper>
                 <DetailWrapper>
-                  <Label>총 주차면:</Label>
-                  <Value>{space.size}</Value>
+                  <Label>토요잁:</Label>
+                  <Value>
+                    {space.saturdayStartTime} - {space.saturdayEndTime}
+                  </Value>
+                </DetailWrapper>
+                <DetailWrapper>
+                  <Label>공휴일:</Label>
+                  <Value>
+                    {space.holidayStartTime} - {space.holidayEndTime}
+                  </Value>
                 </DetailWrapper>
                 <Payments>
                   <PaymentsLabel>유무료 구분:</PaymentsLabel>
