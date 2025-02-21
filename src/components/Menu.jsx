@@ -1,6 +1,8 @@
 import { styled } from "styled-components";
+import defaultImg from "./../assets/defaultImg.png"
 import Parker_Logo from "./../assets/LogoImage.svg"
-import My_Page from "./../assets/MenuButton/Menu_MyPage.svg"
+import MyPage from "./../assets/MenuButton/Menu_MyPage.svg"
+import Crackdown from "./../assets/MenuButton/Menu_Crackdown.svg"
 import SavedParkingSpaces from "./../assets/MenuButton/Menu_SavedParkingSpaces.svg"
 import ParkingSpaces from "./../assets/MenuButton/Menu_ParkingSpaces.svg"
 import Parking_Info from "./../assets/MenuButton/Menu_ParkInfo.svg"
@@ -20,19 +22,22 @@ const Menu = () => {
       </LogoDiv>
 
       <ProfileDiv>
-        <img src={My_Page} alt="profileImage"/>
+        <img src={defaultImg} alt="profileImage"/>
         <div>이름</div> 
       </ProfileDiv>
 
       <PageDiv>
         <button onClick={() => navigate("/mypage")}>
-          <img src={My_Page} alt="myPage" />마이페이지
+          <img src={MyPage} alt="myPage" />마이페이지
         </button>
-        <button onClick={() => navigate("/bookmark")}>
-          <img src={SavedParkingSpaces} alt="SavedParkingSpaces" />즐겨찾는 주차공간
+        <button onClick={() => navigate("/crackdown")}>
+          <img src={Crackdown} alt="crackdown" />주정차 금지구역
         </button>
         <button onClick={() => navigate("/parking-spaces")}>
           <img src={ParkingSpaces} alt="ParkingSpaces" />등록한 주차공간
+        </button>
+        <button onClick={() => navigate("/bookmark")}>
+          <img src={SavedParkingSpaces} alt="SavedParkingSpaces" />즐겨찾는 주차공간
         </button>
         <button onClick={() => navigate("/parkinginfo")}>
           <img src={Parking_Info} alt="parkingInfo" />주차 정보 페이지
@@ -41,16 +46,16 @@ const Menu = () => {
 
       <EtcDiv>
         <button>
-          <CiSettings color="#3a3a3a" size={31} style={{ marginRight: "8px" }} />설정
+          <CiSettings color="#3a3a3a" size={25} style={{ marginRight: "8px" }} />설정
         </button>
         <button>
-          <IoInformationCircleOutline color="#3a3a3a" size={30} style={{ marginRight: "8px" }} />더보기
+          <IoInformationCircleOutline color="#3a3a3a" size={24} style={{ marginRight: "8px" }} />더보기
         </button>
         <button onClick={() => navigate("/signin")}>
-          <IoReturnDownBackOutline color="#3a3a3a" size={27} style={{ marginRight: "8px" }} />로그아웃
+          <IoReturnDownBackOutline color="#3a3a3a" size={21} style={{ marginRight: "8px" }} />로그아웃
         </button>
         <button>
-          <IoShareSocialOutline color="#3a3a3a" size={27} style={{ marginRight: "8px" }} />공유
+          <IoShareSocialOutline color="#3a3a3a" size={21} style={{ marginRight: "8px" }} />공유
         </button>
       </EtcDiv>
     </MenuDiv>
@@ -63,14 +68,14 @@ const MenuDiv = styled.div`
   width: 65%;
   min-height: 100vh;
   height: 100%;
-  position: absolute;
+  position: fixed;
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   padding: 0;
   margin: 0;
-  z-index: 30;
+  z-index: 999;
   overflow: auto;
 `;
 
@@ -91,7 +96,7 @@ const ProfileDiv = styled.div`
   padding-bottom: 10%;
 
   img {
-    width: 60px;
+    width: 50px;
     border-radius: 50%;
     margin-bottom: 13px;
   }
@@ -103,8 +108,8 @@ const ProfileDiv = styled.div`
 
 const PageDiv = styled.div`
   border-bottom: 2px solid #ddd;
-  padding: 20px 30px;
-  padding-bottom: 30px;
+  padding: 10px 30px;
+  padding-bottom: 20px;
 
   button {
     border: none;
@@ -120,7 +125,7 @@ const PageDiv = styled.div`
     transition: transform 0.2s;
 
     img {
-      width: 25px;
+      width: 20px;
       margin-right: 10px;
     }
 
@@ -131,7 +136,7 @@ const PageDiv = styled.div`
 `;
 
 const EtcDiv = styled.div`
-  padding: 20px 30px;
+  padding: 10px 30px;
 
   button {
     border: none;

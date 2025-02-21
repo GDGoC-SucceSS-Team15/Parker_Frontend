@@ -1,9 +1,9 @@
 import Menu from "./Menu";
 import { IoSearchSharp } from "react-icons/io5";
 import { FiMenu } from "react-icons/fi";
-import Parking from "./../assets/ParkingIcon.svg";
-import Warning from "./../assets/WarningIcon.svg";
-import Fire from "./../assets/FireIcon.svg";
+import { LuSquareParking } from "react-icons/lu";
+import Warning from "./../assets/WarningIcon.svg"
+import Fire from "./../assets/FireIcon.svg"
 import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import CustomModal from "./Modals/CustomModal";
@@ -37,6 +37,12 @@ const TopBar = ({ onSearch, onToggle }) => {
 
   const toggleMenu = () => {
     setIsMenuVisible((prev) => !prev);
+  };
+
+  // 필터링
+  const handleClick = (filterType) => {
+    onToggle(filterType);
+
   };
 
   // 클릭한 곳이 메뉴 외부인 경우 메뉴 닫기
@@ -84,13 +90,13 @@ const TopBar = ({ onSearch, onToggle }) => {
       )}
 
       <ButtonWrapper>
-        <FilterButton onClick={() => onToggle("parking")}>
-          <img src={Parking} alt="Parking" />
+        <FilterButton onClick={() => handleClick("parking")}>
+          <LuSquareParking color="#015900" size={22} />
           주차공간
         </FilterButton>
-        <FilterButton onClick={() => onToggle("enforcement")}>
-          <img src={Warning} alt="enforcement" />
-          단속 구역
+        <FilterButton onClick={() => handleClick("crackdown")}>
+          <img src={Warning} alt="crackdown" />
+          단속구역
         </FilterButton>
         <FilterButton onClick={() => setOpenModal(true)}>
           <img src={Fire} alt="probability" />

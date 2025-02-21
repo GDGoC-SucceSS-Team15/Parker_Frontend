@@ -9,6 +9,7 @@ import { IoLockClosedOutline } from "react-icons/io5";
 import { FaCircleCheck } from "react-icons/fa6";
 import SquareButton from "../components/Buttons/SquareButton";
 import { userApi } from "../api/user";
+import api from "../api/api";
 
 function SignUpPage() {
   const navigate = useNavigate();
@@ -70,7 +71,6 @@ function SignUpPage() {
 
     if (isValid) {
       console.log(formData);
-      userApi.signUp(formData);
       setStep(5);
     } else {
       alert("올바르지 않은 형식이 포함되거나 작성하지 않은 필드가 있습니다.");
