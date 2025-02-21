@@ -93,15 +93,15 @@ const TopBar = ({ onSearch, onToggle }) => {
       )}
 
       <ButtonWrapper>
-        <FilterButton onClick={() => handleClick("parking")} >
+        <FilterButton onClick={() => handleClick("parking")}>
           <LuSquareParking color="#015900" size={22} />
           주차공간
         </FilterButton>
-        <FilterButton onClick={() => handleClick("crackdown")} >
+        <FilterButton onClick={() => handleClick("crackdown")}>
           <img src={Warning} alt="crackdown" />
           단속구역
         </FilterButton>
-        <FilterButton onClick={() => setOpenModal(true)} >
+        <FilterButton onClick={() => setOpenModal(true)}>
           <img src={Fire} alt="probability" />
           단속확률
         </FilterButton>
@@ -224,6 +224,8 @@ const FilterButton = styled.button`
   color: #333;
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
   transition: background-color 0.3s ease, color 0.3s ease;
+  align-items: center;
+  gap: 10px;
 
   img {
     width: 20px;
