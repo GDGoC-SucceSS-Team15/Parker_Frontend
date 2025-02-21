@@ -33,9 +33,6 @@ const Menu = () => {
         <button onClick={() => navigate("/crackdown")}>
           <img src={Crackdown} alt="crackdown" />주정차 금지구역
         </button>
-        <button onClick={() => navigate("/parking-spaces")}>
-          <img src={ParkingSpaces} alt="ParkingSpaces" />등록한 주차공간
-        </button>
         <button onClick={() => navigate("/bookmark")}>
           <img src={SavedParkingSpaces} alt="SavedParkingSpaces" />즐겨찾는 주차공간
         </button>
