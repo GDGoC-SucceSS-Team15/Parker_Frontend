@@ -20,6 +20,7 @@ function SignInPage() {
       showNotification("✅ 로그인 성공");
     } catch (err) {
       console.log("로그인 실패", err);
+      showNotification("⚠️ 로그인 실패");
     }
 
     navigate("/map");
