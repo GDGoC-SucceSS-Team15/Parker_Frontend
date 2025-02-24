@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { styled } from "styled-components";
-import defaultImg from "./../assets/defaultImg.png"
-import Parker_Logo from "./../assets/LogoImage.svg"
-import MyPage from "./../assets/MenuButton/Menu_MyPage.svg"
-import Crackdown from "./../assets/MenuButton/Menu_Crackdown.svg"
-import SavedParkingSpaces from "./../assets/MenuButton/Menu_SavedParkingSpaces.svg"
-import Parking_Info from "./../assets/MenuButton/Menu_ParkInfo.svg"
+//import defaultImg from "./../assets/defaultImg.png";
+import Parker_Logo from "./../assets/LogoImage.svg";
+import MyPage from "./../assets/MenuButton/Menu_MyPage.svg";
+import Crackdown from "./../assets/MenuButton/Menu_Crackdown.svg";
+import SavedParkingSpaces from "./../assets/MenuButton/Menu_SavedParkingSpaces.svg";
+import Parking_Info from "./../assets/MenuButton/Menu_ParkInfo.svg";
 import profileImg from "../assets/profile.svg";
 import { CiSettings } from "react-icons/ci";
 import { IoInformationCircleOutline } from "react-icons/io5";
@@ -13,6 +13,8 @@ import { IoReturnDownBackOutline } from "react-icons/io5";
 import { IoShareSocialOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import mypageApi from "../api/mypage";
+import { userApi } from "../api/user";
+import useNotificationStore from "../store/notificationStore.js";
 
 const Menu = () => {
   const navigate = useNavigate();
@@ -21,6 +23,7 @@ const Menu = () => {
     nickname: "",
     profileImageUrl: profileImg,
   });
+  const { showNotification } = useNotificationStore();
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -37,17 +40,25 @@ const Menu = () => {
     fetchUserInfo();
   }, []);
 
-  return(
+  const handleLogout = async () => {
+    try {
+      userApi.logOut();
+    } catch (err) {
+      showNotification("⚠️ 로그아웃 실패");
+    }
+
+    showNotification("🙇 로그아웃");
+    navigate("/");
+  };
+
+  return (
     <MenuDiv>
       <LogoDiv>
         <img src={Parker_Logo} alt="parkerLogo" />
       </LogoDiv>
 
       <ProfileDiv onClick={() => navigate("/mypage")}>
-        <img 
-          src={userInfo.profileImageUrl || profileImg}
-          alt="profile"
-        />
+        <img src={userInfo.profileImageUrl || profileImg} alt="profile" />
         <Nickname onClick={() => navigate("/nickname-edit")}>
           <span style={{ fontWeight: "bold" }}>
             {userInfo.nickname || userInfo.name || "김고수"}
@@ -58,36 +69,60 @@ const Menu = () => {
 
       <PageDiv>
         <button onClick={() => navigate("/mypage")}>
-          <img src={MyPage} alt="myPage" />마이페이지
+          <img src={MyPage} alt="myPage" />
+          마이페이지
         </button>
         <button onClick={() => navigate("/crackdown")}>
-          <img src={Crackdown} alt="crackdown" />주정차 금지구역
+          <img src={Crackdown} alt="crackdown" />
+          주정차 금지구역
         </button>
         <button onClick={() => navigate("/bookmark")}>
-          <img src={SavedParkingSpaces} alt="SavedParkingSpaces" />즐겨찾는 주차공간
+          <img src={SavedParkingSpaces} alt="SavedParkingSpaces" />
+          즐겨찾는 주차공간
         </button>
         <button onClick={() => navigate("/parkinginfo")}>
-          <img src={Parking_Info} alt="parkingInfo" />주차 정보 페이지
+          <img src={Parking_Info} alt="parkingInfo" />
+          주차 정보 페이지
         </button>
       </PageDiv>
 
       <EtcDiv>
         <button>
-          <CiSettings color="#3a3a3a" size={25} style={{ marginRight: "8px" }} />설정
+          <CiSettings
+            color="#3a3a3a"
+            size={25}
+            style={{ marginRight: "8px" }}
+          />
+          설정
         </button>
         <button>
-          <IoInformationCircleOutline color="#3a3a3a" size={24} style={{ marginRight: "8px" }} />더보기
+          <IoInformationCircleOutline
+            color="#3a3a3a"
+            size={24}
+            style={{ marginRight: "8px" }}
+          />
+          더보기
         </button>
-        <button onClick={() => navigate("/signin")}>
-          <IoReturnDownBackOutline color="#3a3a3a" size={21} style={{ marginRight: "8px" }} />로그아웃
+        <button onClick={handleLogout}>
+          <IoReturnDownBackOutline
+            color="#3a3a3a"
+            size={21}
+            style={{ marginRight: "8px" }}
+          />
+          로그아웃
         </button>
         <button>
-          <IoShareSocialOutline color="#3a3a3a" size={21} style={{ marginRight: "8px" }} />공유
+          <IoShareSocialOutline
+            color="#3a3a3a"
+            size={21}
+            style={{ marginRight: "8px" }}
+          />
+          공유
         </button>
       </EtcDiv>
     </MenuDiv>
-  )
-}
+  );
+};
 
 export default Menu;
 
@@ -126,6 +161,7 @@ const ProfileDiv = styled.div`
     width: 50px;
     border-radius: 50%;
     margin-bottom: 13px;
+    object-fit: cover;
   }
 `;
 
@@ -136,8 +172,8 @@ const Nickname = styled.div`
   margin-left: 10px;
   &:hover {
     text-decoration: underline;
-  } 
-`
+  }
+`;
 
 const PageDiv = styled.div`
   border-bottom: 2px solid #ddd;
@@ -189,4 +225,3 @@ const EtcDiv = styled.div`
     }
   }
 `;
-
