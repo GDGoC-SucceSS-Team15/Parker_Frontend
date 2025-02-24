@@ -80,7 +80,7 @@ function BookmarkPage() {
                   </Value>
                 </DetailWrapper>
                 <DetailWrapper>
-                  <Label>토요잁:</Label>
+                  <Label>토요일:</Label>
                   <Value>
                     {space.saturdayStartTime} - {space.saturdayEndTime}
                   </Value>
