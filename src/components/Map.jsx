@@ -160,6 +160,13 @@ const Map = () => {
           activeOverlay.setMap(null);
         }
 
+        // 지도 중심 이동
+        map.setCenter(
+          new window.kakao.maps.LatLng(parking.latitude, parking.longitude)
+        );
+
+        map.setLevel(3); // 확대 레벨을 3으로 설정
+
         const parkingIdData = await mapApi.getPakringById(
           parking.id,
           currentLocation
@@ -225,11 +232,19 @@ const Map = () => {
           activeOverlay.setMap(null);
         }
 
+        // 지도 중심 이동
+        map.setCenter(
+          new window.kakao.maps.LatLng(crackdown.latitude, crackdown.longitude)
+        );
+
+        map.setLevel(3); // 확대 레벨을 3으로 설정
+
         // 커스텀 오버레이 생성
         const overlayContent = document.createElement("div");
         overlayContent.className = "custom-overlay";
         overlayContent.innerHTML = `
-          <span class="text>${crackdown.areaName}</span>
+        <span class="icon">P</span>
+          <span class="text">${crackdown.areaName}</span>
         `;
         // <span class="text>${crackdown.address}</span> -> 주소
 
@@ -278,6 +293,8 @@ const Map = () => {
     }
   };
 
+  const [isMarkerClicked, setIsMarkerClicked] = useState(false);
+
   const displayPlaces = useCallback(
     (places) => {
       if (!map) return; // map이 없을 경우 실행하지 않음
@@ -285,13 +302,35 @@ const Map = () => {
       const bounds = new window.kakao.maps.LatLngBounds();
       places.forEach((place) => {
         const markerPosition = new window.kakao.maps.LatLng(place.y, place.x);
-        new window.kakao.maps.Marker({ position: markerPosition, map });
+        const searchMarker = new window.kakao.maps.Marker({
+          position: markerPosition,
+          map: map,
+        });
+
         bounds.extend(markerPosition);
+
+        // 검색 결과 마커 중 클릭
+        window.kakao.maps.event.addListener(searchMarker, "click", async () => {
+          setIsMarkerClicked(true);
+
+          const newLocation = { latitude: place.y, longitude: place.x };
+          setCurrentLocation(newLocation);
+
+          // 지도 중심 이동 및 확대 레벨 3으로 고정
+          map.setCenter(markerPosition);
+          map.setLevel(3);
+
+          // 마커를 지도 중앙에 위치
+          map.setCenter(markerPosition);
+        });
       });
 
-      map.setBounds(bounds);
+      // 마커 클릭 시에는 setBounds 호출하지 않음
+      if (!isMarkerClicked) {
+        map.setBounds(bounds);
+      }
     },
-    [map] // ✅ map이 변경될 때만 함수가 새로 생성됨
+    [isMarkerClicked, map] // ✅ map이 변경될 때만 함수가 새로 생성됨
   );
 
   // 🔍 장소 검색 완료 시 호출되는 콜백 함수
