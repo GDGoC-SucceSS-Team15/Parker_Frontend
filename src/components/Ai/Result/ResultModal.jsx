@@ -28,14 +28,13 @@ const RESULT_DATA = {
     icon: "https://cdn-icons-png.flaticon.com/128/3477/3477085.png",
   },
   4: {
-    background: "#FFECA1",
-    text: '"황색 실선 구역,\n시간·요일에 따라 탄력적 주정차 가능."',
-    fine: "주차 가능 여부는 현장 확인 필요",
-    icon: "https://cdn-icons-png.flaticon.com/128/4285/4285398.png",
+    background: "#C0FEC5",
+    text: '"흰색 실선 구역,\n주정차 가능합니다."',
+    icon: "https://cdn-icons-png.flaticon.com/128/5201/5201653.png",
   },
   5: {
     background: "#FFECA1",
-    text: '"흰색 점선 구역,\n5분 이내 정차만 가능."',
+    text: '"황색 점선 구역,\n5분 이내 정차만 가능."',
     icon: "https://cdn-icons-png.flaticon.com/128/4285/4285398.png",
   },
   6: {
@@ -45,9 +44,10 @@ const RESULT_DATA = {
     icon: "https://cdn-icons-png.flaticon.com/128/3477/3477085.png",
   },
   7: {
-    background: "#C0FEC5",
-    text: '"흰색 실선 구역,\n주정차 가능합니다."',
-    icon: "https://cdn-icons-png.flaticon.com/128/5201/5201653.png",
+    background: "#FFECA1",
+    text: '"황색 실선 구역,\n시간·요일에 따라 탄력적 주정차 가능."',
+    fine: "주변 안내판을 확인해보세요!",
+    icon: "https://cdn-icons-png.flaticon.com/128/4285/4285398.png",
   },
 };
 
