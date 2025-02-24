@@ -11,9 +11,11 @@ export const bookmarkApi = {
       console.log("즐겨찾기 토글 실패", err);
     }
   },
-  getBookmark: async () => {
+  getBookmark: async (sort) => {
     try {
-      const res = await api.get("/api/bookmark/parking-space-list");
+      const res = await api.get("/api/bookmark/parking-space-list", {
+        params: { sort: sort },
+      });
 
       console.log("즐겨찾기 조회 성공", res);
       const bmData = res.data;

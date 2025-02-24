@@ -16,14 +16,14 @@ function BookmarkPage() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
-    const getBookMark = async () => {
-      const bookmarkData = await bookmarkApi.getBookmark();
-      setParkingSpaces(bookmarkData);
-    };
+  const getBookMark = async (sort) => {
+    const bookmarkData = await bookmarkApi.getBookmark(sort);
+    setParkingSpaces(bookmarkData);
+  };
 
-    getBookMark();
-  }, []);
+  useEffect(() => {
+    getBookMark(sortOrder);
+  }, [sortOrder]);
 
   const handleBack = () => {
     if (window.history.length > 1) {
@@ -33,11 +33,10 @@ function BookmarkPage() {
     }
   };
 
-  const removeParking = (id) => {
-    setParkingSpaces((prevSpaces) =>
-      prevSpaces.filter((space) => space.id !== id)
-    );
+  const removeParking = async (id) => {
+    await bookmarkApi.toggleBookmark(id);
     setIsModalOpen(true);
+    getBookMark(sortOrder);
   };
 
   const closeModal = () => {
@@ -45,7 +44,9 @@ function BookmarkPage() {
   };
 
   const toggleSortOrder = () => {
-    setSortOrder((prevOrder) => (prevOrder === "latest" ? "oldest" : "latest"));
+    setSortOrder((prevOrder) =>
+      prevOrder === "latest" ? "earliest" : "latest"
+    );
   };
 
   return (
