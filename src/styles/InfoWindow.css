@@ -1,0 +1,47 @@
+.custom-overlay {
+  position: relative;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 0px 8px rgba(0, 0, 0, 0.3);
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(-10px);
+  animation: fadeInUp 0.3s ease forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.custom-overlay .icon {
+  color: green;
+  font-weight: bold;
+  font-size: 18px;
+  margin-right: 8px;
+}
+
+.custom-overlay .text {
+  font-size: 13px;
+  color: #161616;
+}
+
+.custom-overlay::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 8px 8px 0;
+  border-style: solid;
+  border-color: white transparent transparent;
+}

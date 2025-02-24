@@ -9,6 +9,7 @@ import CrackdownMarker from "./../assets/CrackdownMarker.svg";
 import BottomBar from "./BottomBar";
 import TopBar from "./TopBar";
 import { mapApi } from "../api/map";
+import "../styles/InfoWindow.css";
 
 const Map = () => {
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -124,7 +125,9 @@ const Map = () => {
   useEffect(() => {
     if (!map) return;
     updateCrackdownMarkers();
-  }, [map, showCrackdown]);
+  }, [map, parkingSpaces, showCrackdown]);
+
+  let activeOverlay = null; // 전역 변수로 오버레이 관리
 
   // 🅿️ 주차장 마커 추가 & 제거
   const updateParkingMarkers = () => {
@@ -152,11 +155,37 @@ const Map = () => {
       });
 
       window.kakao.maps.event.addListener(marker, "click", async () => {
+        // 기존에 열려 있던 오버레이 닫기
+        if (activeOverlay) {
+          activeOverlay.setMap(null);
+        }
+
         const parkingIdData = await mapApi.getPakringById(
           parking.id,
           currentLocation
         );
         setSelectedParking(parkingIdData);
+
+        // 커스텀 오버레이 생성
+        const overlayContent = document.createElement("div");
+        overlayContent.className = "custom-overlay";
+        overlayContent.innerHTML = `
+          <span class="icon">P</span>
+          <span class="text">${parking.parkingName}</span>
+      `;
+
+        const overlay = await new window.kakao.maps.CustomOverlay({
+          position: new window.kakao.maps.LatLng(
+            parking.latitude,
+            parking.longitude
+          ),
+          content: overlayContent,
+          xAnchor: 0.5,
+          yAnchor: 2.6,
+          map: map,
+        });
+
+        activeOverlay = overlay; // 현재 열린 오버레이 업데이트
       });
 
       return marker;
@@ -188,6 +217,34 @@ const Map = () => {
         ),
         map: map,
         image: CrackdownMark,
+      });
+
+      window.kakao.maps.event.addListener(marker, "click", async () => {
+        // 기존에 열려 있던 오버레이 닫기
+        if (activeOverlay) {
+          activeOverlay.setMap(null);
+        }
+
+        // 커스텀 오버레이 생성
+        const overlayContent = document.createElement("div");
+        overlayContent.className = "custom-overlay";
+        overlayContent.innerHTML = `
+          <span class="text>${crackdown.areaName}</span>
+        `;
+        // <span class="text>${crackdown.address}</span> -> 주소
+
+        const overlay = new window.kakao.maps.CustomOverlay({
+          position: new window.kakao.maps.LatLng(
+            crackdown.latitude,
+            crackdown.longitude
+          ),
+          content: overlayContent,
+          xAnchor: 0.5,
+          yAnchor: 2.6,
+          map: map,
+        });
+
+        activeOverlay = overlay; // 현재 열린 오버레이 업데이트
       });
 
       return marker;
