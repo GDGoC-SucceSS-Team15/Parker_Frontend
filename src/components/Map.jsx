@@ -10,6 +10,8 @@ import BottomBar from "./BottomBar";
 import TopBar from "./TopBar";
 import { mapApi } from "../api/map";
 import "../styles/InfoWindow.css";
+import overlayParking from "../assets/parking.svg";
+import overlayCrackdown from "../assets/cctv.svg";
 
 const Map = () => {
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -177,8 +179,10 @@ const Map = () => {
         const overlayContent = document.createElement("div");
         overlayContent.className = "custom-overlay";
         overlayContent.innerHTML = `
-          <span class="icon">P</span>
-          <span class="text">${parking.parkingName}</span>
+          <div class="content-div">
+            <span class="icon"><img src="${overlayParking}" alt="parking"/></span>
+            <span class="text">${parking.parkingName}</span>
+          </div>
       `;
 
         const overlay = await new window.kakao.maps.CustomOverlay({
@@ -243,8 +247,13 @@ const Map = () => {
         const overlayContent = document.createElement("div");
         overlayContent.className = "custom-overlay";
         overlayContent.innerHTML = `
-        <span class="icon">P</span>
-          <span class="text">${crackdown.areaName}</span>
+          <div class="content-div">
+            <span class="icon"><img src="${overlayCrackdown}" alt="parking"/></span>
+            <span class="text">${crackdown.areaName}</span>
+          </div>
+          <div>
+            <span class="address">${crackdown.address}</span>
+          </div>
         `;
         // <span class="text>${crackdown.address}</span> -> 주소
 
@@ -255,7 +264,7 @@ const Map = () => {
           ),
           content: overlayContent,
           xAnchor: 0.5,
-          yAnchor: 2.6,
+          yAnchor: 2.0,
           map: map,
         });
 
