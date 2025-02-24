@@ -1,9 +1,9 @@
 import Menu from "./Menu";
 import { IoSearchSharp } from "react-icons/io5";
 import { FiMenu } from "react-icons/fi";
-import { LuSquareParking } from "react-icons/lu";
 import Warning from "./../assets/WarningIcon.svg";
-import Fire from "./../assets/FireIcon.svg";
+import Crackdown from "./../assets/cctv.svg";
+import Parking from "./../assets/parking.svg";
 import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import CustomModal from "./Modals/CustomModal";
@@ -94,16 +94,17 @@ const TopBar = ({ onSearch, onToggle }) => {
 
       <ButtonWrapper>
         <FilterButton onClick={() => handleClick("parking")}>
-          <LuSquareParking color="#015900" size={22} />
+          <img src={Parking} alt="parking" />
+          {/* <LuSquareParking color="#015900" size={22} /> */}
           주차공간
         </FilterButton>
         <FilterButton onClick={() => handleClick("crackdown")}>
-          <img src={Warning} alt="crackdown" />
+          <img src={Crackdown} alt="crackdown" />
           단속구역
         </FilterButton>
         <FilterButton onClick={() => setOpenModal(true)}>
-          <img src={Fire} alt="probability" />
-          단속확률
+          <img src={Warning} alt="probability" />
+          단속 여부
         </FilterButton>
       </ButtonWrapper>
 
@@ -228,8 +229,8 @@ const FilterButton = styled.button`
   gap: 10px;
 
   img {
-    width: 20px;
-    height: 20px;
+    //width: 20px;
+    height: 18px;
     vertical-align: middle;
     object-fit: contain;
     margin-top: -2px;

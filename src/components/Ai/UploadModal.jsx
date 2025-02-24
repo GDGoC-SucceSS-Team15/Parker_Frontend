@@ -95,6 +95,9 @@ const Wrapper = styled.div`
   width: 100%;
   .icon {
     margin: auto;
+    img {
+      width: 40px;
+    }
   }
 `;
 
