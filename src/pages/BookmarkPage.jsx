@@ -62,6 +62,9 @@ function BookmarkPage() {
           </SortButton>
         </SortDiv>
         <ParkingList>
+          {parkingSpaces?.length === 0 && (
+            <div className="nodata">즐겨찾는 주차 공간이 없습니다.</div>
+          )}
           {parkingSpaces?.map((space) => (
             <ParkingItem key={space.id}>
               <ParkingContent>
@@ -160,6 +163,12 @@ const ParkingList = styled.div`
   padding-bottom: 10px;
   &::-webkit-scrollnar {
     display: none;
+  }
+
+  .nodata {
+    color: #898989;
+    font-size: 13px;
+    font-weight: 600;
   }
 `;
 
