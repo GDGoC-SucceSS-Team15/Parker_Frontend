@@ -7,7 +7,7 @@ import CustomModal from "../components/Modals/CustomModal";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { bookmarkApi } from "../api/bookmark";
 import Header from "../components/Headers/Header";
-import useNotificationStore from "../../store/notificationStore.js";
+import useNotificationStore from "../store/notificationStore.js";
 
 function BookmarkPage() {
   const [sortOrder, setSortOrder] = useState("latest");
