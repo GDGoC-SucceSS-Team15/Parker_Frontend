@@ -130,7 +130,7 @@ const MenuDiv = styled.div`
   width: 65%;
   min-height: 100vh;
   height: 100%;
-  position: fixed;
+  position: absolute;
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
