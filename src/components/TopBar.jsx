@@ -245,9 +245,4 @@ const FilterButton = styled.button`
     object-fit: contain;
     margin-top: -2px;
   }
-
-  &:hover {
-    background-color: #f0f0f0;
-    color: #000;
-  }
 `;
