@@ -26,6 +26,7 @@ export const reportApi = {
       return true;
     } catch (err) {
       console.error("불법 주정차 신고 실패", err);
+      return false;
     }
   },
   // 내 신고 목록 조회
@@ -46,8 +47,10 @@ export const reportApi = {
       const res = await api.delete(`/api/report/delete/${reportId}`);
 
       console.log("신고 철회 성공", res);
+      return true;
     } catch (err) {
       console.error("신고 철회 실패", err);
+      return false;
     }
   },
 };

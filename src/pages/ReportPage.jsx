@@ -6,9 +6,12 @@ import CustomModal from "../components/Modals/CustomModal";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { reportApi } from "../api/report";
 import Header from "../components/Headers/Header";
+import useNotificationStore from "../store/notificationStore";
 
 function ReportPage() {
   const [reports, setReports] = useState([]);
+
+  const { showNotification } = useNotificationStore();
 
   const getReport = async () => {
     const reportData = await reportApi.getMyReport();
@@ -21,9 +24,18 @@ function ReportPage() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const removeReport = (id) => {
-    reportApi.delMyReport(id);
-    setIsModalOpen(true);
+  const removeReport = async (id) => {
+    try {
+      const reqOk = await reportApi.delMyReport(id);
+      if (reqOk) {
+        setIsModalOpen(true);
+        showNotification("🔄 신고가 철회되었습니다.");
+      } else {
+        showNotification("⚠️ 신고 철회 실패");
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const closeModal = () => {
