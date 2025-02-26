@@ -19,6 +19,8 @@ api.interceptors.request.use(
       "/api/bookmark/parking-space-list",
       "/api/parker/parking-space/nearby",
       "/api/parking-violation/nearby",
+      "/api/user/signup",
+      "/api/user/login",
     ]; // 로딩을 부여할 요청만 포함
 
     const shouldShowLoading = includedUrls.includes(config.url); // 해당 URL이 로딩 포함 목록에 있는지 확인
