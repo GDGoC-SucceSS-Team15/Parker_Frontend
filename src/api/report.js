@@ -4,8 +4,9 @@ import api from "./api";
 export const reportApi = {
   postReport: async (address, image) => {
     try {
-      if (!address || !image) {
-        return;
+      if (!address) {
+        alert("주소를 입력해주세요.");
+        return false;
       }
 
       const res = await api.post(
@@ -22,6 +23,7 @@ export const reportApi = {
       );
 
       console.log("불법 주정차 신고 성공", res);
+      return true;
     } catch (err) {
       console.error("불법 주정차 신고 실패", err);
     }

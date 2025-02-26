@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { Trash2 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { AiOutlineArrowLeft } from "react-icons/ai";
-import profileImg from "../assets/profile.svg";
+import defaultImg from "../assets/defaultImg.png";
 import CustomModal from "../components/Modals/CustomModal";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { reportApi } from "../api/report";
+import Header from "../components/Headers/Header";
 
 function ReportPage() {
-  const navigate = useNavigate();
   const [reports, setReports] = useState([]);
 
   const getReport = async () => {
@@ -33,26 +31,14 @@ function ReportPage() {
     getReport();
   };
 
-  const handleBack = () => {
-    if (window.history.length > 1) {
-      navigate(-1);
-    } else {
-      navigate("/");
-    }
-  };
-
   return (
     <Wrapper>
       <Content>
-        <HeaderWrapper>
-          <BackButton onClick={handleBack}>
-            <AiOutlineArrowLeft size={25} />
-          </BackButton>
-          <h2>신고 내역</h2>
-          <ProfileImage src={profileImg} alt="profile" />
-        </HeaderWrapper>
+        <Header title="신고 내역" profileImg={defaultImg} />
         <ReportList>
-          {reports?.length === 0 && <div>신고 내역이 없습니다.</div>}
+          {reports?.length === 0 && (
+            <div className="nodata">신고 내역이 없습니다.</div>
+          )}
           {reports?.map((report) => (
             <ReportItem key={report.id}>
               <ReportContent>
@@ -92,33 +78,20 @@ const Wrapper = styled.div`
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  margin-top: 10px;
 `;
 
 const Content = styled.div`
-  width: 85%;
-  text-align: center;
-`;
-
-const HeaderWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   width: 100%;
-  position: relative;
-  margin-bottom: 20px;
-`;
+  text-align: center;
+  overflow-y: auto;
 
-const BackButton = styled.div`
-  cursor: pointer;
-  color: #000000;
-`;
-
-const ProfileImage = styled.img`
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  object-fit: cover;
+  & {
+    -ms-overflow-style: none; /* 인터넷 익스플로러 */
+    scrollbar-width: none; /* 파이어폭스 */
+  }
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const ReportList = styled.div`
@@ -126,19 +99,26 @@ const ReportList = styled.div`
   flex-direction: column;
   width: 100%;
   text-align: center;
+  justify-content: center;
+
+  .nodata {
+    color: #898989;
+    font-size: 13px;
+    font-weight: 600;
+  }
 `;
 
 const ReportItem = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 93%;
+  width: 80%;
+  margin: 20px auto;
   position: relative;
   padding: 15px;
   border: 1px solid #ddd;
   border-radius: 7px;
   box-shadow: 0 7px 7px rgba(0, 0, 0, 0.1);
-  margin-bottom: 40px;
   transition: box-shadow 0.3s ease-in-out;
   &:hover {
     box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
