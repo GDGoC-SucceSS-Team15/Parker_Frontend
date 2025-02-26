@@ -1,5 +1,5 @@
 import React from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { IoIosArrowBack } from "react-icons/io";
 
 const RESULT_DATA = {
@@ -84,17 +84,38 @@ const ResultModal = ({ isOpen, onRequestClose, type = "fireZone" }) => {
 
 export default ResultModal;
 
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+
+const slideUp = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(20px); /* 시작 위치를 약간 아래로 설정 */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
 const ModalOverlay = styled.div`
   background-color: rgba(217, 217, 217, 0.7);
   width: 100%;
   height: 100vh;
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 9999; /* z-index 충분히 높이기 */
+  animation: ${fadeIn} 0.4s ease-in-out;
 `;
 
 const ModalContent = styled.div`
@@ -110,6 +131,7 @@ const ModalContent = styled.div`
   color: black;
   position: relative;
   padding: 15px;
+  animation: ${slideUp} 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
 `;
 
 const BackBtn = styled.div`
