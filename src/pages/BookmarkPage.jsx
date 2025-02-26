@@ -7,12 +7,15 @@ import CustomModal from "../components/Modals/CustomModal";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { bookmarkApi } from "../api/bookmark";
 import Header from "../components/Headers/Header";
+import useNotificationStore from "../../store/notificationStore.js";
 
 function BookmarkPage() {
   const [sortOrder, setSortOrder] = useState("latest");
   const [parkingSpaces, setParkingSpaces] = useState([]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const { showNotification } = useNotificationStore();
 
   const getBookMark = async (sort) => {
     const bookmarkData = await bookmarkApi.getBookmark(sort);
@@ -24,9 +27,18 @@ function BookmarkPage() {
   }, [sortOrder]);
 
   const removeParking = async (id) => {
-    await bookmarkApi.toggleBookmark(id);
-    setIsModalOpen(true);
-    getBookMark(sortOrder);
+    try {
+      const reqOk = await bookmarkApi.toggleBookmark(id);
+
+      if (reqOk) {
+        setIsModalOpen(true);
+        getBookMark(sortOrder);
+      } else {
+        showNotification("⚠️ 즐겨찾기 삭제 실패");
+      }
+    } catch (err) {
+      console.log("즐겨찾기 삭제 실패", err);
+    }
   };
 
   const closeModal = () => {
