@@ -116,7 +116,10 @@ const TopBar = ({ onSearch, onToggle }) => {
       </CustomModal>
       <ResultModal
         isOpen={modal}
-        onRequestClose={() => setModal(false)}
+        onRequestClose={() => {
+          setModal(false);
+          setOpenModal(false);
+        }}
         type={result?.class_id}
       />
     </>
