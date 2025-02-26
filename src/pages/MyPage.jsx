@@ -62,7 +62,7 @@ function MyPage() {
           <ProfileInfo>
             <Nickname onClick={() => navigate("/nickname-edit")}>
               <span style={{ fontWeight: "bold" }}>
-                {userInfo.nickname || "김고수"}
+                {userInfo.nickname || userInfo.name || "김고수"}
               </span>
               님
             </Nickname>
