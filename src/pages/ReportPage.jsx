@@ -52,8 +52,8 @@ function ReportPage() {
           <ProfileImage src={profileImg} alt="profile" />
         </HeaderWrapper>
         <ReportList>
-          {reports.length === 0 && <div>신고 내역이 없습니다.</div>}
-          {reports.map((report) => (
+          {reports?.length === 0 && <div>신고 내역이 없습니다.</div>}
+          {reports?.map((report) => (
             <ReportItem key={report.id}>
               <ReportContent>
                 <DateTimeWrapper>

@@ -92,7 +92,7 @@ const ReportContent = () => {
     [map] // ✅ map이 변경될 때만 함수가 새로 생성됨
   );
 
-  // 🔍 장소 검색 완료 시 호출되는 콜백 함수
+  // 장소 검색 완료 시 호출되는 콜백 함수
   useEffect(() => {
     if (!map || !searchQuery) return;
 
@@ -127,13 +127,20 @@ const ReportContent = () => {
   const handlePost = async () => {
     console.log("파일", file);
     try {
-      reportApi.postReport(inputLocation, file);
+      await reportApi.postReport(inputLocation, file);
       showNotification("✅ 신고가 정상적으로 처리되었습니다");
       navigate("/report");
     } catch (err) {
       showNotification("⚠️ 신고 접수 실패");
     }
   };
+
+  const activeEnter = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
   return (
     <div style={{ width: "80%", margin: "auto" }}>
       <ReportWrapper>
@@ -151,6 +158,7 @@ const ReportContent = () => {
             placeholder="주소 직접 입력"
             value={inputLocation}
             onChange={(e) => setinputLocation(e.target.value)}
+            onKeyDown={(e) => activeEnter(e)}
           />
           <SearchBtn onClick={handleSearch}>검색</SearchBtn>
         </InputDiv>
