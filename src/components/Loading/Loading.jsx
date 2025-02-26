@@ -25,6 +25,6 @@ const Wrapper = styled.div`
   background-color: #00000086;
 
   img {
-    width: 150px;
+    width: 130px;
   }
 `;
