@@ -23,7 +23,7 @@ const ParkInfoListItem = ({
           <div>{km}</div>
         </div>
         <div className="Right">
-          <div className="title">{title} 주차장</div>
+          <div className="title">{title}</div>
           <div className="location">{location}</div>
         </div>
       </Location>
