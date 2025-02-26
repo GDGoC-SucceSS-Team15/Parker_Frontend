@@ -1,8 +1,7 @@
 .mobile-container {
   width: 100vw;
   min-width: 320px; /* 최소 너비는 min-width */
-  min-height: 100vh;
-  width: 100vw;
+  min-height: 100dvh;
   height: 100%;
   background: #ffffff;
   overflow: hidden;
