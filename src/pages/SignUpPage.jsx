@@ -73,9 +73,13 @@ function SignUpPage() {
 
     if (isValid) {
       console.log(formData);
-      userApi.signUp(formData);
-      showNotification("✨ 회원가입 성공");
-      setStep(5);
+      const reqOk = await userApi.signUp(formData);
+      if (reqOk) {
+        showNotification("✨ 회원가입 성공");
+        setStep(5);
+      } else {
+        showNotification("⚠️ 회원가입에 실패했습니다.");
+      }
     } else {
       showNotification(
         "⚠️ 올바르지 않은 형식이 포함되거나 작성하지 않은 필드가 있습니다."
