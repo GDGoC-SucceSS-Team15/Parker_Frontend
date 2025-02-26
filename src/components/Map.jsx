@@ -124,7 +124,7 @@ const Map = () => {
   useEffect(() => {
     if (!map) return;
     updateCrackdownMarkers();
-  }, [map, showCrackdown]);
+  }, [map, parkingSpaces, showCrackdown]);
 
   // 🅿️ 주차장 마커 추가 & 제거
   const updateParkingMarkers = () => {
