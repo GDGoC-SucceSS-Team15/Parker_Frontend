@@ -42,19 +42,26 @@ function ParkInfoPage() {
       <Header title="가까운 주차 공간" profileImg={defaultImg} />
       <ContentDiv>
         <SubTitle>현재 위치에서 가까운 순</SubTitle>
-        {isLoading && <div>로딩 중...</div>}
-        {parkingSpaces?.map((item) => (
-          <ParkInfoListItem
-            key={item.id}
-            title={item.parkingName}
-            location={item.address}
-            km={item.distance}
-            time={item[daytype] === "00:00 ~ 00:00" ? "휴무" : item[daytype]}
-            unit_time={item.baseParkingTime}
-            unit_fee={item.baseParkingFee}
-            onClick={() => handleModalOpen(item.id)}
-          />
-        ))}
+        {isLoading && <div className="loading">로딩 중...</div>}
+        {parkingSpaces?.map((item) => {
+          const formattedTitle =
+            item.parkingName.slice(-3) === "주차장"
+              ? item.parkingName
+              : `${item.parkingName} 주차장`;
+
+          return (
+            <ParkInfoListItem
+              key={item.id}
+              title={formattedTitle} // "주차장"이 없는 경우 추가
+              location={item.address}
+              km={item.distance}
+              time={item[daytype] === "00:00 ~ 00:00" ? "휴무" : item[daytype]}
+              unit_time={item.baseParkingTime}
+              unit_fee={item.baseParkingFee}
+              onClick={() => handleModalOpen(item.id)}
+            />
+          );
+        })}
       </ContentDiv>
       <CustomModal
         isOpen={modalOpen}
@@ -85,6 +92,15 @@ const ContentDiv = styled.div`
   }
   &::-webkit-scrollbar {
     display: none;
+  }
+
+  .loading {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #898989;
   }
 `;
 
