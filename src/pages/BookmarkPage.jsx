@@ -122,15 +122,19 @@ export default BookmarkPage;
 
 const Wrapper = styled.div`
   width: 100%;
-  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   justify-content: center;
-  margin-top: 10px;
+  flex-direction: column;
 `;
 
 const Content = styled.div`
   width: 100%;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: hidden;
 `;
 
 const SortDiv = styled.div`
@@ -157,10 +161,11 @@ const SortButton = styled.button`
 const ParkingList = styled.div`
   display: flex;
   flex-direction: column;
-  overflow-x: auto;
-  white-space: nowrap;
   gap: 20px;
   padding-bottom: 10px;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
   &::-webkit-scrollnar {
     display: none;
   }
