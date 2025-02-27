@@ -8,8 +8,10 @@ import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { bookmarkApi } from "../api/bookmark";
 import Header from "../components/Headers/Header";
 import useNotificationStore from "../store/notificationStore.js";
+import { useLocation } from "react-router-dom";
 
 function BookmarkPage() {
+  const location = useLocation();
   const [sortOrder, setSortOrder] = useState("latest");
   const [parkingSpaces, setParkingSpaces] = useState([]);
 
@@ -24,7 +26,7 @@ function BookmarkPage() {
 
   useEffect(() => {
     getBookMark(sortOrder);
-  }, [sortOrder]);
+  }, [sortOrder, location]);
 
   const removeParking = async (id) => {
     try {
@@ -61,50 +63,52 @@ function BookmarkPage() {
             {sortOrder === "latest" ? "최신순" : "오래된순"}
           </SortButton>
         </SortDiv>
-        <ParkingList>
-          {parkingSpaces?.length === 0 && (
-            <div className="nodata">즐겨찾는 주차 공간이 없습니다.</div>
-          )}
-          {parkingSpaces?.map((space) => (
-            <ParkingItem key={space.id}>
-              <ParkingContent>
-                <ParkingNameWrapper>
-                  <ParkingName>{space.parkingName} 주차장</ParkingName>
-                  <ParkingType>{space.type}</ParkingType>
-                </ParkingNameWrapper>
-                <Divider />
-                <Address>{space.address}</Address>
-                <DetailWrapper>
-                  <Label>평일:</Label>
-                  <Value>
-                    {space.weekdayStartTime} - {space.weekdayEndTime}
-                  </Value>
-                </DetailWrapper>
-                <DetailWrapper>
-                  <Label>토요일:</Label>
-                  <Value>
-                    {space.saturdayStartTime} - {space.saturdayEndTime}
-                  </Value>
-                </DetailWrapper>
-                <DetailWrapper>
-                  <Label>공휴일:</Label>
-                  <Value>
-                    {space.holidayStartTime} - {space.holidayEndTime}
-                  </Value>
-                </DetailWrapper>
-                <Payments>
-                  <PaymentsLabel>요금:</PaymentsLabel>
-                  <PaymentStatus>
-                    {space.baseParkingTime}분 당 {space.baseParkingFee}원
-                  </PaymentStatus>
-                </Payments>
-              </ParkingContent>
-              <DeleteButton onClick={() => removeParking(space.id)}>
-                <Trash2 size={20} />
-              </DeleteButton>
-            </ParkingItem>
-          ))}
-        </ParkingList>
+        <ParkingDiv>
+          <ParkingList>
+            {parkingSpaces?.length === 0 && (
+              <div className="nodata">즐겨찾는 주차 공간이 없습니다.</div>
+            )}
+            {parkingSpaces?.map((space) => (
+              <ParkingItem key={space.id}>
+                <ParkingContent>
+                  <ParkingNameWrapper>
+                    <ParkingName>{space.parkingName} 주차장</ParkingName>
+                    <ParkingType>{space.type}</ParkingType>
+                  </ParkingNameWrapper>
+                  <Divider />
+                  <Address>{space.address}</Address>
+                  <DetailWrapper>
+                    <Label>평일:</Label>
+                    <Value>
+                      {space.weekdayStartTime} - {space.weekdayEndTime}
+                    </Value>
+                  </DetailWrapper>
+                  <DetailWrapper>
+                    <Label>토요일:</Label>
+                    <Value>
+                      {space.saturdayStartTime} - {space.saturdayEndTime}
+                    </Value>
+                  </DetailWrapper>
+                  <DetailWrapper>
+                    <Label>공휴일:</Label>
+                    <Value>
+                      {space.holidayStartTime} - {space.holidayEndTime}
+                    </Value>
+                  </DetailWrapper>
+                  <Payments>
+                    <PaymentsLabel>요금:</PaymentsLabel>
+                    <PaymentStatus>
+                      {space.baseParkingTime}분 당 {space.baseParkingFee}원
+                    </PaymentStatus>
+                  </Payments>
+                </ParkingContent>
+                <DeleteButton onClick={() => removeParking(space.id)}>
+                  <Trash2 size={20} />
+                </DeleteButton>
+              </ParkingItem>
+            ))}
+          </ParkingList>
+        </ParkingDiv>
 
         <CustomModal isOpen={isModalOpen} onRequestClose={closeModal}>
           <ModalContainer>
@@ -122,19 +126,18 @@ export default BookmarkPage;
 
 const Wrapper = styled.div`
   width: 100%;
-  min-height: 100dvh;
+  height: 100dvh;
   display: flex;
-  justify-content: center;
   flex-direction: column;
+  overflow: hidden;
 `;
 
 const Content = styled.div`
   width: 100%;
-  text-align: center;
   display: flex;
   flex-direction: column;
   flex: 1;
-  overflow-y: hidden;
+  overflow: hidden;
 `;
 
 const SortDiv = styled.div`
@@ -158,17 +161,23 @@ const SortButton = styled.button`
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
+const ParkingDiv = styled.div`
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  padding: 20px 0;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+`;
+
 const ParkingList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
   padding-bottom: 10px;
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  &::-webkit-scrollnar {
-    display: none;
-  }
 
   .nodata {
     color: #898989;
