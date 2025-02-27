@@ -128,7 +128,7 @@ export default Menu;
 
 const MenuDiv = styled.div`
   width: 65%;
-  min-height: 100vh;
+  min-height: 100dvh;
   height: 100%;
   position: absolute;
   display: flex;
