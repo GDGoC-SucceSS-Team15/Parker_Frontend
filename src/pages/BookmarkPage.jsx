@@ -57,7 +57,7 @@ function BookmarkPage() {
             <AiOutlineArrowLeft size={25} />
           </BackButton>
           <h2>즐겨찾는 주차 공간</h2>
-          <ProfileImage src={profileImg} alt="profile" />
+          <ProfileImage onClick={() => navigate("/mypage")} src={profileImg} alt="profile" />
         </HeaderWrapper>
         <SortButton onClick={toggleSortOrder}>
           <FaSortAmountDown size={16} />
@@ -151,6 +151,7 @@ const ProfileImage = styled.img`
   height: 50px;
   border-radius: 50%;
   object-fit: cover;
+  cursor: pointer;
 `;
 
 const SortButton = styled.button`
