@@ -1,7 +1,7 @@
 .mobile-container {
   width: 100vw;
   min-width: 320px; /* 최소 너비는 min-width */
-  height: 100%;
+  height: 100dvh;
   background: #ffffff;
   overflow: hidden;
   position: relative;
@@ -11,7 +11,7 @@
 @media (min-width: 600px) {
   .mobile-container {
     width: 600px; /* 고정된 모바일 너비 */
-    height: 100%; /* 고정된 모바일 높이 */
+    height: 100dvh; /* 고정된 모바일 높이 */
     background: #ffffff;
     border: 1px solid #ddd;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);

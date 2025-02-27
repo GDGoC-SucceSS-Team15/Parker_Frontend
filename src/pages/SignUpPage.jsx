@@ -260,7 +260,7 @@ export default SignUpPage;
 
 const Wrapper = styled.div`
   width: 100%;
-  min-height: 100vh;
+  min-height: 100%;
   display: flex;
   justify-content: center;
   margin-top: 30px;
