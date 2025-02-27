@@ -18,10 +18,9 @@ function MyPage() {
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const response = await mypageApi.getUserInfo();
-        if (response.isSuccess) {
-          setUserInfo(response.result);
-        }
+        const data = await mypageApi.getUserInfo();
+        console.log("유저 정보 응답:", data);
+        setUserInfo(data.result);
       } catch (error) {
         console.error("유저 정보 불러오기 실패:", error);
       }

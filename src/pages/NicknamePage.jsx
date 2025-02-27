@@ -19,8 +19,14 @@ function ProfileEditPage() {
       console.log("닉네임 변경 요청 시작:", nickname);
       const data = await profileEditApi.updateNickname(nickname);
 
+      console.log("닉네임 변경 응답:", data);
       alert("닉네임이 변경되었습니다.");
-      setNickname(data.result.nickname);
+
+      if (data.result && data.result.nickname) {
+        setNickname(data.result.nickname);
+      } else {
+        console.warn("닉네임 변경 응답에 result.nickname 없음");
+      }
     } catch (error) {
       console.error("닉네임 변경 오류:", error.response?.data || error);
       alert(error.response?.data?.message || "닉네임 변경 실패");
@@ -33,7 +39,13 @@ function ProfileEditPage() {
 
     try {
       const data = await profileEditApi.uploadProfileImage(file);
-      setSelectedImage(data.result.profileImageUrl);
+      console.log("이미지 업로드 응답 확인:", data);
+
+      if (data.result && data.result.profileImageUrl) {
+        setSelectedImage(data.result.profileImageUrl);
+      } else {
+        console.warn("API 응답에 profileImageUrl 없음");
+      }
     } catch (error) {
       console.error("이미지 업로드 실패:", error);
       alert(error.message || "이미지 업로드 실패");
