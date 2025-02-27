@@ -1,20 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { Trash2 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { AiOutlineArrowLeft } from "react-icons/ai";
+import defaultImg from "../assets/defaultImg.png";
 import { FaSortAmountDown } from "react-icons/fa";
-import profileImg from "../assets/profile.svg";
 import CustomModal from "../components/Modals/CustomModal";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { bookmarkApi } from "../api/bookmark";
+import Header from "../components/Headers/Header";
+import useNotificationStore from "../store/notificationStore.js";
+import { useLocation } from "react-router-dom";
 
 function BookmarkPage() {
-  const navigate = useNavigate();
+  const location = useLocation();
   const [sortOrder, setSortOrder] = useState("latest");
   const [parkingSpaces, setParkingSpaces] = useState([]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const { showNotification } = useNotificationStore();
 
   const getBookMark = async (sort) => {
     const bookmarkData = await bookmarkApi.getBookmark(sort);
@@ -23,20 +26,21 @@ function BookmarkPage() {
 
   useEffect(() => {
     getBookMark(sortOrder);
-  }, [sortOrder]);
-
-  const handleBack = () => {
-    if (window.history.length > 1) {
-      navigate(-1);
-    } else {
-      navigate("/");
-    }
-  };
+  }, [sortOrder, location]);
 
   const removeParking = async (id) => {
-    await bookmarkApi.toggleBookmark(id);
-    setIsModalOpen(true);
-    getBookMark(sortOrder);
+    try {
+      const reqOk = await bookmarkApi.toggleBookmark(id);
+
+      if (reqOk) {
+        setIsModalOpen(true);
+        getBookMark(sortOrder);
+      } else {
+        showNotification("⚠️ 즐겨찾기 삭제 실패");
+      }
+    } catch (err) {
+      console.log("즐겨찾기 삭제 실패", err);
+    }
   };
 
   const closeModal = () => {
@@ -52,58 +56,59 @@ function BookmarkPage() {
   return (
     <Wrapper>
       <Content>
-        <HeaderWrapper>
-          <BackButton onClick={handleBack}>
-            <AiOutlineArrowLeft size={25} />
-          </BackButton>
-          <h2>즐겨찾는 주차 공간</h2>
-          <ProfileImage src={profileImg} alt="profile" />
-        </HeaderWrapper>
-        <SortButton onClick={toggleSortOrder}>
-          <FaSortAmountDown size={16} />
-          {sortOrder === "latest" ? "최신순" : "오래된순"}
-        </SortButton>
-        <ParkingList>
-          {parkingSpaces?.map((space) => (
-            <ParkingItem key={space.id}>
-              <ParkingContent>
-                <ParkingNameWrapper>
-                  <ParkingName>{space.parkingName} 주차장</ParkingName>
-                  <ParkingType>{space.type}</ParkingType>
-                </ParkingNameWrapper>
-                <Divider />
-                <Address>{space.address}</Address>
-                <DetailWrapper>
-                  <Label>평일:</Label>
-                  <Value>
-                    {space.weekdayStartTime} - {space.weekdayEndTime}
-                  </Value>
-                </DetailWrapper>
-                <DetailWrapper>
-                  <Label>토요일:</Label>
-                  <Value>
-                    {space.saturdayStartTime} - {space.saturdayEndTime}
-                  </Value>
-                </DetailWrapper>
-                <DetailWrapper>
-                  <Label>공휴일:</Label>
-                  <Value>
-                    {space.holidayStartTime} - {space.holidayEndTime}
-                  </Value>
-                </DetailWrapper>
-                <Payments>
-                  <PaymentsLabel>유무료 구분:</PaymentsLabel>
-                  <PaymentStatus paid={space.paid}>
-                    {space.paid ? "유료" : "무료"}
-                  </PaymentStatus>
-                </Payments>
-              </ParkingContent>
-              <DeleteButton onClick={() => removeParking(space.id)}>
-                <Trash2 size={20} />
-              </DeleteButton>
-            </ParkingItem>
-          ))}
-        </ParkingList>
+        <Header title="즐겨찾는 주차 공간" profileImg={defaultImg} />
+        <SortDiv>
+          <SortButton onClick={toggleSortOrder}>
+            <FaSortAmountDown size={16} color="black" />
+            {sortOrder === "latest" ? "최신순" : "오래된순"}
+          </SortButton>
+        </SortDiv>
+        <ParkingDiv>
+          <ParkingList>
+            {parkingSpaces?.length === 0 && (
+              <div className="nodata">즐겨찾는 주차 공간이 없습니다.</div>
+            )}
+            {parkingSpaces?.map((space) => (
+              <ParkingItem key={space.id}>
+                <ParkingContent>
+                  <ParkingNameWrapper>
+                    <ParkingName>{space.parkingName} 주차장</ParkingName>
+                    <ParkingType>{space.type}</ParkingType>
+                  </ParkingNameWrapper>
+                  <Divider />
+                  <Address>{space.address}</Address>
+                  <DetailWrapper>
+                    <Label>평일:</Label>
+                    <Value>
+                      {space.weekdayStartTime} - {space.weekdayEndTime}
+                    </Value>
+                  </DetailWrapper>
+                  <DetailWrapper>
+                    <Label>토요일:</Label>
+                    <Value>
+                      {space.saturdayStartTime} - {space.saturdayEndTime}
+                    </Value>
+                  </DetailWrapper>
+                  <DetailWrapper>
+                    <Label>공휴일:</Label>
+                    <Value>
+                      {space.holidayStartTime} - {space.holidayEndTime}
+                    </Value>
+                  </DetailWrapper>
+                  <Payments>
+                    <PaymentsLabel>요금:</PaymentsLabel>
+                    <PaymentStatus>
+                      {space.baseParkingTime}분 당 {space.baseParkingFee}원
+                    </PaymentStatus>
+                  </Payments>
+                </ParkingContent>
+                <DeleteButton onClick={() => removeParking(space.id)}>
+                  <Trash2 size={20} />
+                </DeleteButton>
+              </ParkingItem>
+            ))}
+          </ParkingList>
+        </ParkingDiv>
 
         <CustomModal isOpen={isModalOpen} onRequestClose={closeModal}>
           <ModalContainer>
@@ -121,63 +126,63 @@ export default BookmarkPage;
 
 const Wrapper = styled.div`
   width: 100%;
-  min-height: 100vh;
+  height: 100dvh;
   display: flex;
-  justify-content: center;
-  margin-top: 10px;
+  flex-direction: column;
+  overflow: hidden;
 `;
 
 const Content = styled.div`
-  width: 85%;
-  text-align: center;
-`;
-
-const HeaderWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   width: 100%;
-  position: relative;
-  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
 `;
 
-const BackButton = styled.div`
-  cursor: pointer;
-  color: #000000;
-`;
-
-const ProfileImage = styled.img`
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  object-fit: cover;
+const SortDiv = styled.div`
+  width: calc(80% + 30px);
+  display: flex;
+  justify-content: end;
+  margin: auto;
 `;
 
 const SortButton = styled.button`
   display: flex;
-  margin-left: auto;
   align-items: center;
   background: #fff;
   border: 0.5px solid #ddd;
   padding: 8px 12px;
   border-radius: 20px;
   font-size: 14px;
+  color: black;
   cursor: pointer;
-  margin-bottom: 20px;
-  position: fi;
   gap: 10px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+`;
+
+const ParkingDiv = styled.div`
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+  padding: 20px 0;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 `;
 
 const ParkingList = styled.div`
   display: flex;
   flex-direction: column;
-  overflow-x: auto;
-  white-space: nowrap;
   gap: 20px;
   padding-bottom: 10px;
-  &::-webkit-scrollnar {
-    display: none;
+
+  .nodata {
+    color: #898989;
+    font-size: 13px;
+    font-weight: 600;
   }
 `;
 
@@ -185,14 +190,14 @@ const ParkingItem = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 93%;
+  width: 80%;
   position: relative;
   padding: 15px;
   min-height: 110px;
   border: 1px solid #ddd;
   border-radius: 7px;
   box-shadow: 0 7px 7px rgba(0, 0, 0, 0.1);
-  margin-bottom: 40px;
+  margin: 20px auto;
   transition: box-shadow 0.3s ease-in-out;
   &:hover {
     box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
@@ -272,7 +277,7 @@ const PaymentsLabel = styled.div`
 
 const PaymentStatus = styled.p`
   font-weight: bold;
-  color: ${(props) => (props.paid ? "red" : "green")};
+  color: green;
   margin-top: 5px;
 `;
 

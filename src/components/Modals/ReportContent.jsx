@@ -127,9 +127,12 @@ const ReportContent = () => {
   const handlePost = async () => {
     console.log("파일", file);
     try {
-      await reportApi.postReport(inputLocation, file);
-      showNotification("✅ 신고가 정상적으로 처리되었습니다");
-      navigate("/report");
+      const reqOk = await reportApi.postReport(inputLocation, file || null);
+
+      if (reqOk) {
+        showNotification("✅ 신고가 접수되었습니다.");
+        navigate("/report");
+      }
     } catch (err) {
       showNotification("⚠️ 신고 접수 실패");
     }
@@ -236,6 +239,7 @@ const InputDiv = styled.div`
     width: 100%;
     ::placeholder {
       color: #636363;
+      font-size: 13px;
     }
   }
 

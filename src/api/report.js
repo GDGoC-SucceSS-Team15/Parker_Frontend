@@ -4,8 +4,9 @@ import api from "./api";
 export const reportApi = {
   postReport: async (address, image) => {
     try {
-      if (!address || !image) {
-        return;
+      if (!address) {
+        alert("주소를 입력해주세요.");
+        return false;
       }
 
       const res = await api.post(
@@ -22,8 +23,10 @@ export const reportApi = {
       );
 
       console.log("불법 주정차 신고 성공", res);
+      return true;
     } catch (err) {
       console.error("불법 주정차 신고 실패", err);
+      return false;
     }
   },
   // 내 신고 목록 조회
@@ -44,8 +47,10 @@ export const reportApi = {
       const res = await api.delete(`/api/report/delete/${reportId}`);
 
       console.log("신고 철회 성공", res);
+      return true;
     } catch (err) {
       console.error("신고 철회 실패", err);
+      return false;
     }
   },
 };

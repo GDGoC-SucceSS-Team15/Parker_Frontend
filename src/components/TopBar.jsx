@@ -16,6 +16,7 @@ const TopBar = ({ onSearch, onToggle }) => {
   const menuRef = useRef(null);
   const topBarRef = useRef(null);
   const [openModal, setOpenModal] = useState(false);
+  const [selectedFilters, setSelectedFilters] = useState([]);
 
   const [modal, setModal] = useState(false);
   const [result, setResult] = useState(null);
@@ -43,8 +44,11 @@ const TopBar = ({ onSearch, onToggle }) => {
     setIsMenuVisible((prev) => !prev);
   };
 
-  // 필터링
+  // 필터링 & 버튼 상태관리
   const handleClick = (filterType) => {
+      setSelectedFilters((prev) =>
+      prev.includes(filterType) ? prev.filter((f) => f !== filterType) : [...prev, filterType]
+      );
     onToggle(filterType);
   };
 
@@ -93,12 +97,18 @@ const TopBar = ({ onSearch, onToggle }) => {
       )}
 
       <ButtonWrapper>
-        <FilterButton onClick={() => handleClick("parking")}>
+        <FilterButton
+          onClick={() => handleClick("parking")}
+          selected={selectedFilters.includes("parking")}
+          >
           <img src={Parking} alt="parking" />
           {/* <LuSquareParking color="#015900" size={22} /> */}
           주차공간
         </FilterButton>
-        <FilterButton onClick={() => handleClick("crackdown")}>
+        <FilterButton
+          onClick={() => handleClick("crackdown")}
+          selected={selectedFilters.includes("crackdown")}
+        >
           <img src={Crackdown} alt="crackdown" />
           단속구역
         </FilterButton>
@@ -116,7 +126,10 @@ const TopBar = ({ onSearch, onToggle }) => {
       </CustomModal>
       <ResultModal
         isOpen={modal}
-        onRequestClose={() => setModal(false)}
+        onRequestClose={() => {
+          setModal(false);
+          setOpenModal(false);
+        }}
         type={result?.class_id}
       />
     </>
@@ -213,7 +226,7 @@ const ButtonWrapper = styled.div`
 
 const FilterButton = styled.button`
   display: flex;
-  background-color: #ffffff;
+  background-color: ${({ selected }) => (selected ? "#BDBDBD" : "white")};
   border: none;
   justify-content: center;
   padding: 10px 0;
@@ -234,10 +247,5 @@ const FilterButton = styled.button`
     vertical-align: middle;
     object-fit: contain;
     margin-top: -2px;
-  }
-
-  &:hover {
-    background-color: #f0f0f0;
-    color: #000;
   }
 `;

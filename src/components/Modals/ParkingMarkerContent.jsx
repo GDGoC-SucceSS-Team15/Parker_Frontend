@@ -25,13 +25,15 @@ const ParkingMarkerContent = ({
   const [bmState, setBmState] = useState(bookmarked);
   const { showNotification } = useNotificationStore();
   const handleBookmark = async (id) => {
-    bookmarkApi.toggleBookmark(id);
-    if (bmState) {
-      showNotification("🗑️ 즐겨찾기 삭제");
-    } else {
-      showNotification("⭐️ 즐겨찾기 추가");
+    const reqOk = await bookmarkApi.toggleBookmark(id);
+    if (reqOk) {
+      if (bmState) {
+        showNotification("🗑️ 즐겨찾기 삭제");
+      } else {
+        showNotification("⭐️ 즐겨찾기 추가");
+      }
+      setBmState(!bmState);
     }
-    setBmState(!bmState);
   };
   return (
     <Container>
@@ -39,7 +41,7 @@ const ParkingMarkerContent = ({
         <BackBtn onClick={onClose}>
           <IoArrowBack size={25} />
         </BackBtn>
-        <Title>{parkingName}</Title>
+        <Title>{parkingName.slice(-3) === "주차장" ? parkingName : `${parkingName} 주차장`}</Title>
         <StarBtn onClick={() => handleBookmark(parkingId)}>
           {bmState ? <FaStar size={22} /> : <FaRegStar size={22} />}
         </StarBtn>
@@ -68,7 +70,7 @@ const ParkingMarkerContent = ({
       <InfoRow>
         <BiDollarCircle size={18} />
         <InfoText>
-          (매 {baseParkingTime}분당) {baseParkingFee}원
+          {baseParkingFee === "0" ? "주차 요금 정보 없음" : `분당 ${baseParkingFee}원` }
         </InfoText>
       </InfoRow>
 
