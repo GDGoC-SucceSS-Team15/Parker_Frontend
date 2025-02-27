@@ -25,13 +25,15 @@ const ParkingMarkerContent = ({
   const [bmState, setBmState] = useState(bookmarked);
   const { showNotification } = useNotificationStore();
   const handleBookmark = async (id) => {
-    bookmarkApi.toggleBookmark(id);
-    if (bmState) {
-      showNotification("🗑️ 즐겨찾기 삭제");
-    } else {
-      showNotification("⭐️ 즐겨찾기 추가");
+    const reqOk = await bookmarkApi.toggleBookmark(id);
+    if (reqOk) {
+      if (bmState) {
+        showNotification("🗑️ 즐겨찾기 삭제");
+      } else {
+        showNotification("⭐️ 즐겨찾기 추가");
+      }
+      setBmState(!bmState);
     }
-    setBmState(!bmState);
   };
   return (
     <Container>

@@ -12,8 +12,10 @@ export const userApi = {
       });
 
       console.log("회원가입 성공", res);
+      return true;
     } catch (err) {
       console.log("회원가입 실패", err);
+      return false;
     }
   },
 
@@ -26,8 +28,10 @@ export const userApi = {
 
       console.log("로그인 성공", res);
       localStorage.setItem("accessToken", res.data.result.accessToken);
+      return true;
     } catch (err) {
       console.log("로그인 실패", err);
+      return false;
     }
   },
 
@@ -37,8 +41,10 @@ export const userApi = {
 
       console.log("로그아웃 성공", res);
       localStorage.removeItem("accessToken");
+      return true;
     } catch (err) {
       console.log("로그아웃 실패", err);
+      return false;
     }
   },
 
@@ -48,8 +54,10 @@ export const userApi = {
 
       console.log("회원 탈퇴 성공", res);
       localStorage.removeItem("accessToken");
+      return true;
     } catch (err) {
       console.log("회원 탈퇴 실패", err);
+      return false;
     }
   },
 };

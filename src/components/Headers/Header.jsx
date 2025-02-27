@@ -33,7 +33,9 @@ const HeaderWrapper = styled.div`
     justify-content: space-between;
     align-items: center;
     padding: 30px;
+    background-color: white;
   }
+  z-index: 9999;
 `;
 
 const BackBtn = styled.div`

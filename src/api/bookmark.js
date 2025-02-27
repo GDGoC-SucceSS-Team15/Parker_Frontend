@@ -7,8 +7,10 @@ export const bookmarkApi = {
       const res = await api.post(`/api/bookmark/parking-space/${id}`);
 
       console.log("즐겨찾기 토글 성공", res);
+      return true;
     } catch (err) {
       console.log("즐겨찾기 토글 실패", err);
+      return false;
     }
   },
   getBookmark: async (sort) => {

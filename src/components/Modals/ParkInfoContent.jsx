@@ -2,9 +2,13 @@ import React from "react";
 import styled from "styled-components";
 
 const ParkInfoContent = ({ parkingModalData }) => {
+  const formattedTitle =
+    parkingModalData.parkingName.slice(-3) === "주차장"
+      ? parkingModalData.parkingName
+      : `${parkingModalData.parkingName} 주차장`;
   return (
     <ContentWrapper>
-      <div className="parking_name">{parkingModalData.parkingName} </div>
+      <div className="parking_name">{formattedTitle} </div>
       <Line />
       <div className="title">주차장 구분 / 유형 / 구획수</div>
       <div className="info">

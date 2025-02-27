@@ -16,14 +16,17 @@ function SignInPage() {
 
   const handleLogin = async () => {
     try {
-      userApi.signIn(email, pw);
-      showNotification("✅ 로그인 성공");
+      const reqOk = await userApi.signIn(email, pw);
+      if (reqOk) {
+        showNotification("✅ 로그인 성공");
+        navigate("/map");
+      } else {
+        showNotification("⚠️ 로그인 실패");
+      }
     } catch (err) {
       console.log("로그인 실패", err);
       showNotification("⚠️ 로그인 실패");
     }
-
-    navigate("/map");
   };
 
   const activeEnter = (e) => {
@@ -74,7 +77,7 @@ export default SignInPage;
 
 const Wrapper = styled.div`
   width: 100%;
-  min-height: 100vh;
+  min-height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
