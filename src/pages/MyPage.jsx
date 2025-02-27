@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineArrowLeft, AiOutlineSetting } from "react-icons/ai";
-import profileImg from "../assets/profile.svg";
+import defaultImg from "../assets/defaultImg.png";
 import logoImg from "../assets/logoimg.svg";
 import mypageApi from "../api/mypage";
 
@@ -12,16 +12,15 @@ function MyPage() {
   const [userInfo, setUserInfo] = useState({
     name: "",
     nickname: "",
-    profileImageUrl: profileImg,
+    profileImageUrl: defaultImg,
   });
 
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const response = await mypageApi.getUserInfo();
-        if (response.isSuccess) {
-          setUserInfo(response.result);
-        }
+        const data = await mypageApi.getUserInfo();
+        console.log("유저 정보 응답:", data);
+        setUserInfo(data.result);
       } catch (error) {
         console.error("유저 정보 불러오기 실패:", error);
       }
@@ -56,7 +55,7 @@ function MyPage() {
         </HeaderWrapper>
         <ProfileDiv>
           <ProfileImage
-            src={userInfo.profileImageUrl || profileImg}
+            src={userInfo.profileImageUrl || defaultImg}
             alt="profile"
           />
           <ProfileInfo>
