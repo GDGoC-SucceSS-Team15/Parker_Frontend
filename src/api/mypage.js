@@ -11,21 +11,5 @@ const mypageApi = {
       throw error;
     }
   },
-
-  updateProfileImage: async (file) => {
-    const formData = new FormData();
-    formData.append("profileImage", file);
-
-    try {
-      const response = await api.post("/api/my-page/user-info", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      return response.data;
-    } catch (error) {
-      console.error("프로필 이미지 업로드 실패:", error);
-      throw error;
-    }
-  },
 };
-
 export default mypageApi;

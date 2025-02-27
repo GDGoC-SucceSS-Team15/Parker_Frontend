@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineArrowLeft, AiOutlineCamera } from "react-icons/ai";
-import profileImg from "../assets/profile.svg";
+import defaultImg from "../assets/defaultImg.png";
 import profileEditApi from "../api/profileEdit";
 
 function ProfileEditPage() {
   const navigate = useNavigate();
-  const [selectedImage, setSelectedImage] = useState(profileImg);
+  const [selectedImage, setSelectedImage] = useState(defaultImg);
   const [nickname, setNickname] = useState("");
 
   const handleBack = () => {
@@ -19,13 +19,17 @@ function ProfileEditPage() {
       console.log("닉네임 변경 요청 시작:", nickname);
       const data = await profileEditApi.updateNickname(nickname);
 
-      console.log("닉네임 변경 응답:", data);
-      alert("닉네임이 변경되었습니다.");
-
-      if (data.result && data.result.nickname) {
-        setNickname(data.result.nickname);
+      if (data.isSuccess) {
+        if (data.result && data.result.nickname) {
+          setNickname(data.result.nickname);
+          console.log("닉네임 변경 응답:", data);
+          alert("닉네임이 변경되었습니다.");
+        } else {
+          console.warn("닉네임 변경 응답에 result.nickname 없음");
+        }
       } else {
-        console.warn("닉네임 변경 응답에 result.nickname 없음");
+        console.warn("API 응답 실패:", data.message);
+        alert(data.message || "닉네임 변경 실패");
       }
     } catch (error) {
       console.error("닉네임 변경 오류:", error.response?.data || error);
@@ -41,10 +45,16 @@ function ProfileEditPage() {
       const data = await profileEditApi.uploadProfileImage(file);
       console.log("이미지 업로드 응답 확인:", data);
 
-      if (data.result && data.result.profileImageUrl) {
-        setSelectedImage(data.result.profileImageUrl);
+      if (data.isSuccess) {
+        if (data.result && data.result.profileImageUrl) {
+          setSelectedImage(data.result.profileImageUrl);
+          console.log("이미지 업로드 응답 확인:", data);
+        } else {
+          console.warn("API 응답에 profileImageUrl 없음");
+        }
       } else {
-        console.warn("API 응답에 profileImageUrl 없음");
+        console.warn("이미지 업로드 실패:", data.message);
+        alert(data.message || "이미지 업로드 실패");
       }
     } catch (error) {
       console.error("이미지 업로드 실패:", error);
@@ -62,7 +72,7 @@ function ProfileEditPage() {
       </HeaderWrapper>
       <ProfileContainer>
         <ProfileLabel>
-          <ProfileImage src={selectedImage || profileImg} alt="profile" />
+          <ProfileImage src={selectedImage || defaultImg} alt="profile" />
           <CameraIcon>
             <AiOutlineCamera size={23} />
             <ImgFileInput
@@ -79,9 +89,7 @@ function ProfileEditPage() {
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
           />
-          <SubmitButton onClick={() => handleNicknameChange(nickname)}>
-            변경
-          </SubmitButton>{" "}
+          <SubmitButton onClick={handleNicknameChange}>변경</SubmitButton>
         </NicknameWrapper>
       </ProfileContainer>
     </Wrapper>

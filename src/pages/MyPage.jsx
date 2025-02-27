@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineArrowLeft, AiOutlineSetting } from "react-icons/ai";
-import profileImg from "../assets/profile.svg";
+import defaultImg from "../assets/defaultImg.png";
 import logoImg from "../assets/logoimg.svg";
 import mypageApi from "../api/mypage";
 
@@ -12,7 +12,7 @@ function MyPage() {
   const [userInfo, setUserInfo] = useState({
     name: "",
     nickname: "",
-    profileImageUrl: profileImg,
+    profileImageUrl: defaultImg,
   });
 
   useEffect(() => {
@@ -55,7 +55,7 @@ function MyPage() {
         </HeaderWrapper>
         <ProfileDiv>
           <ProfileImage
-            src={userInfo.profileImageUrl || profileImg}
+            src={userInfo.profileImageUrl || defaultImg}
             alt="profile"
           />
           <ProfileInfo>
