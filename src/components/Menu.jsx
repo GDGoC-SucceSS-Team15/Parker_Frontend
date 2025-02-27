@@ -6,7 +6,7 @@ import MyPage from "./../assets/MenuButton/Menu_MyPage.svg";
 import Crackdown from "./../assets/MenuButton/Menu_Crackdown.svg";
 import SavedParkingSpaces from "./../assets/MenuButton/Menu_SavedParkingSpaces.svg";
 import Parking_Info from "./../assets/MenuButton/Menu_ParkInfo.svg";
-import profileImg from "../assets/profile.svg";
+import defaultImg from "../assets/defaultImg.png";
 import { CiSettings } from "react-icons/ci";
 import { IoInformationCircleOutline } from "react-icons/io5";
 import { IoReturnDownBackOutline } from "react-icons/io5";
@@ -21,7 +21,7 @@ const Menu = () => {
   const [userInfo, setUserInfo] = useState({
     name: "",
     nickname: "",
-    profileImageUrl: profileImg,
+    profileImageUrl: "",
   });
   const { showNotification } = useNotificationStore();
 
@@ -58,7 +58,7 @@ const Menu = () => {
       </LogoDiv>
 
       <ProfileDiv onClick={() => navigate("/mypage")}>
-        <img src={userInfo.profileImageUrl || profileImg} alt="profile" />
+        <img src={userInfo.profileImageUrl || defaultImg} alt="profile" />
         <Nickname onClick={() => navigate("/nickname-edit")}>
           <span style={{ fontWeight: "bold" }}>
             {userInfo.nickname || userInfo.name || "김고수"}
