@@ -127,7 +127,7 @@ const RightGroup = styled.div`
     transition: transform 0.2s ease-in-out;
 
     img {
-      width: 27px;
+      width: 26px;
     }
   }
 `;
