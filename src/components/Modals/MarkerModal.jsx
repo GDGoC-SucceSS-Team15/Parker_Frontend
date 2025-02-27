@@ -13,7 +13,7 @@ const customStyles = {
     position: "fixed",
     top: "0",
     left: "0",
-    display: "flex",
+    display: "absolute",
     margin: "0 auto",
     pointerEvents: "none",
     alignItems: "center",

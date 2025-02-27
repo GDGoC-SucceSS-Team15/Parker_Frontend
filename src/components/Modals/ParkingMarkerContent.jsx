@@ -68,7 +68,7 @@ const ParkingMarkerContent = ({
       <InfoRow>
         <BiDollarCircle size={18} />
         <InfoText>
-          (매 {baseParkingTime}분당) {baseParkingFee}원
+          {baseParkingFee === "0" ? "주차 요금 정보 없음" : `분당 ${baseParkingFee}원` }
         </InfoText>
       </InfoRow>
 
